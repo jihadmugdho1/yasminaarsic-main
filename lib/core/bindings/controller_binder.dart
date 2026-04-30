@@ -1,0 +1,17 @@
+import 'package:get/get.dart';
+import 'package:yasminaarsic/core/localization/localization_controller.dart';
+import 'package:yasminaarsic/features/authentication/controllers/login_controller.dart';
+import 'package:yasminaarsic/features/authentication/data/services/authentication_service.dart';
+
+class ControllerBinder extends Bindings {
+  @override
+  void dependencies() {
+    // Register LocalizationController as permanent so it's available app-wide
+    Get.put<LocalizationController>(LocalizationController(), permanent: true);
+
+    // Register AuthenticationService as permanent so it's available app-wide
+    Get.put<AuthenticationService>(AuthenticationService(), permanent: true);
+
+    Get.lazyPut<LoginController>(() => LoginController(), fenix: true);
+  }
+}

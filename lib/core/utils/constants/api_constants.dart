@@ -1,0 +1,102 @@
+class ApiConstants {
+  static const String baseUrl =
+      "https://placard-silenced-scope.ngrok-free.dev/api/v1/";
+
+  // static const String baseUrl = "http://localhost:3000/api/v1/";
+
+  static const String subscriptionBaseUrl = "https://placard-silenced-scope.ngrok-free.dev/api/v1/";
+
+  static String get register => "${baseUrl}auth/register";
+  static String get verifyEmail => "${baseUrl}auth/verify-email";
+  static String get login => "${baseUrl}auth/login";
+  static String get passwordResetSendCode =>
+      "${baseUrl}auth/password-reset/send-code";
+  static String get passwordResetVerifyCode =>
+      "${baseUrl}auth/password-reset/verify-code";
+  static String get confirmPasswordReset =>
+      "${baseUrl}auth/password-reset/confirm";
+  static String get changePassword => "${baseUrl}auth/change-password";
+  static String get get => "${baseUrl}category";
+
+  // FCM Token
+  static String get registerFcmToken => "${baseUrl}users/fcm-token";
+
+  // Offers
+  static String getNewestOffers({
+    required String categoryId,
+    required int limit,
+    int page = 1,
+  }) {
+    return "${baseUrl}offer/newest?categoryId=$categoryId&limit=$limit&page=$page";
+  }
+
+  static String getTrendingOffers({
+    required String categoryId,
+    required int limit,
+    int page = 1,
+  }) {
+    return "${baseUrl}offer/trending?categoryId=$categoryId&limit=$limit&page=$page";
+  }
+
+  // Vendor
+  static String getVendorById(String userId) {
+    return "${baseUrl}vendors/$userId";
+  }
+
+  static String searchVendors(String query) {
+    return "${baseUrl}vendors?search=$query";
+  }
+
+  // Subscription
+  static String get subscriptionPlans => "${subscriptionBaseUrl}subscription-plan";
+  static String get currentSubscription => "${baseUrl}subscriptions/current";
+  static String get subscriptionHistory => "${baseUrl}subscriptions/history";
+  static String get subscriptionCheckout => "${subscriptionBaseUrl}subscription/subscribe/checkout";
+  
+  static String getCheckoutPaymentForm(String paymentId) {
+    return "${subscriptionBaseUrl}subscription/checkout/$paymentId/form";
+  }
+
+  // Notifications
+  static String getNotifications({
+    String? type,
+    String? status,
+    int page = 1,
+    int limit = 20,
+  }) {
+    final queryParams = <String>[];
+    if (type != null && type.isNotEmpty) queryParams.add('type=$type');
+    if (status != null && status.isNotEmpty) queryParams.add('status=$status');
+    queryParams.add('page=$page');
+    queryParams.add('limit=$limit');
+
+    final queryString = queryParams.isNotEmpty
+        ? '?${queryParams.join('&')}'
+        : '';
+    return "${baseUrl}api/v1/notifications$queryString";
+  }
+
+  static String markNotificationAsRead(String notificationId) {
+    return "${baseUrl}api/v1/notifications/$notificationId/read";
+  }
+
+  static String deleteNotification(String notificationId) {
+    return "${baseUrl}api/v1/notifications/$notificationId";
+  }
+
+  static String get markAllNotificationsAsRead =>
+      "${baseUrl}api/v1/notifications/mark-all-read";
+
+  static String get getUnreadNotificationCount =>
+      "${baseUrl}api/v1/notifications/unread-count";
+
+  static String get getProfile => "${baseUrl}users/me";
+  static String get updateProfile =>
+      "${baseUrl}users"; // Used with ID in service
+  static String get uploadImage => "${baseUrl}users/upload-image";
+  static String get notificationPreference =>
+      "${baseUrl}users/notification-preferences";
+  // static String get notificationPreference => "${baseUrl}users/notification-preferences";
+  static String get myRedeemedOffers => "${baseUrl}offer/my-redeemed-offers";
+  static String get generateOfferQRCode => "${baseUrl}offer/qr-code";
+}
