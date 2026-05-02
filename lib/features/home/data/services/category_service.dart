@@ -9,7 +9,7 @@ import 'package:yasminaarsic/features/home/models/category_model.dart';
 class CategoryService {
   final NetworkCaller _networkCaller = NetworkCaller();
 
-  /// Fetch categories from API and return List<CategoryModel> wrapped in ResponseData
+
   Future<ResponseData> getCategories() async {
     try {
       AppLoggerHelper.debug('Fetching categories from: ${ApiConstants.get}');

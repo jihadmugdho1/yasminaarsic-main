@@ -507,23 +507,7 @@ class HomeScreen extends StatelessWidget {
                     );
                   }),
                   // Load more trending offers
-                  Obx(() {
-                    if (controller.hasMoreTrendingOffers.value &&
-                        controller.selectedCategory.value != 0) {
-                      return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 18.w),
-                        child: ElevatedButton(
-                          onPressed: controller.isLoadingMoreTrending.value
-                              ? null
-                              : controller.loadMoreTrendingOffers,
-                          child: controller.isLoadingMoreTrending.value
-                              ? CircularProgressIndicator()
-                              : Text(locale.get('load_more')),
-                        ),
-                      );
-                    }
-                    return SizedBox.shrink();
-                  }),
+                
                   SizedBox(height: 16.h),
                   Builder(
                     builder: (context) {

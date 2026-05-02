@@ -175,13 +175,13 @@ class _NetworkImageWithTimeout extends StatefulWidget {
 
 class _NetworkImageWithTimeoutState extends State<_NetworkImageWithTimeout> {
   bool _showFallback = false;
+  bool _imageLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    // Start a timer to show fallback after timeout
     Future.delayed(Duration(seconds: widget.timeoutSeconds), () {
-      if (mounted && !_showFallback) {
+      if (mounted && !_showFallback && !_imageLoaded) {
         setState(() {
           _showFallback = true;
         });
@@ -192,7 +192,6 @@ class _NetworkImageWithTimeoutState extends State<_NetworkImageWithTimeout> {
   @override
   Widget build(BuildContext context) {
     if (_showFallback) {
-      // Show fallback image after timeout
       return Image.asset(
         widget.fallbackImage,
         height: widget.height,
@@ -208,10 +207,9 @@ class _NetworkImageWithTimeoutState extends State<_NetworkImageWithTimeout> {
       fit: widget.fit,
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) {
-          // Image loaded successfully
+          _imageLoaded = true;
           return child;
         }
-        // Show loading indicator while loading
         return Container(
           height: widget.height,
           width: widget.width,
@@ -227,7 +225,6 @@ class _NetworkImageWithTimeoutState extends State<_NetworkImageWithTimeout> {
         );
       },
       errorBuilder: (context, error, stackTrace) {
-        // Show fallback on error
         return Image.asset(
           widget.fallbackImage,
           height: widget.height,

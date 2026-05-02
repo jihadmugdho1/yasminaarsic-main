@@ -14,6 +14,17 @@ import 'package:yasminaarsic/features/home/models/vendor_model.dart'
     as vendor_models;
 import 'package:yasminaarsic/routes/app_routes.dart';
 
+OfferModel _toOfferModel(OfferApiModel api, String categoryLabel) {
+  return OfferModel(
+    imagePath: api.thumbnail.isNotEmpty ? api.thumbnail : ImagePath.imageFive,
+    title: api.title,
+    location: api.vendorProfile?.city ?? '',
+    categoryLabel: categoryLabel,
+    isNetworkImage: api.thumbnail.isNotEmpty,
+    offerApiData: api,
+  );
+}
+
 class HomeController extends GetxController {
   late LocalizationController locale;
 
@@ -61,43 +72,11 @@ class HomeController extends GetxController {
     super.onInit();
     locale = Get.find<LocalizationController>();
 
-    // Initialize the lists as empty first
     trendingOffers = <OfferModel>[].obs;
     newOffers = <OfferModel>[].obs;
     categories = <CategoryModel>[].obs;
 
-    _initializeOffers();
     _loadCategories();
-
-    // Listen for language changes and re-initialize offers
-    ever(locale.currentLanguage, (_) {
-      _initializeOffers();
-    });
-  }
-
-  void _initializeOffers() {
-    // Pass translation keys instead of translated strings
-    trendingOffers.assignAll(
-      List.generate(5, (index) {
-        return OfferModel(
-          imagePath: ImagePath.imageSeven,
-          title: 'food_drinks',
-          location: 'downtown_city_center',
-          categoryLabel: 'dining',
-        );
-      }),
-    );
-
-    newOffers.assignAll(
-      List.generate(5, (index) {
-        return OfferModel(
-          imagePath: ImagePath.imageFive,
-          title: 'food_drinks',
-          location: 'downtown_city_center',
-          categoryLabel: 'dining',
-        );
-      }),
-    );
   }
 
   Future<void> _loadCategories() async {
@@ -165,157 +144,76 @@ class HomeController extends GetxController {
     if (categoryIndex >= categories.length) return;
 
     isLoadingOffers.value = true;
+    newOffers.clear();
+    trendingOffers.clear();
+
     final selectedCat = categories[categoryIndex];
 
     try {
-      // If "All Offers" is selected, fetch from all actual categories
       if (selectedCat.id == 'all') {
-        final actualCategories = categories
-            .skip(1)
-            .toList(); // Skip "All Offers"
-        final List<OfferApiModel> allNewOffers = [];
-        final List<OfferApiModel> allTrendingOffers = [];
-
-        for (var cat in actualCategories) {
-          // Fetch newest offers for each category
-          final newestResponse = await _offerService.getNewestOffers(
-            categoryId: cat.id,
-            limit: 50, // Load more for all
-          );
-
-          if (newestResponse.isSuccess && newestResponse.responseData != null) {
-            allNewOffers.addAll(
-              newestResponse.responseData as List<OfferApiModel>,
-            );
-          }
-
-          // Fetch trending offers for each category
-          final trendingResponse = await _offerService.getTrendingOffers(
-            categoryId: cat.id,
-            limit: 50, // Load more for all
-          );
-
-          if (trendingResponse.isSuccess &&
-              trendingResponse.responseData != null) {
-            allTrendingOffers.addAll(
-              trendingResponse.responseData as List<OfferApiModel>,
-            );
-          }
+        // Single call for all offers — no category filter
+        final response = await _offerService.getOffers(
+          limit: 10,
+          page: 1,
+        );
+        if (response.isSuccess && response.responseData != null) {
+          final data = response.responseData as Map<String, dynamic>;
+          final offers = data['offers'] as List<OfferApiModel>;
+          final totalPages = data['totalPages'] as int;
+          newOffers.assignAll(offers.map((o) => _toOfferModel(o, 'All')));
+          trendingOffers.assignAll(offers.map((o) => _toOfferModel(o, 'All')));
+          hasMoreNewOffers.value = totalPages > 1;
+          hasMoreTrendingOffers.value = totalPages > 1;
+        } else {
+          hasMoreNewOffers.value = false;
+          hasMoreTrendingOffers.value = false;
         }
-
-        // Convert to OfferModel and assign
-        newOffers.assignAll(
-          allNewOffers.map((apiOffer) {
-            final hasValidThumbnail = apiOffer.thumbnail.isNotEmpty;
-            return OfferModel(
-              imagePath: hasValidThumbnail
-                  ? 'https://yasminaarsic-server.onrender.com${apiOffer.thumbnail}'
-                  : ImagePath.imageFive,
-              title: apiOffer.title,
-              location: apiOffer.vendorProfile?.city ?? 'Unknown',
-              categoryLabel: apiOffer.vendorProfile?.categoryId ?? 'All',
-              isNetworkImage: hasValidThumbnail,
-              offerApiData: apiOffer,
-            );
-          }).toList(),
-        );
-
-        trendingOffers.assignAll(
-          allTrendingOffers.map((apiOffer) {
-            final hasValidThumbnail = apiOffer.thumbnail.isNotEmpty;
-            return OfferModel(
-              imagePath: hasValidThumbnail
-                  ? 'https://yasminaarsic-server.onrender.com${apiOffer.thumbnail}'
-                  : ImagePath.imageSeven,
-              title: apiOffer.title,
-              location: apiOffer.vendorProfile?.city ?? 'Unknown',
-              categoryLabel: apiOffer.vendorProfile?.categoryId ?? 'All',
-              isNetworkImage: hasValidThumbnail,
-              offerApiData: apiOffer,
-            );
-          }).toList(),
-        );
-        // For "all", no more loading
-        hasMoreNewOffers.value = false;
-        hasMoreTrendingOffers.value = false;
       } else {
-        // Fetch newest offers for specific category
-        final newestResponse = await _offerService.getNewestOffers(
-          categoryId: selectedCat.id,
-          limit: 10,
-          page: newOffersPage.value,
-        );
+        final results = await Future.wait([
+          _offerService.getNewestOffers(
+            categoryId: selectedCat.id,
+            limit: 10,
+            page: newOffersPage.value,
+          ),
+          _offerService.getTrendingOffers(
+            categoryId: selectedCat.id,
+            limit: 10,
+            page: trendingOffersPage.value,
+          ),
+        ]);
 
-        // Fetch trending offers for specific category
-        final trendingResponse = await _offerService.getTrendingOffers(
-          categoryId: selectedCat.id,
-          limit: 10,
-          page: trendingOffersPage.value,
-        );
+        final newestResponse = results[0];
+        final trendingResponse = results[1];
 
         if (newestResponse.isSuccess && newestResponse.responseData != null) {
-          final newestOffersApi =
-              newestResponse.responseData as List<OfferApiModel>;
-          newOffers.assignAll(
-            newestOffersApi.map((apiOffer) {
-              final hasValidThumbnail = apiOffer.thumbnail.isNotEmpty;
-              return OfferModel(
-                imagePath: hasValidThumbnail
-                    ? 'https://yasminaarsic-server.onrender.com${apiOffer.thumbnail}'
-                    : ImagePath.imageFive,
-                title: apiOffer.title,
-                location: apiOffer.vendorProfile?.city ?? 'Unknown',
-                categoryLabel: selectedCat.name,
-                isNetworkImage: hasValidThumbnail,
-                offerApiData: apiOffer,
-              );
-            }).toList(),
-          );
-          hasMoreNewOffers.value = newestOffersApi.length == 10;
+          final data = newestResponse.responseData as Map<String, dynamic>;
+          final offers = data['offers'] as List<OfferApiModel>;
+          final totalPages = data['totalPages'] as int;
+          newOffers.assignAll(offers.map((o) => _toOfferModel(o, selectedCat.name)));
+          hasMoreNewOffers.value = newOffersPage.value < totalPages;
         } else {
-          newOffers.clear();
           hasMoreNewOffers.value = false;
         }
 
-        if (trendingResponse.isSuccess &&
-            trendingResponse.responseData != null) {
-          final trendingOffersApi =
-              trendingResponse.responseData as List<OfferApiModel>;
-          trendingOffers.assignAll(
-            trendingOffersApi.map((apiOffer) {
-              final hasValidThumbnail = apiOffer.thumbnail.isNotEmpty;
-              return OfferModel(
-                imagePath: hasValidThumbnail
-                    ? 'https://yasminaarsic-server.onrender.com${apiOffer.thumbnail}'
-                    : ImagePath.imageSeven,
-                title: apiOffer.title,
-                location: apiOffer.vendorProfile?.city ?? 'Unknown',
-                categoryLabel: selectedCat.name,
-                isNetworkImage: hasValidThumbnail,
-                offerApiData: apiOffer,
-              );
-            }).toList(),
-          );
-          hasMoreTrendingOffers.value = trendingOffersApi.length == 10;
+        if (trendingResponse.isSuccess && trendingResponse.responseData != null) {
+          final data = trendingResponse.responseData as Map<String, dynamic>;
+          final offers = data['offers'] as List<OfferApiModel>;
+          final totalPages = data['totalPages'] as int;
+          trendingOffers.assignAll(offers.map((o) => _toOfferModel(o, selectedCat.name)));
+          hasMoreTrendingOffers.value = trendingOffersPage.value < totalPages;
         } else {
-          trendingOffers.clear();
           hasMoreTrendingOffers.value = false;
         }
       }
     } catch (e) {
-      print('Error loading offers: $e');
-      newOffers.clear();
-      trendingOffers.clear();
+      AppLoggerHelper.error('Error loading offers', e);
     } finally {
       isLoadingOffers.value = false;
     }
   }
 
   Future<void> loadMoreNewOffers() async {
-    if (!hasMoreNewOffers.value ||
-        isLoadingMoreNew.value ||
-        selectedCategory.value == 0)
-      return;
+    if (!hasMoreNewOffers.value || isLoadingMoreNew.value || selectedCategory.value == 0) return;
 
     isLoadingMoreNew.value = true;
     newOffersPage.value++;
@@ -327,29 +225,17 @@ class HomeController extends GetxController {
         limit: 10,
         page: newOffersPage.value,
       );
-
       if (response.isSuccess && response.responseData != null) {
-        final newOffersApi = response.responseData as List<OfferApiModel>;
-        final newModels = newOffersApi.map((apiOffer) {
-          final hasValidThumbnail = apiOffer.thumbnail.isNotEmpty;
-          return OfferModel(
-            imagePath: hasValidThumbnail
-                ? 'https://yasminaarsic-server.onrender.com${apiOffer.thumbnail}'
-                : ImagePath.imageFive,
-            title: apiOffer.title,
-            location: apiOffer.vendorProfile?.city ?? 'Unknown',
-            categoryLabel: selectedCat.name,
-            isNetworkImage: hasValidThumbnail,
-            offerApiData: apiOffer,
-          );
-        }).toList();
-        newOffers.addAll(newModels);
-        hasMoreNewOffers.value = newOffersApi.length == 10;
+        final data = response.responseData as Map<String, dynamic>;
+        final offers = data['offers'] as List<OfferApiModel>;
+        final totalPages = data['totalPages'] as int;
+        newOffers.addAll(offers.map((o) => _toOfferModel(o, selectedCat.name)));
+        hasMoreNewOffers.value = newOffersPage.value < totalPages;
       } else {
         hasMoreNewOffers.value = false;
       }
     } catch (e) {
-      print('Error loading more new offers: $e');
+      AppLoggerHelper.error('Error loading more new offers', e);
       hasMoreNewOffers.value = false;
     } finally {
       isLoadingMoreNew.value = false;
@@ -357,10 +243,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> loadMoreTrendingOffers() async {
-    if (!hasMoreTrendingOffers.value ||
-        isLoadingMoreTrending.value ||
-        selectedCategory.value == 0)
-      return;
+    if (!hasMoreTrendingOffers.value || isLoadingMoreTrending.value || selectedCategory.value == 0) return;
 
     isLoadingMoreTrending.value = true;
     trendingOffersPage.value++;
@@ -372,29 +255,17 @@ class HomeController extends GetxController {
         limit: 10,
         page: trendingOffersPage.value,
       );
-
       if (response.isSuccess && response.responseData != null) {
-        final newOffersApi = response.responseData as List<OfferApiModel>;
-        final newModels = newOffersApi.map((apiOffer) {
-          final hasValidThumbnail = apiOffer.thumbnail.isNotEmpty;
-          return OfferModel(
-            imagePath: hasValidThumbnail
-                ? 'https://yasminaarsic-server.onrender.com${apiOffer.thumbnail}'
-                : ImagePath.imageSeven,
-            title: apiOffer.title,
-            location: apiOffer.vendorProfile?.city ?? 'Unknown',
-            categoryLabel: selectedCat.name,
-            isNetworkImage: hasValidThumbnail,
-            offerApiData: apiOffer,
-          );
-        }).toList();
-        trendingOffers.addAll(newModels);
-        hasMoreTrendingOffers.value = newOffersApi.length == 10;
+        final data = response.responseData as Map<String, dynamic>;
+        final offers = data['offers'] as List<OfferApiModel>;
+        final totalPages = data['totalPages'] as int;
+        trendingOffers.addAll(offers.map((o) => _toOfferModel(o, selectedCat.name)));
+        hasMoreTrendingOffers.value = trendingOffersPage.value < totalPages;
       } else {
         hasMoreTrendingOffers.value = false;
       }
     } catch (e) {
-      print('Error loading more trending offers: $e');
+      AppLoggerHelper.error('Error loading more trending offers', e);
       hasMoreTrendingOffers.value = false;
     } finally {
       isLoadingMoreTrending.value = false;
@@ -438,7 +309,7 @@ class HomeController extends GetxController {
         searchResults.clear();
       }
     } catch (e) {
-      print('Error searching vendors: $e');
+      AppLoggerHelper.error('Error searching vendors', e);
       searchResults.clear();
     } finally {
       isSearching.value = false;

@@ -18,6 +18,18 @@ class ApiConstants {
   static String get registerFcmToken => "${baseUrl}users/fcm-token";
 
   // Offers
+  static String getOffers({
+    String? categoryId,
+    required int limit,
+    int page = 1,
+  }) {
+    final params = ['page=$page', 'limit=$limit'];
+    if (categoryId != null && categoryId.isNotEmpty && categoryId != 'all') {
+      params.add('categoryId=$categoryId');
+    }
+    return "${baseUrl}offer?${params.join('&')}";
+  }
+
   static String getNewestOffers({
     required String categoryId,
     required int limit,
