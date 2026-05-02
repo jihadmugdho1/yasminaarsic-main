@@ -138,6 +138,7 @@ class SubscriptionController extends GetxController {
 
       if (!checkoutResult.isSuccess || checkoutResult.responseData == null) {
         Get.snackbar('Checkout Failed', checkoutResult.errorMessage);
+        AppLoggerHelper.error("Checkout failed: ${checkoutResult.errorMessage}");
         return;
       }
 

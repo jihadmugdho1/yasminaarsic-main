@@ -187,7 +187,9 @@ class NetworkCaller {
         isSuccess: false,
         statusCode: response.statusCode,
         responseData: decoded,
-        errorMessage: _extractErrorMessages(decoded['errorSources']),
+        errorMessage: decoded is Map && decoded['errorSources'] != null
+            ? _extractErrorMessages(decoded['errorSources'])
+            : (decoded is Map ? decoded['message'] ?? 'Validation error' : 'Validation error'),
       );
     } else if (response.statusCode == 401) {
       return ResponseData(

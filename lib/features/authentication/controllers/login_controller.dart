@@ -157,11 +157,46 @@ class LoginController extends GetxController {
             });
           } else {
             AppLoggerHelper.error('❌ Login failed: success is not true');
+            Get.snackbar(
+              'Login Failed',
+              message ?? 'Something went wrong. Please try again.',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+            );
           }
         } else {
           AppLoggerHelper.error(
             '❌ Login failed with status: ${response?.statusCode}',
           );
+          String errorMessage = 'Something went wrong. Please try again.';
+          try {
+            if (response != null && response.body.isNotEmpty) {
+              final errorData = jsonDecode(response.body);
+              errorMessage = errorData['message'] as String? ?? errorMessage;
+            }
+          } catch (_) {}
+
+          if (response?.statusCode == 401 &&
+              errorMessage.toLowerCase().contains('verify your email')) {
+            Get.snackbar(
+              'Email Not Verified',
+              'Please verify your email to continue.',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.orange,
+              colorText: Colors.white,
+              duration: const Duration(seconds: 3),
+            );
+            _showLoginVerificationDialog();
+          } else {
+            Get.snackbar(
+              'Login Failed',
+              errorMessage,
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+            );
+          }
         }
       } catch (e) {
         AppLoggerHelper.error('❌ Login error: $e', e);
@@ -225,6 +260,77 @@ class LoginController extends GetxController {
       ),
       barrierDismissible: false,
     );
+  }
+
+  void _showLoginVerificationDialog() {
+    Get.dialog(
+      VerificationCodeDialog(
+        title: 'Email Verification',
+        description:
+            'A verification code has been sent to ${emailControllerOne.text}.',
+        loading: isVerifyLoading,
+        onSubmitPressed: _verifyLoginEmailCode,
+        onChangeEmailPressed: () => Get.back(),
+        onClosePressed: () => Get.back(),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
+  void _verifyLoginEmailCode(String code) async {
+    isVerifyLoading.value = true;
+    try {
+      final authService = Get.find<AuthenticationService>();
+      final response = await authService.verifyEmail(
+        email: emailControllerOne.text,
+        code: code,
+      );
+
+      if (response != null &&
+          (response.statusCode == 200 || response.statusCode == 201)) {
+        final responseData = jsonDecode(response.body);
+        final success = responseData['success'];
+        final data = responseData['data'];
+        final accessToken = data['accessToken'];
+        final userId = data['user']['id'];
+
+        if (success == true) {
+          await StorageService.saveToken(accessToken, userId);
+          Get.back();
+          await _registerFcmToken();
+          Future.delayed(const Duration(milliseconds: 800), () {
+            Get.offAll(() => MainAppScreen());
+          });
+        } else {
+          Get.snackbar(
+            'Verification Failed',
+            responseData['message'] ?? 'Verification failed. Please try again.',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+        }
+      } else {
+        String errorMessage = 'Verification failed. Please try again.';
+        try {
+          if (response != null && response.body.isNotEmpty) {
+            final errorData = jsonDecode(response.body);
+            errorMessage = errorData['message'] as String? ?? errorMessage;
+          }
+        } catch (_) {}
+        Get.snackbar(
+          'Verification Failed',
+          errorMessage,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      AppLoggerHelper.error('❌ Verify login email error: $e', e);
+    } finally {
+      isVerifyLoading.value = false;
+    }
   }
 
   void verifyEmailCode(String code) async {

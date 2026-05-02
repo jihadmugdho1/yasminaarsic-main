@@ -323,9 +323,7 @@ class HomeScreen extends StatelessWidget {
                               icon: cat.icon,
                               isSelected: isSelected,
                               onTap: () {
-                                print(
-                                  'Category tapped: ${cat.name} (ID: ${cat.id})',
-                                );
+                            
                                 controller.setSelectedCategory(index);
                               },
                             );

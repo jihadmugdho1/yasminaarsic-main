@@ -145,7 +145,7 @@ class VendorDetailsController extends GetxController {
                 '',
             description: offerItem.description,
             location: vendorData.value?.vendorProfile?.city ?? '',
-            imageUrl: offerItem.thumbnail ?? ImagePath.imageFive,
+            imageUrl: offerItem.thumbnail ?? '',
             category: offerItem.type,
             expiryDate: offerItem.validUntil,
             isReuseable: offerItem.isReusable,

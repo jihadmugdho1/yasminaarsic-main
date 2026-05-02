@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:yasminaarsic/core/models/response_data.dart';
 import 'package:yasminaarsic/core/services/network_caller.dart';
 import 'package:yasminaarsic/core/utils/constants/api_constants.dart';
@@ -29,12 +31,14 @@ class CategoryService {
           AppLoggerHelper.debug(
             'Categories loaded successfully: ${categories.length}',
           );
+          AppLoggerHelper.debug('Category fetch : ${jsonEncode(response.responseData)}');
           return ResponseData(
             isSuccess: true,
             statusCode: response.statusCode,
             responseData: categories,
             errorMessage: '',
           );
+          
         } catch (parseError) {
           AppLoggerHelper.error('Error parsing categories data', parseError);
           return ResponseData(

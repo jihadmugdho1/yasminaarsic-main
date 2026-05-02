@@ -1,10 +1,6 @@
 class ApiConstants {
   static const String baseUrl =
-      "https://placard-silenced-scope.ngrok-free.dev/api/v1/";
-
-  // static const String baseUrl = "http://localhost:3000/api/v1/";
-
-  static const String subscriptionBaseUrl = "https://placard-silenced-scope.ngrok-free.dev/api/v1/";
+      "https://api.vendora.rs/api/v1/";
 
   static String get register => "${baseUrl}auth/register";
   static String get verifyEmail => "${baseUrl}auth/verify-email";
@@ -48,13 +44,13 @@ class ApiConstants {
   }
 
   // Subscription
-  static String get subscriptionPlans => "${subscriptionBaseUrl}subscription-plan";
+  static String get subscriptionPlans => "${baseUrl}subscription-plan";
   static String get currentSubscription => "${baseUrl}subscriptions/current";
   static String get subscriptionHistory => "${baseUrl}subscriptions/history";
-  static String get subscriptionCheckout => "${subscriptionBaseUrl}subscription/subscribe/checkout";
+  static String get subscriptionCheckout => "${baseUrl}subscription/subscribe/checkout";
   
   static String getCheckoutPaymentForm(String paymentId) {
-    return "${subscriptionBaseUrl}subscription/checkout/$paymentId/form";
+    return "${baseUrl}subscription/checkout/$paymentId/form";
   }
 
   // Notifications

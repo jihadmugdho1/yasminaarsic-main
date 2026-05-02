@@ -26,29 +26,30 @@ class CategorySkeletonLoader extends StatelessWidget {
         crossAxisSpacing: 18.w,
       ),
       itemBuilder: (context, index) {
-        return Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(14),
-              color: Colors.white,
-              border: Border.all(
-                color: Colors.grey.withOpacity(0.22),
-                width: 2,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.yellow.withOpacity(0.20),
-                  blurRadius: 2,
-                  offset: Offset(0, 2),
-                ),
-              ],
+        return Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            color: Colors.white,
+            border: Border.all(
+              color: Colors.grey.withValues(alpha: 0.22),
+              width: 2,
             ),
-            child: Center(
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.yellow.withValues(alpha: 0.20),
+                blurRadius: 2,
+                offset: Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Center(
+            child: Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
                     height: 28.sp,

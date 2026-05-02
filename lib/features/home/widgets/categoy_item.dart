@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:yasminaarsic/core/core.dart';
 
 class CategoryGridItem extends StatelessWidget {
@@ -9,12 +10,12 @@ class CategoryGridItem extends StatelessWidget {
   final VoidCallback? onTap;
 
   const CategoryGridItem({
-    Key? key,
+    super.key,
     required this.label,
     required this.icon,
     required this.isSelected,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -74,8 +75,7 @@ class CategoryGridItem extends StatelessWidget {
       child: InkWell(
         borderRadius: BorderRadius.circular(14),
         onTap: onTap,
-        splashColor: AppColors.primary.withOpacity(0.2),
-        highlightColor: AppColors.primary.withOpacity(0.1),
+
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
@@ -155,13 +155,13 @@ class _NetworkImageWithTimeout extends StatefulWidget {
 
 class _NetworkImageWithTimeoutState extends State<_NetworkImageWithTimeout> {
   bool _showFallback = false;
+  bool _imageLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    // Start a timer to show fallback after timeout
     Future.delayed(Duration(seconds: widget.timeoutSeconds), () {
-      if (mounted && !_showFallback) {
+      if (mounted && !_showFallback && !_imageLoaded) {
         setState(() {
           _showFallback = true;
         });
@@ -172,7 +172,6 @@ class _NetworkImageWithTimeoutState extends State<_NetworkImageWithTimeout> {
   @override
   Widget build(BuildContext context) {
     if (_showFallback) {
-      // Show fallback image after timeout
       return Image.asset(
         widget.fallbackImage,
         height: widget.height,
@@ -185,17 +184,26 @@ class _NetworkImageWithTimeoutState extends State<_NetworkImageWithTimeout> {
       widget.imageUrl,
       height: widget.height,
       width: widget.width,
-      color: widget.color,
+      // No color tint — real S3 photos should not be color-filtered
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) {
-          // Image loaded successfully
+          _imageLoaded = true;
           return child;
         }
-        // Still loading, show nothing or a placeholder
-        return SizedBox(height: widget.height, width: widget.width);
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            height: widget.height,
+            width: widget.width,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+        );
       },
       errorBuilder: (context, error, stackTrace) {
-        // Show fallback on error
         return Image.asset(
           widget.fallbackImage,
           height: widget.height,

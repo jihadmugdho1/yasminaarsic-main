@@ -8,39 +8,49 @@ class OfferCard extends StatelessWidget {
   final Offer offer;
   final VoidCallback? onTap;
 
-  const OfferCard({Key? key, required this.offer, this.onTap})
-    : super(key: key);
+  const OfferCard({super.key, required this.offer, this.onTap});
 
-  /// Check if image URL is a remote URL or local asset
-  bool _isRemoteUrl(String url) {
-    return url.startsWith('http://') ||
-        url.startsWith('https://') ||
-        url.startsWith('/uploads/');
-  }
+  static const String _fallbackImage = 'assets/images/app_logo.png';
 
-  /// Build image widget based on URL type
   Widget _buildImage(String imageUrl, double width, double height) {
-    if (_isRemoteUrl(imageUrl)) {
-      final fullUrl = imageUrl.startsWith('/')
-          ? 'https://yasminaarsic-server.onrender.com$imageUrl'
-          : imageUrl;
+    final isRemote = imageUrl.startsWith('http://') ||
+        imageUrl.startsWith('https://') ||
+        imageUrl.startsWith('/');
 
-      return _NetworkImageWithTimeout(
-        imageUrl: fullUrl,
-        width: width,
-        height: height,
-        fit: BoxFit.cover,
-        timeoutSeconds: 5,
-        fallbackImage: 'assets/images/app_logo.png',
-      );
-    } else {
+    if (imageUrl.isEmpty || !isRemote) {
       return Image.asset(
-        imageUrl,
+        _fallbackImage,
         width: width,
         height: height,
         fit: BoxFit.cover,
       );
     }
+
+    final fullUrl = imageUrl.startsWith('/')
+        ? 'https://yasminaarsic-server.onrender.com$imageUrl'
+        : imageUrl;
+
+    return Image.network(
+      fullUrl,
+      width: width,
+      height: height,
+      fit: BoxFit.cover,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Container(
+          width: width,
+          height: height,
+          color: Colors.grey[300],
+          child: const Center(child: CircularProgressIndicator()),
+        );
+      },
+      errorBuilder: (context, error, stackTrace) => Image.asset(
+        _fallbackImage,
+        width: width,
+        height: height,
+        fit: BoxFit.cover,
+      ),
+    );
   }
 
   @override
@@ -197,91 +207,3 @@ class OfferCard extends StatelessWidget {
   }
 }
 
-class _NetworkImageWithTimeout extends StatefulWidget {
-  final String imageUrl;
-  final double width;
-  final double height;
-  final BoxFit fit;
-  final int timeoutSeconds;
-  final String fallbackImage;
-
-  const _NetworkImageWithTimeout({
-    Key? key,
-    required this.imageUrl,
-    required this.width,
-    required this.height,
-    required this.fit,
-    required this.timeoutSeconds,
-    required this.fallbackImage,
-  }) : super(key: key);
-
-  @override
-  _NetworkImageWithTimeoutState createState() =>
-      _NetworkImageWithTimeoutState();
-}
-
-class _NetworkImageWithTimeoutState extends State<_NetworkImageWithTimeout> {
-  bool _showFallback = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // Start a timer to show fallback after timeout
-    Future.delayed(Duration(seconds: widget.timeoutSeconds), () {
-      if (mounted && !_showFallback) {
-        setState(() {
-          _showFallback = true;
-        });
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_showFallback) {
-      // Show fallback image after timeout
-      return Image.asset(
-        widget.fallbackImage,
-        width: widget.width,
-        height: widget.height,
-        fit: widget.fit,
-      );
-    }
-
-    return Image.network(
-      widget.imageUrl,
-      width: widget.width,
-      height: widget.height,
-      fit: widget.fit,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) {
-          // Image loaded successfully
-          return child;
-        }
-        // Show loading indicator while loading
-        return Container(
-          width: widget.width,
-          height: widget.height,
-          color: Colors.grey[300],
-          child: Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                  : null,
-            ),
-          ),
-        );
-      },
-      errorBuilder: (context, error, stackTrace) {
-        // Show fallback on error
-        return Image.asset(
-          widget.fallbackImage,
-          width: widget.width,
-          height: widget.height,
-          fit: widget.fit,
-        );
-      },
-    );
-  }
-}
