@@ -74,23 +74,28 @@ class NotificationPreferenceService {
     }
 
     try {
+      AppLoggerHelper.debug('[NotificationPref] PATCH request payload: ${jsonEncode(data)}');
+
       final response = await http.patch(
         Uri.parse(ApiConstants.notificationPreference),
         headers: {'Authorization': 'Bearer $token', 'Content-Type': _contentType},
         body: jsonEncode(data),
       );
 
+      AppLoggerHelper.debug('[NotificationPref] PATCH response status: ${response.statusCode}');
+      AppLoggerHelper.debug('[NotificationPref] PATCH response body: ${response.body}');
+
       if (response.statusCode == 200) {
         final body = json.decode(response.body);
+        final isSuccess = body['success'] == true;
+        AppLoggerHelper.debug('[NotificationPref] PATCH success=$isSuccess data: ${body['data']}');
         return ResponseData(
-          isSuccess: body['success'] == true,
+          isSuccess: isSuccess,
           statusCode: 200,
           responseData: body['data'],
-          errorMessage: body['success'] ? '' : body['message'] ?? 'Update failed',
+          errorMessage: isSuccess ? '' : body['message'] ?? 'Update failed',
         );
-        
       }
-      AppLoggerHelper.debug("Update Notification Preferences  status: ${response.body}");
 
       return ResponseData(
         isSuccess: false,

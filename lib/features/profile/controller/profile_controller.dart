@@ -61,16 +61,10 @@ class ProfileController extends GetxController {
 
       final user = profileResp.responseData as UserModel;
 
-      // 2. Fetch notification preferences
-      final notifResp = await _notificationService.getNotificationPreferences();
-      NotificationModel? notifData;
-      if (notifResp.isSuccess && notifResp.responseData != null) {
-        notifData = NotificationModel.fromJson(
-          notifResp.responseData as Map<String, dynamic>,
-        );
-      }
+      // Notification preferences come embedded in the profile response (notifications[0])
+      final notifData = user.notifications.isNotEmpty ? user.notifications.first : null;
+      AppLoggerHelper.debug('[ProfileController] notifications from profile: $notifData');
 
-      // 3. Build UI model
       final prefs = _buildNotificationPreferences(notifData);
 
       String formatBirthDate(String? raw) {
@@ -204,9 +198,14 @@ class ProfileController extends GetxController {
       'promotional': currentPrefs[2].isEnabled,
     };
 
+    AppLoggerHelper.debug('[ProfileController] onNotificationToggle index=$index value=$value payload=$payload');
+
     final response = await _notificationService.updateNotificationPreferences(
       payload,
     );
+
+    AppLoggerHelper.debug('[ProfileController] onNotificationToggle response: isSuccess=${response.isSuccess} statusCode=${response.statusCode} data=${response.responseData} error=${response.errorMessage}');
+
     if (!response.isSuccess) {
       // Revert on failure
       final revertedPrefs = List<NotificationPreferenceModel>.from(
