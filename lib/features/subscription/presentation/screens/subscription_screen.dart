@@ -7,6 +7,7 @@ import 'package:yasminaarsic/core/utils/constants/colors.dart';
 import 'package:yasminaarsic/core/localization/localization_controller.dart';
 import 'package:yasminaarsic/features/subscription/controller/subscription_controller.dart';
 import 'package:yasminaarsic/features/subscription/presentation/widgets/subscription_card.dart';
+import 'package:yasminaarsic/features/subscription/presentation/widgets/subscription_card_shimmer.dart';
 import 'package:yasminaarsic/features/subscription/presentation/widgets/subscription_details_card.dart';
 import 'package:yasminaarsic/features/subscription/presentation/widgets/subscription_status_card.dart';
 import 'package:yasminaarsic/features/subscription/presentation/screens/plan_details_screen.dart';
@@ -88,9 +89,7 @@ class SubscriptionScreen extends StatelessWidget {
                   return Padding(
                     padding: EdgeInsets.symmetric(vertical: 20.h),
                     child: Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.primary,
-                      ),
+                      child: SubscriptionShimmer(),
                     ),
                   );
                 }
