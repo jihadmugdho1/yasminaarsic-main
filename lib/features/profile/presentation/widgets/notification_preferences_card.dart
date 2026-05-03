@@ -1,6 +1,9 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:yasminaarsic/core/core.dart';
 
 class NotificationPreferencesCard extends StatelessWidget {
   final String title;
@@ -112,9 +115,21 @@ class NotificationPreferencesCard extends StatelessWidget {
                   duration: const Duration(seconds: 2),
                 );
               },
+              // --- Border / Outline Color ---
+              trackOutlineColor: WidgetStateProperty.resolveWith<Color?>((
+                Set<WidgetState> states,
+              ) {
+                return states.contains(WidgetState.selected)
+                    ? AppColors.primary
+                    : AppColors.textSecondary.withOpacity(0.2);
+              }),
+              activeThumbColor: AppColors.white,
+              activeTrackColor: AppColors.primary,
+              activeColor: AppColors.primary,
+
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              inactiveThumbColor: Colors.grey[300],
-              inactiveTrackColor: Colors.grey[200],
+              inactiveThumbColor: AppColors.textSecondary.withOpacity(0.36),
+              inactiveTrackColor: AppColors.white,
             ),
           ),
         ],
