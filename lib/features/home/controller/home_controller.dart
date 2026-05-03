@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:yasminaarsic/core/core.dart';
 import 'package:yasminaarsic/core/localization/localization_controller.dart';
 import 'package:yasminaarsic/features/home/data/services/category_service.dart';
+import 'package:yasminaarsic/features/home/data/services/hero_slider_service.dart';
 import 'package:yasminaarsic/features/home/data/services/offer_service.dart';
 import 'package:yasminaarsic/features/home/data/services/vendor_service.dart';
 import 'package:yasminaarsic/features/home/models/carousel_model.dart';
@@ -43,6 +44,8 @@ class HomeController extends GetxController {
     CarouselModel(imagePath: ImagePath.imageFour),
     CarouselModel(imagePath: ImagePath.imageTwo),
   ].obs;
+  final RxList<String> sliderImageUrls = <String>[].obs;
+  final RxBool isLoadingSlider = true.obs;
 
   late RxList<OfferModel> trendingOffers;
   late RxList<OfferModel> newOffers;
@@ -65,6 +68,7 @@ class HomeController extends GetxController {
   final CategoryService _categoryService = CategoryService();
   final OfferService _offerService = OfferService();
   final VendorService _vendorService = VendorService();
+  final HeroSliderService _heroSliderService = HeroSliderService();
 
   @override
   void onInit() {
@@ -76,6 +80,22 @@ class HomeController extends GetxController {
     categories = <CategoryModel>[].obs;
 
     _loadCategories();
+    _loadSliderImages();
+  }
+
+  Future<void> _loadSliderImages() async {
+    isLoadingSlider.value = true;
+    try {
+      final response = await _heroSliderService.getActiveSliders();
+      if (response.isSuccess && response.responseData != null) {
+        final urls = response.responseData as List<String>;
+        if (urls.isNotEmpty) sliderImageUrls.assignAll(urls);
+      }
+    } catch (e) {
+      AppLoggerHelper.error('Error loading slider images', e);
+    } finally {
+      isLoadingSlider.value = false;
+    }
   }
 
   Future<void> _loadCategories() async {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:yasminaarsic/core/core.dart';
 import 'package:yasminaarsic/core/localization/localization_controller.dart';
 import 'package:yasminaarsic/features/home/controller/home_controller.dart';
@@ -232,65 +233,100 @@ class HomeScreen extends StatelessWidget {
                     return SizedBox.shrink();
                   }),
                   // Carousel
-                  Stack(
-                    children: [
-                      CarouselSlider(
-                        options: CarouselOptions(
-                          height: 200.h,
-                          viewportFraction: 1.0,
-                          enlargeCenterPage: false,
-                          onPageChanged: (index, reason) {
-                            controller.setCurrentIndex(index);
-                          },
+                  Obx(() {
+                    if (controller.isLoadingSlider.value) {
+                      return Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 16.w,
+                          vertical: 12.h,
                         ),
-                        items: controller.carouselItems
-                            .map(
-                              (item) => ClipRRect(
-                                borderRadius: BorderRadius.zero,
-                                child: Image.asset(
-                                  item.imagePath,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                      Positioned(
-                        bottom: 14.h,
-                        left: 0,
-                        right: 0,
-                        child: Center(
-                          child: Obx(
-                            () => Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: controller.carouselItems
-                                  .asMap()
-                                  .entries
-                                  .map((entry) {
-                                    return Container(
-                                      width: 12.w,
-                                      height: 12.h,
-                                      margin: EdgeInsets.symmetric(
-                                        horizontal: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color:
-                                            controller.currentIndex.value ==
-                                                entry.key
-                                            ? AppColors.primary
-                                            : Colors.white.withOpacity(0.7),
-                                      ),
-                                    );
-                                  })
-                                  .toList(),
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.grey.shade300,
+                          highlightColor: Colors.grey.shade100,
+                          child: Container(
+                            height: 200.h,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12.r),
                             ),
                           ),
                         ),
+                      );
+                    }
+
+                    final urls = controller.sliderImageUrls;
+                    if (urls.isEmpty) return const SizedBox.shrink();
+
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 12.h,
                       ),
-                    ],
-                  ),
+                      child: Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12.r),
+                            child: CarouselSlider(
+                              options: CarouselOptions(
+                                height: 200.h,
+                                viewportFraction: 1.0,
+                                enlargeCenterPage: false,
+                                autoPlay: true,
+                                autoPlayInterval: const Duration(seconds: 3),
+                                autoPlayAnimationDuration: const Duration(milliseconds: 600),
+                                onPageChanged: (index, reason) {
+                                  controller.setCurrentIndex(index);
+                                },
+                              ),
+                              items: urls.map((url) {
+                                return Image.network(
+                                  url,
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  loadingBuilder: (context, child, progress) {
+                                    if (progress == null) return child;
+                                    return Shimmer.fromColors(
+                                      baseColor: Colors.grey.shade300,
+                                      highlightColor: Colors.grey.shade100,
+                                      child: Container(color: Colors.white),
+                                    );
+                                  },
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(color: Colors.grey.shade200);
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 14.h,
+                            left: 0,
+                            right: 0,
+                            child: Center(
+                              child: Obx(
+                                () => Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: urls.asMap().entries.map((entry) {
+                                    return Container(
+                                      width: 12.w,
+                                      height: 12.h,
+                                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: controller.currentIndex.value == entry.key
+                                            ? AppColors.primary
+                                            : Colors.white.withValues(alpha: 0.7),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
                   SizedBox(height: 16.h),
                   // Categories grid
                   Padding(

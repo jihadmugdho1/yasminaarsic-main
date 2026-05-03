@@ -107,4 +107,7 @@ class ApiConstants {
   // static String get notificationPreference => "${baseUrl}users/notification-preferences";
   static String get myRedeemedOffers => "${baseUrl}offer/my-redeemed-offers";
   static String get generateOfferQRCode => "${baseUrl}offer/qr-code";
+
+  // Hero Slider
+  static String get heroSlider => "${baseUrl}app-hero-slider/active";
 }
