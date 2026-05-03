@@ -20,12 +20,7 @@ class VendorDetailsController extends GetxController {
   final Rx<Map<String, dynamic>?> selectedOfferDetail =
       Rx<Map<String, dynamic>?>(null);
 
-  final RxList<CarouselItem> carouselItems = [
-    CarouselItem(imagePath: ImagePath.imageOne),
-    CarouselItem(imagePath: ImagePath.imageTwo),
-    CarouselItem(imagePath: ImagePath.imageThree),
-    CarouselItem(imagePath: ImagePath.imageFour),
-  ].obs;
+  final RxList<CarouselItem> carouselItems = <CarouselItem>[].obs;
 
   void setCurrentIndex(int index) {
     currentIndex.value = index;
@@ -154,6 +149,16 @@ class VendorDetailsController extends GetxController {
         }).toList();
 
         offers.assignAll(offerList);
+
+        // Update carousel with offer thumbnails from API
+        final carouselList = offerList
+            .where((o) => o.imageUrl.isNotEmpty)
+            .map((o) => CarouselItem(imagePath: o.imageUrl))
+            .toList();
+        if (carouselList.isNotEmpty) {
+          carouselItems.assignAll(carouselList);
+        }
+
         AppLoggerHelper.debug('Offers loaded: ${offerList.length} offers');
       } else {
         AppLoggerHelper.error(

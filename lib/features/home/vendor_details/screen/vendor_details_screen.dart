@@ -73,23 +73,45 @@ class VendorDetailsScreen extends StatelessWidget {
                             .map(
                               (item) => ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
-                                child: Image.asset(
-                                  item.imagePath,
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Container(
-                                      color: Colors.grey[300],
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.image_not_supported_outlined,
-                                          color: Colors.grey[600],
-                                          size: 40,
-                                        ),
+                                child: item.imagePath.startsWith('http')
+                                    ? Image.network(
+                                        item.imagePath,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                              return Container(
+                                                color: Colors.grey[300],
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons
+                                                        .image_not_supported_outlined,
+                                                    color: Colors.grey[600],
+                                                    size: 40,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                      )
+                                    : Image.asset(
+                                        item.imagePath,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                              return Container(
+                                                color: Colors.grey[300],
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons
+                                                        .image_not_supported_outlined,
+                                                    color: Colors.grey[600],
+                                                    size: 40,
+                                                  ),
+                                                ),
+                                              );
+                                            },
                                       ),
-                                    );
-                                  },
-                                ),
                               ),
                             )
                             .toList(),

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:yasminaarsic/core/models/response_data.dart';
 import 'package:yasminaarsic/core/services/network_caller.dart';
 import 'package:yasminaarsic/core/utils/constants/api_constants.dart';
@@ -28,6 +30,7 @@ class ProfileService {
           final userData =
               response.responseData['data'] as Map<String, dynamic>;
           final user = UserModel.fromJson(userData);
+          AppLoggerHelper.debug("User data : ${jsonEncode(response.responseData)}");
           AppLoggerHelper.debug('User loaded successfully: ${user.name}');
           return ResponseData(
             isSuccess: true,
