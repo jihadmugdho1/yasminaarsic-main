@@ -150,7 +150,7 @@ class OfferCard extends StatelessWidget {
                         Icon(Icons.calendar_today_outlined, size: 16, color: dateColor),
                         const SizedBox(width: 4),
                         Text(
-                          '${_formatDate(date!)}',
+                          _formatDate(date!),
                           style: TextStyle(
                             fontSize: 12.sp,
                             fontFamily: 'Arial',

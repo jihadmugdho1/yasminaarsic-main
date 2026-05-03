@@ -7,8 +7,7 @@ import 'package:yasminaarsic/features/home/models/pop_up_offer_model.dart';
 class PopupOfferWidget extends StatelessWidget {
   final PopupOfferController controller;
 
-  const PopupOfferWidget({Key? key, required this.controller})
-    : super(key: key);
+  const PopupOfferWidget({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {

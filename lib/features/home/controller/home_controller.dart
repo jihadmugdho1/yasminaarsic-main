@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:yasminaarsic/core/core.dart';
 import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/core/utils/constants/image_path.dart';
 import 'package:yasminaarsic/features/home/data/services/category_service.dart';
 import 'package:yasminaarsic/features/home/data/services/offer_service.dart';
 import 'package:yasminaarsic/features/home/data/services/vendor_service.dart';

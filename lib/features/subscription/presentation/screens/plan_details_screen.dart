@@ -4,16 +4,12 @@ import 'package:get/get.dart';
 import 'package:yasminaarsic/core/utils/constants/colors.dart';
 import 'package:yasminaarsic/features/subscription/controller/subscription_controller.dart';
 import 'package:yasminaarsic/features/subscription/data/subscription_plan_model.dart';
-import 'package:yasminaarsic/features/subscription/presentation/widgets/subscription_card.dart';
 import 'package:yasminaarsic/core/common/widgets/custom_button.dart';
 
 class PlanDetailsScreen extends StatefulWidget {
   final SubscriptionPlanModel plan;
 
-  const PlanDetailsScreen({
-    super.key,
-    required this.plan,
-  });
+  const PlanDetailsScreen({super.key, required this.plan});
 
   @override
   State<PlanDetailsScreen> createState() => _PlanDetailsScreenState();
@@ -43,10 +39,22 @@ class _PlanDetailsScreenState extends State<PlanDetailsScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+          onPressed: () => Get.back(),
+        ),
         backgroundColor: AppColors.primary,
         elevation: 0,
-        toolbarHeight: 0,
+        title: Text(
+          'Plan Details',
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
+        ),
       ),
+
       body: SingleChildScrollView(
         padding: EdgeInsets.zero,
         child: SafeArea(
@@ -54,26 +62,16 @@ class _PlanDetailsScreenState extends State<PlanDetailsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header Card
-              SubscriptionCard(
-                title: 'Plan Details',
-                subtitle: widget.plan.name,
-                backgroundColor: const Color(0xFF6C63FE),
-                titleColor: Colors.white,
-                subtitleColor: Colors.white70,
-              ),
-              SizedBox(height: 24.h),
 
               // Plan Information Section
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
                 child: Container(
                   padding: EdgeInsets.all(16.w),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(
-                      color: Colors.grey.withOpacity(0.2),
-                    ),
+                    border: Border.all(color: Colors.grey.withOpacity(0.2)),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,7 +110,8 @@ class _PlanDetailsScreenState extends State<PlanDetailsScreen> {
                       _buildDetailRow(
                         icon: Icons.attach_money_outlined,
                         label: 'Base Price',
-                        value: '${widget.plan.currency} ${basePrice.toStringAsFixed(2)}',
+                        value:
+                            '${widget.plan.currency} ${basePrice.toStringAsFixed(2)}',
                       ),
                       SizedBox(height: 16.h),
                       Divider(color: Colors.grey.withOpacity(0.2)),
@@ -163,7 +162,9 @@ class _PlanDetailsScreenState extends State<PlanDetailsScreen> {
                                     borderRadius: BorderRadius.circular(6.r),
                                   ),
                                   child: Text(
-                                    widget.plan.isActive ? 'Active' : 'Inactive',
+                                    widget.plan.isActive
+                                        ? 'Active'
+                                        : 'Inactive',
                                     style: TextStyle(
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w600,
@@ -341,10 +342,7 @@ class _PlanDetailsScreenState extends State<PlanDetailsScreen> {
                               ),
                             ],
                           ),
-                          Divider(
-                            color: Colors.grey[300],
-                            height: 16.h,
-                          ),
+                          Divider(color: Colors.grey[300], height: 16.h),
                         ],
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,

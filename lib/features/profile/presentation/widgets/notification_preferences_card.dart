@@ -61,7 +61,7 @@ class NotificationPreferencesCard extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Preferences List
-            ...preferences.map((pref) => _buildPreferenceItem(pref)).toList(),
+            ...preferences.map((pref) => _buildPreferenceItem(pref)),
           ],
         ),
       ),

@@ -13,11 +13,11 @@ class OfferDialog extends StatelessWidget {
   final Map<String, dynamic>? offerDetail;
 
   const OfferDialog({
-    Key? key,
+    super.key,
     this.offer,
     this.offerIndex = 0,
     this.offerDetail,
-  }) : super(key: key);
+  });
   Widget _buildOfferImage() {
     final controller = Get.find<OfferController>();
     final imageUrl = controller.offer.value.imageUrl;
@@ -275,7 +275,6 @@ class OfferDialog extends StatelessWidget {
                         flex: 1, // Close button takes 1/4 width
                         child: OutlinedButton(
                           onPressed: () => Get.back(),
-                          child: Text('Close'),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: Colors.deepPurple,
                             side: BorderSide(color: Colors.yellow),
@@ -284,6 +283,7 @@ class OfferDialog extends StatelessWidget {
                             ),
                             minimumSize: Size(0, 48.h),
                           ),
+                          child: Text('Close'),
                         ),
                       ),
                     ],
@@ -333,14 +333,13 @@ class _NetworkImageWithTimeout extends StatefulWidget {
   final String fallbackImage;
 
   const _NetworkImageWithTimeout({
-    Key? key,
     required this.imageUrl,
     required this.height,
     this.width,
     required this.fit,
     required this.timeoutSeconds,
     required this.fallbackImage,
-  }) : super(key: key);
+  });
 
   @override
   _NetworkImageWithTimeoutState createState() =>

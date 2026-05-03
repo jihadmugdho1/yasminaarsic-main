@@ -19,7 +19,7 @@ class OfferCard extends StatelessWidget {
   final OfferApiModel? offerData; // Store the full offer data
 
   const OfferCard({
-    Key? key,
+    super.key,
     required this.imagePath,
     required this.titleKey,
     required this.locationKey,
@@ -27,7 +27,7 @@ class OfferCard extends StatelessWidget {
     required this.onTap, // Required onTap
     this.isNetworkImage = false, // Default to asset image
     this.offerData,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -159,14 +159,13 @@ class _NetworkImageWithTimeout extends StatefulWidget {
   final String fallbackImage;
 
   const _NetworkImageWithTimeout({
-    Key? key,
     required this.imageUrl,
     required this.height,
     this.width,
     required this.fit,
     required this.timeoutSeconds,
     required this.fallbackImage,
-  }) : super(key: key);
+  });
 
   @override
   _NetworkImageWithTimeoutState createState() =>

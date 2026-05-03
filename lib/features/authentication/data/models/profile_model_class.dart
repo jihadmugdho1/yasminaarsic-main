@@ -18,8 +18,8 @@ class GetCategory {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
-    data['success'] = this.success;
-    data['message'] = this.message;
+    data['success'] = success;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
@@ -52,11 +52,11 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
-    data['id'] = this.id;
-    data['categoryName'] = this.categoryName;
-    data['userId'] = this.userId;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
+    data['id'] = id;
+    data['categoryName'] = categoryName;
+    data['userId'] = userId;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
     return data;
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
 
 class OfferDialogShimmer extends StatelessWidget {
-  const OfferDialogShimmer({Key? key}) : super(key: key);
+  const OfferDialogShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -3,11 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:yasminaarsic/core/core.dart';
 import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/core/utils/constants/image_path.dart';
 import 'package:yasminaarsic/features/home/vendor_details/controllers/vendor_details_controller.dart';
 
 class VendorDetailsCard extends StatelessWidget {
   final VendorDetailsController controller = Get.find();
+
+   VendorDetailsCard({super.key});
 
   /// Build vendor image with fallback to default image
   Widget _buildVendorImage() {
@@ -270,14 +271,13 @@ class _NetworkImageWithTimeout extends StatefulWidget {
   final String fallbackImage;
 
   const _NetworkImageWithTimeout({
-    Key? key,
     required this.imageUrl,
     required this.width,
     required this.height,
     required this.fit,
     required this.timeoutSeconds,
     required this.fallbackImage,
-  }) : super(key: key);
+  });
 
   @override
   _NetworkImageWithTimeoutState createState() =>

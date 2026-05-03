@@ -12,14 +12,14 @@ class FirebaseService {
     await messaging.requestPermission(alert: true, badge: true, sound: true);
 
     // get device token
-    String? _token = await messaging.getToken();
+    String? token = await messaging.getToken();
 
     // developer can save the FCM Token to lcal database from here
-    print("FCM Token: $_token");
-    AppLoggerHelper.info("FCM Token: $_token");
+    print("FCM Token: $token");
+    AppLoggerHelper.info("FCM Token: $token");
 
-    if (_token != null) {
-      await StorageService.saveFcmToken(_token);
+    if (token != null) {
+      await StorageService.saveFcmToken(token);
     }
   }
 }

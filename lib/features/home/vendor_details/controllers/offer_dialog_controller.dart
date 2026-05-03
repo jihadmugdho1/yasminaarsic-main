@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:yasminaarsic/features/home/vendor_details/models/alert_dialogs/offer_dialog_model.dart';
 import 'package:yasminaarsic/features/home/vendor_details/widgets/alert_dialogs/qr_dialog.dart';

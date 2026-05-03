@@ -139,14 +139,13 @@ class _NetworkImageWithTimeout extends StatefulWidget {
   final String fallbackImage;
 
   const _NetworkImageWithTimeout({
-    Key? key,
     required this.imageUrl,
     required this.height,
     required this.width,
     this.color,
     required this.timeoutSeconds,
     required this.fallbackImage,
-  }) : super(key: key);
+  });
 
   @override
   _NetworkImageWithTimeoutState createState() =>

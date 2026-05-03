@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:yasminaarsic/core/core.dart';
 import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/core/utils/constants/image_path.dart';
 import 'package:yasminaarsic/features/home/vendor_details/models/offer_model.dart';
 import '../../controllers/offer_dialog_controller.dart';
 import '../../controllers/vendor_details_controller.dart';
@@ -14,11 +13,11 @@ class OfferDialog extends StatelessWidget {
   final Map<String, dynamic>? offerDetail;
 
   const OfferDialog({
-    Key? key,
+    super.key,
     required this.offer,
     required this.offerIndex,
     this.offerDetail,
-  }) : super(key: key);
+  });
 
   /// Build offer image with fallback to default image
   Widget _buildOfferImage() {

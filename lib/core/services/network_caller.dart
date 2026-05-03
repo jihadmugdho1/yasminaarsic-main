@@ -223,22 +223,24 @@ class NetworkCaller {
   }
 
   String _extractErrorMessages(dynamic errorSources) {
-    if (errorSources is List)
+    if (errorSources is List) {
       return errorSources
           .map((e) => e['message'] ?? 'Unknown error')
           .join(', ');
+    }
     return 'Validation error';
   }
 
   ResponseData _handleError(dynamic error) {
     AppLoggerHelper.error('Request error', error);
-    if (error is TimeoutException)
+    if (error is TimeoutException) {
       return ResponseData(
         isSuccess: false,
         statusCode: 408,
         responseData: '',
         errorMessage: 'Request timeout',
       );
+    }
     return ResponseData(
       isSuccess: false,
       statusCode: 500,

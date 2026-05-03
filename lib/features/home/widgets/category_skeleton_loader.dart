@@ -8,10 +8,10 @@ class CategorySkeletonLoader extends StatelessWidget {
   final int crossAxisCount;
 
   const CategorySkeletonLoader({
-    Key? key,
+    super.key,
     this.itemCount = 6,
     this.crossAxisCount = 3,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

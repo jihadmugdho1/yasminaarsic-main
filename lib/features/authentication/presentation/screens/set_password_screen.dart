@@ -33,6 +33,7 @@ class _SetPasswordScreenState extends State<SetPasswordScreen> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,

@@ -44,14 +44,18 @@ class SubscriptionCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Inter',
-                      color: titleColor,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Inter',
+                          color: titleColor,
+                        ),
+                      ),
+                    ],
                   ),
                    SizedBox(height: 4.h),
                   Text(

@@ -10,8 +10,7 @@ class QrRedemptionAlertDialog extends StatelessWidget {
   final QrOffer qrOffer;
   final VoidCallback? onClose;
 
-  const QrRedemptionAlertDialog({Key? key, required this.qrOffer, this.onClose})
-    : super(key: key);
+  const QrRedemptionAlertDialog({super.key, required this.qrOffer, this.onClose});
 
   @override
   Widget build(BuildContext context) {

@@ -131,7 +131,7 @@ class CustomButton extends StatelessWidget {
 
     switch (type) {
       case ButtonType.filled:
-        final Color? bg = isEnabled
+        final Color bg = isEnabled
             ? backgroundColor ?? Theme.of(context).colorScheme.primary
             : disabledBackgroundColor ?? Theme.of(context).disabledColor;
 
