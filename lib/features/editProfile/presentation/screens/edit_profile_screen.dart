@@ -36,6 +36,7 @@ class EditProfileScreen extends StatelessWidget {
                   return EditProfileCard(
                     name: p.name,
                     avatarInitials: p.avatarInitials,
+                    imageUrl: p.imageUrl,
                     backgroundColor: const Color(0xFF6C63FE),
                     textColor: Colors.white,
                     buttonTextColor: Colors.white,

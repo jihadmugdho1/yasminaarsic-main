@@ -40,21 +40,137 @@ class SubscriptionScreen extends StatelessWidget {
                 subtitleColor: Colors.white,
               ),
               SizedBox(height: 16.h),
+              // ✅ All current Subscription Plans Section
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Obx(() {
-                  final data = controller.subscriptionData.value;
-                  return SubscriptionDetailsCard(
-                    planTitle: data.planTitle,
-                    planSubtitle: data.planSubtitle,
-                    trailingBadgeText: data.trailingBadgeText,
-                    trailingBadgeColor: data.trailingBadgeColor,
-                    startDate: data.startDate,
-                    renewalDate: data.renewalDate,
-                    planDescription: data.planDescription,
-                    pricePerYear: data.pricePerYear,
-                    isAutoRenewEnabled: data.isAutoRenewEnabled,
-                    autoRenewMessage: data.autoRenewMessage,
+                child: Text(
+                  'Current Plans',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Inter',
+                    color: const Color(0xFF101828),
+                  ),
+                ),
+              ),
+              SizedBox(height: 12.h),
+              Obx(() {
+                if (controller.isLoadingCurrentSubscription.value) {
+                  return const SubscriptionCurrentPlanShimmer();
+                }
+
+                // if (controller.currentSubscriptionError.value.isNotEmpty) {
+                //   return Padding(
+                //     padding: EdgeInsets.symmetric(horizontal: 16.w),
+                //     child: Container(
+                //       padding: EdgeInsets.all(12.w),
+                //       decoration: BoxDecoration(
+                //         color: Colors.red.shade50,
+                //         borderRadius: BorderRadius.circular(8.r),
+                //         border: Border.all(color: Colors.red.shade200),
+                //       ),
+                //       child: Text(
+                //         controller.currentSubscriptionError.value,
+                //         style: TextStyle(
+                //           fontSize: 14.sp,
+                //           color: Colors.red.shade700,
+                //         ),
+                //       ),
+                //     ),
+                //   );
+                // }
+
+                final sub = controller.currentSubscription.value;
+                if (sub == null) {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 24.w),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 24.w,
+                          vertical: 32.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16.r),
+                          border: Border.all(
+                            color: AppColors.primary.withValues(alpha: 0.2),
+                            width: 2,
+                          ),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 56.w,
+                              height: 56.h,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade50,
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: AppColors.primary.withValues(
+                                    alpha: 0.7,
+                                  ),
+                                  width: 2,
+                                ),
+                              ),
+                              child: Icon(
+                                Icons.credit_card_outlined,
+                                size: 24.sp,
+                                color: AppColors.primary.withValues(alpha: 0.7),
+                              ),
+                            ),
+                            SizedBox(height: 16.h),
+                            Text(
+                              locale.get('No active subscriptions'),
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey[800],
+                              ),
+                            ),
+                            SizedBox(height: 6.h),
+                            Text(
+                              locale.get(
+                                'Your subscriptions will appear here once activated.',
+                              ),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                color: Colors.grey[500],
+                                height: 1.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
+                final plan = sub.plan;
+                final badgeColor = sub.status.toUpperCase() == 'ACTIVE'
+                    ? const Color(0xFFF4DB35)
+                    : Colors.grey;
+
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: SubscriptionDetailsCard(
+                    planTitle: plan?.name ?? sub.status,
+                    planSubtitle: plan != null
+                        ? '${plan.durationInDays} Days Plan'
+                        : '',
+                    trailingBadgeText: sub.status,
+                    trailingBadgeColor: badgeColor,
+                    startDate: sub.startDate,
+                    renewalDate: sub.endDate,
+                    planDescription: plan?.name ?? '',
+                    pricePerYear: plan != null
+                        ? '${plan.currency} ${plan.currentPriceDisplay.isNotEmpty ? plan.currentPriceDisplay : plan.price}'
+                        : sub.price,
+                    isAutoRenewEnabled: false,
+                    autoRenewMessage: '',
+                    showCancelButton: false,
                     updatePaymentButtonText: locale.get(
                       'update_payment_method',
                     ),
@@ -65,9 +181,9 @@ class SubscriptionScreen extends StatelessWidget {
                     onCancelSubscriptionPressed:
                         controller.onCancelSubscriptionPressed,
                     onCardTap: controller.onCardTap,
-                  );
-                }),
-              ),
+                  ),
+                );
+              }),
               SizedBox(height: 16.h),
               // ✅ All Subscription Plans Section
               Padding(
@@ -88,9 +204,7 @@ class SubscriptionScreen extends StatelessWidget {
                 if (controller.isLoadingPlans.value) {
                   return Padding(
                     padding: EdgeInsets.symmetric(vertical: 20.h),
-                    child: Center(
-                      child: SubscriptionShimmer(),
-                    ),
+                    child: Center(child: SubscriptionShimmer()),
                   );
                 }
 
@@ -131,42 +245,45 @@ class SubscriptionScreen extends StatelessWidget {
                 }
 
                 return Column(
-                  children: List.generate(
-                    controller.subscriptionPlans.length,
-                    (index) {
-                      final plan = controller.subscriptionPlans[index];
-                      return Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 12.h),
-                          child: SubscriptionDetailsCard(
-                            planTitle: plan.name,
-                            planSubtitle: '${plan.durationInDays} Days Plan',
-                            trailingBadgeText: plan.isActive ? 'Active' : 'Inactive',
-                            trailingBadgeColor: plan.isActive ? const Color(0xFFF4DB35) : Colors.grey,
-                            planDescription: plan.description,
-                            pricePerYear: plan.currentPriceDisplay.isNotEmpty 
-                              ? plan.currentPriceDisplay 
+                  children: List.generate(controller.subscriptionPlans.length, (
+                    index,
+                  ) {
+                    final plan = controller.subscriptionPlans[index];
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 12.h),
+                        child: SubscriptionDetailsCard(
+                          planTitle: plan.name,
+                          planSubtitle: '${plan.durationInDays} Days Plan',
+                          trailingBadgeText: plan.isActive
+                              ? 'Active'
+                              : 'Inactive',
+                          trailingBadgeColor: plan.isActive
+                              ? const Color(0xFFF4DB35)
+                              : Colors.grey,
+                          planDescription: plan.description,
+                          pricePerYear: plan.currentPriceDisplay.isNotEmpty
+                              ? plan.currentPriceDisplay
                               : '${plan.currency} ${plan.price}',
-                            updatePaymentButtonText: 'Select Plan',
-                            cancelSubscriptionButtonText: 'View Details',
-                            onUpdatePaymentPressed: () {
-                              Get.to(
-                                () => PlanDetailsScreen(plan: plan),
-                                transition: Transition.rightToLeft,
-                              );
-                            },
-                            onCancelSubscriptionPressed: () {
-                              Get.to(
-                                () => PlanDetailsScreen(plan: plan),
-                                transition: Transition.rightToLeft,
-                              );
-                            },
-                          ),
+                          updatePaymentButtonText: 'Select Plan',
+                          cancelSubscriptionButtonText: 'View Details',
+                          onUpdatePaymentPressed: () {
+                            Get.to(
+                              () => PlanDetailsScreen(plan: plan),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
+                          onCancelSubscriptionPressed: () {
+                            Get.to(
+                              () => PlanDetailsScreen(plan: plan),
+                              transition: Transition.rightToLeft,
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  }),
                 );
               }),
               SizedBox(height: 16.h),
@@ -184,33 +301,79 @@ class SubscriptionScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              ...List.generate(
-                controller.subscriptionData.value.history.length,
-                (index) {
-                  final item = controller.subscriptionData.value.history[index];
+              Obx(() {
+                if (controller.isLoadingHistory.value) {
+                  return const SubscriptionHistoryShimmer();
+                }
+
+                if (controller.historyErrorMessage.value.isNotEmpty) {
                   return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Obx(
-                        // ✅ Wrap in Obx to react to selection change
-                        () => SubscriptionStatusCard(
-                          price: item.price,
-                          startDate: item.startDate,
-                          endDate: item.endDate,
-                          paidDate: item.paidDate,
-                          statusText: item.statusText,
-                          statusColor: item.statusColor,
-                          isSelected:
-                              controller.selectedHistoryIndex.value ==
-                              index, // ✅
-                          onTap: () => controller.onHistoryItemTap(index),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 8.h,
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.all(12.w),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(8.r),
+                        border: Border.all(color: Colors.red.shade200),
+                      ),
+                      child: Text(
+                        controller.historyErrorMessage.value,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.red.shade700,
                         ),
                       ),
                     ),
                   );
-                },
-              ),
+                }
+
+                if (controller.subscriptionHistory.isEmpty) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 20.h),
+                    child: Center(
+                      child: Text(
+                        'No subscription history',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ),
+                  );
+                }
+
+                return Column(
+                  children: List.generate(
+                    controller.subscriptionHistory.length,
+                    (index) {
+                      final item = controller.subscriptionHistory[index];
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Obx(
+                            () => SubscriptionStatusCard(
+                              price: item.priceAsDouble,
+                              startDate: item.startDate,
+                              endDate: item.endDate,
+                              paidDate: item.startDate,
+                              statusText: item.statusText,
+                              statusColor: item.statusColor,
+                              isSelected:
+                                  controller.selectedHistoryIndex.value ==
+                                  index,
+                              onTap: () => controller.onHistoryItemTap(index),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }),
             ],
           ),
         ),

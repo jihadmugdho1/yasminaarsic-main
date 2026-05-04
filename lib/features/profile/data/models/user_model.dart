@@ -13,6 +13,7 @@ class UserModel {
   final String? phone;
   final String status;
   final bool isEmailVerified;
+  final bool isSubscribed;
   final String? verificationCode;
   final String? verificationCodeExpiry;
   final List<NotificationModel> notifications;
@@ -30,6 +31,7 @@ class UserModel {
     this.phone,
     required this.status,
     required this.isEmailVerified,
+    this.isSubscribed = false,
     this.verificationCode,
     this.verificationCodeExpiry,
     required this.notifications,
@@ -49,6 +51,7 @@ class UserModel {
       phone: json['phone'],
       status: json['status'] ?? 'ACTIVE',
       isEmailVerified: json['isEmailVerified'] ?? false,
+      isSubscribed: json['isSubscribed'] ?? false,
       verificationCode: json['verificationCode'],
       verificationCodeExpiry: json['verificationCodeExpiry'],
       notifications: (json['notifications'] as List?)

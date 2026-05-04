@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:http/http.dart' as http;
 import 'package:yasminaarsic/core/core.dart';
+import 'package:yasminaarsic/features/subscription/data/subscription_history_model.dart';
 import 'package:yasminaarsic/features/subscription/data/subscription_plan_model.dart';
 import 'package:yasminaarsic/features/subscription/data/checkout_response_model.dart';
 
@@ -58,9 +59,25 @@ class SubscriptionService {
   // Fetch current user subscription
   Future<ResponseData> getCurrentSubscription() async {
     try {
+      final token = StorageService.token;
       final response = await _networkCaller.getRequest(
         ApiConstants.currentSubscription,
+        token: token != null ? 'Bearer $token' : null,
       );
+
+      if (response.isSuccess && response.responseData != null) {
+        final root = response.responseData as Map<String, dynamic>;
+        final data = root['data'];
+        if (data is Map<String, dynamic>) {
+          return ResponseData(
+            isSuccess: true,
+            statusCode: response.statusCode,
+            errorMessage: '',
+            responseData: SubscriptionHistoryModel.fromJson(data),
+          );
+        }
+      }
+
       return response;
     } catch (e) {
       return ResponseData(
@@ -73,11 +90,45 @@ class SubscriptionService {
   }
 
   // Fetch subscription history
-  Future<ResponseData> getSubscriptionHistory() async {
+  Future<ResponseData> getSubscriptionHistory({int page = 1, int limit = 10}) async {
     try {
+      final token = StorageService.token;
       final response = await _networkCaller.getRequest(
-        ApiConstants.subscriptionHistory,
+        ApiConstants.getSubscriptionHistory(page: page, limit: limit),
+        token: token != null ? 'Bearer $token' : null,
       );
+
+      if (response.isSuccess && response.responseData != null) {
+        final root = response.responseData as Map<String, dynamic>;
+        // Response shape: { data: { data: [...], meta: {...} } }
+        final outerData = root['data'];
+        final List<SubscriptionHistoryModel> items = [];
+
+        if (outerData is Map<String, dynamic>) {
+          final list = outerData['data'];
+          if (list is List) {
+            for (final item in list) {
+              if (item is Map<String, dynamic>) {
+                items.add(SubscriptionHistoryModel.fromJson(item));
+              }
+            }
+          }
+        } else if (outerData is List) {
+          for (final item in outerData) {
+            if (item is Map<String, dynamic>) {
+              items.add(SubscriptionHistoryModel.fromJson(item));
+            }
+          }
+        }
+
+        return ResponseData(
+          isSuccess: true,
+          statusCode: response.statusCode,
+          errorMessage: '',
+          responseData: items,
+        );
+      }
+
       return response;
     } catch (e) {
       return ResponseData(

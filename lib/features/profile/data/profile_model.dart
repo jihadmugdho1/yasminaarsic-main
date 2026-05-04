@@ -9,6 +9,7 @@ class ProfileModel {
   final String location;
   final String birthDate;
   final String avatarInitials;
+  final String? imageUrl;
   final List<NotificationPreferenceModel> notificationPreferences;
 
   ProfileModel({
@@ -18,6 +19,7 @@ class ProfileModel {
     required this.location,
     required this.birthDate,
     required this.avatarInitials,
+    this.imageUrl,
     required this.notificationPreferences,
   });
 }

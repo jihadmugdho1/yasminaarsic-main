@@ -213,6 +213,94 @@ class _RowSeparator extends StatelessWidget {
   }
 }
 
+// ── Current plan card shimmer (public) ───────────────────────────────────────
+
+class SubscriptionCurrentPlanShimmer extends StatelessWidget {
+  const SubscriptionCurrentPlanShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: _CardWrapper(
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey[200]!,
+          highlightColor: Colors.grey[50]!,
+          period: const Duration(milliseconds: 1600),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _PlanTitleRow(),
+              SizedBox(height: 4.h),
+              _ShimmerBox(width: 130.w, height: 12.h),
+              const _CardDivider(),
+              _PlanInfoRow(hasTrailingBadge: false),
+              const _RowSeparator(),
+              _PlanInfoRow(hasTrailingBadge: true),
+              const _RowSeparator(),
+              _PlanInfoRow(hasTrailingBadge: false),
+              const _CardDivider(),
+              _ShimmerBox(width: double.infinity, height: 36.h, radius: 8.r),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ── History section shimmer ───────────────────────────────────────────────────
+
+class SubscriptionHistoryShimmer extends StatelessWidget {
+  final int itemCount;
+  const SubscriptionHistoryShimmer({super.key, this.itemCount = 3});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(
+        itemCount,
+        (_) => Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey[200]!,
+            highlightColor: Colors.grey[50]!,
+            period: const Duration(milliseconds: 1600),
+            child: Container(
+              padding: EdgeInsets.all(16.w),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(color: Colors.grey[200]!, width: 0.5),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _ShimmerBox(width: 20.w, height: 20.h, radius: 10.r),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _ShimmerBox(width: 80.w, height: 14.h),
+                        SizedBox(height: 8.h),
+                        _ShimmerBox(width: 160.w, height: 11.h),
+                        SizedBox(height: 6.h),
+                        _ShimmerBox(width: 120.w, height: 11.h),
+                      ],
+                    ),
+                  ),
+                  _ShimmerBox(width: 58.w, height: 24.h, radius: 12.r),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 // ── Reusable shimmer placeholder ──────────────────────────────────────────────
 
 class _ShimmerBox extends StatelessWidget {

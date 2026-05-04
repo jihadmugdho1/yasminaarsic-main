@@ -8,6 +8,7 @@ class ProfileHeaderCard extends StatelessWidget {
   final String name;
   final String email;
   final String? avatarInitials;
+  final String? imageUrl;
   final Color? backgroundColor;
   final Color? nameColor;
   final Color? emailColor;
@@ -24,11 +25,12 @@ class ProfileHeaderCard extends StatelessWidget {
     required this.name,
     required this.email,
     this.avatarInitials = 'J',
-    this.backgroundColor = const Color(0xFF6C5CE7), // Purple as in image
+    this.imageUrl,
+    this.backgroundColor = const Color(0xFF6C5CE7),
     this.nameColor = Colors.white,
     this.emailColor = Colors.white70,
     this.backButtonColor = Colors.white,
-    this.editButtonColor = const Color(0xFFFFD700), // Yellow
+    this.editButtonColor = const Color(0xFFFFD700),
     this.editTextColor = Colors.black,
     this.borderRadius = 16.0,
     this.padding = const EdgeInsets.all(24),
@@ -109,15 +111,34 @@ class ProfileHeaderCard extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white, width: 4),
             ),
-            child: Center(
-              child: Text(
-                avatarInitials!,
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
+            child: ClipOval(
+              child: (imageUrl != null && imageUrl!.isNotEmpty)
+                  ? Image.network(
+                      imageUrl!,
+                      fit: BoxFit.cover,
+                      width: 80,
+                      height: 80,
+                      errorBuilder: (context, error, stackTrace) => Center(
+                        child: Text(
+                          avatarInitials ?? 'U',
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Center(
+                      child: Text(
+                        avatarInitials ?? 'U',
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
             ),
           ),
           const SizedBox(height: 16),

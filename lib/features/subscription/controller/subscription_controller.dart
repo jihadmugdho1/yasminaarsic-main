@@ -8,6 +8,7 @@ import 'package:uuid/uuid.dart';
 import 'package:yasminaarsic/core/core.dart';
 import 'package:yasminaarsic/core/localization/localization_controller.dart';
 import 'package:yasminaarsic/features/subscription/data/checkout_response_model.dart';
+import 'package:yasminaarsic/features/subscription/data/subscription_history_model.dart';
 import 'package:yasminaarsic/features/subscription/data/subscription_model.dart';
 import 'package:yasminaarsic/features/subscription/data/subscription_plan_model.dart';
 import 'package:yasminaarsic/features/subscription/data/subscription_service.dart';
@@ -21,6 +22,16 @@ class SubscriptionController extends GetxController {
   final subscriptionPlans = <SubscriptionPlanModel>[].obs;
   final isLoadingPlans = false.obs;
   final plansErrorMessage = ''.obs;
+
+  // Current Subscription
+  final currentSubscription = Rxn<SubscriptionHistoryModel>();
+  final isLoadingCurrentSubscription = false.obs;
+  final currentSubscriptionError = ''.obs;
+
+  // Subscription History
+  final subscriptionHistory = <SubscriptionHistoryModel>[].obs;
+  final isLoadingHistory = false.obs;
+  final historyErrorMessage = ''.obs;
 
   final SubscriptionService _subscriptionService = SubscriptionService();
 
@@ -41,7 +52,9 @@ class SubscriptionController extends GetxController {
     });
 
     // ✅ Fetch subscription plans on init
+    fetchCurrentSubscription();
     fetchSubscriptionPlans();
+    fetchSubscriptionHistory();
   }
 
   @override
@@ -73,6 +86,45 @@ class SubscriptionController extends GetxController {
       plansErrorMessage.value = 'Error loading subscription plans: $e';
     } finally {
       isLoadingPlans.value = false;
+    }
+  }
+
+  Future<void> fetchCurrentSubscription() async {
+    isLoadingCurrentSubscription.value = true;
+    currentSubscriptionError.value = '';
+
+    try {
+      final response = await _subscriptionService.getCurrentSubscription();
+
+      if (response.isSuccess && response.responseData != null) {
+        currentSubscription.value = response.responseData as SubscriptionHistoryModel;
+      } else {
+        currentSubscriptionError.value = response.errorMessage;
+      }
+    } catch (e) {
+      currentSubscriptionError.value = 'Error loading current subscription: $e';
+    } finally {
+      isLoadingCurrentSubscription.value = false;
+    }
+  }
+
+  Future<void> fetchSubscriptionHistory() async {
+    isLoadingHistory.value = true;
+    historyErrorMessage.value = '';
+
+    try {
+      final response = await _subscriptionService.getSubscriptionHistory();
+
+      if (response.isSuccess && response.responseData != null) {
+        final items = response.responseData as List<SubscriptionHistoryModel>;
+        subscriptionHistory.assignAll(items);
+      } else {
+        historyErrorMessage.value = response.errorMessage;
+      }
+    } catch (e) {
+      historyErrorMessage.value = 'Error loading subscription history: $e';
+    } finally {
+      isLoadingHistory.value = false;
     }
   }
 

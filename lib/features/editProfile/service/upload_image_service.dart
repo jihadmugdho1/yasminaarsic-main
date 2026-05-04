@@ -27,7 +27,7 @@ class UploadImageService {
       final streamedResponse = await request.send();
       final response = await http.Response.fromStream(streamedResponse);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
         final body = json.decode(response.body);
         if (body['success'] == true) {
           final data = body['data'];
@@ -39,7 +39,7 @@ class UploadImageService {
         }
       }
       return null;
-    } catch (_) {
+    } catch (e) {
       return null;
     }
   }

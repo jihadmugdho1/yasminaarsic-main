@@ -22,14 +22,14 @@ class EditProfileService {
         headers: {'Authorization': auth, 'Content-Type': _contentType},
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
         final body = json.decode(response.body);
         if (body['success'] == true && body['data'] != null) {
-          return UserData.fromJson(body['data']);
+          return UserData.fromJson(body['data'] as Map<String, dynamic>);
         }
       }
       return null;
-    } catch (_) {
+    } catch (e) {
       return null;
     }
   }
@@ -45,14 +45,14 @@ class EditProfileService {
         body: jsonEncode(data),
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode >= 200 && response.statusCode < 300) {
         final body = json.decode(response.body);
         if (body['success'] == true && body['data'] != null) {
-          return UserData.fromJson(body['data']);
+          return UserData.fromJson(body['data'] as Map<String, dynamic>);
         }
       }
       return null;
-    } catch (_) {
+    } catch (e) {
       return null;
     }
   }

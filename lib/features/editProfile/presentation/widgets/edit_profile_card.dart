@@ -9,6 +9,7 @@ import 'package:yasminaarsic/core/localization/localization_controller.dart';
 class EditProfileCard extends StatelessWidget {
   final String? name;
   final String? avatarInitials;
+  final String? imageUrl;
   final Color? backgroundColor;
   final Color? textColor;
   final Color? buttonTextColor;
@@ -26,6 +27,7 @@ class EditProfileCard extends StatelessWidget {
     super.key,
     this.name = 'John Doe',
     this.avatarInitials = 'J',
+    this.imageUrl,
     this.textColor = Colors.white,
     this.buttonTextColor = Colors.white,
     this.cancelButtonColor = const Color(0xFF9E9E9E),
@@ -126,19 +128,24 @@ class EditProfileCard extends StatelessWidget {
                 child: selectedImage != null
                     ? CircleAvatar(
                         backgroundImage: FileImage(selectedImage!, scale: 1.0)
-                          ..evict(), // ✅ Clear cache
+                          ..evict(),
                         radius: 40.w,
                       )
-                    : Center(
-                        child: Text(
-                          avatarInitials ?? 'J',
-                          style: TextStyle(
-                            fontSize: 40.sp,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                    : (imageUrl != null && imageUrl!.isNotEmpty)
+                        ? CircleAvatar(
+                            backgroundImage: NetworkImage(imageUrl!),
+                            radius: 40.w,
+                          )
+                        : Center(
+                            child: Text(
+                              avatarInitials ?? 'J',
+                              style: TextStyle(
+                                fontSize: 40.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
               ),
               // Camera Button
               GestureDetector(

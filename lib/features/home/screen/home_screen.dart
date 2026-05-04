@@ -564,17 +564,17 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            // Popup positioned at the bottom
-            Positioned(
-              bottom: 20,
-              left: 0,
-              right: 0,
-              child: Builder(
-                builder: (context) {
-                  return PopupOfferWidget(controller: popupController);
-                },
-              ),
-            ),
+            // // Popup positioned at the bottom
+            // Positioned(
+            //   bottom: 20,
+            //   left: 0,
+            //   right: 0,
+            //   child: Builder(
+            //     builder: (context) {
+            //       return PopupOfferWidget(controller: popupController);
+            //     },
+            //   ),
+            // ),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:yasminaarsic/core/core.dart';
+import 'package:yasminaarsic/routes/app_routes.dart' show AppRoute;
 
 class PaymentWebViewController extends GetxController {
   PaymentWebViewController({
@@ -17,6 +18,16 @@ class PaymentWebViewController extends GetxController {
   final RxDouble progress = 0.0.obs;
 
   bool _initialPageLoaded = false;
+  bool _navigationHandled = false;
+
+  bool _isPaymentSuccess(String url) {
+    final lower = url.toLowerCase();
+    return lower.contains('success') ||
+        lower.contains('payment-complete') ||
+        lower.contains('payment_complete') ||
+        lower.contains('order-complete') ||
+        lower.contains('order_complete');
+  }
 
   @override
   void onInit() {
@@ -46,6 +57,18 @@ class PaymentWebViewController extends GetxController {
               showBlockingLoader.value = false;
             }
             progress.value = 1;
+            if (!_navigationHandled && _isPaymentSuccess(url)) {
+              _navigationHandled = true;
+              Get.offAllNamed(AppRoute.subscriptionScreen);
+            }
+          },
+          onNavigationRequest: (NavigationRequest request) {
+            if (!_navigationHandled && _isPaymentSuccess(request.url)) {
+              _navigationHandled = true;
+              Get.offAllNamed(AppRoute.subscriptionScreen);
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
           },
           onWebResourceError: (WebResourceError error) {
             AppLoggerHelper.error(

@@ -126,6 +126,7 @@ class EditProfileController extends GetxController {
 
     if (updatedUser != null) {
       profile.value = updatedUser;
+      selectedImage.value = null;
       if (Get.isRegistered<ProfileController>()) {
         Get.find<ProfileController>().updateProfileFromEdit(updatedUser);
       }

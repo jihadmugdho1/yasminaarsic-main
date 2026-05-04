@@ -19,6 +19,7 @@ class SubscriptionDetailsCard extends StatelessWidget {
   final String? autoRenewMessage;
   final String updatePaymentButtonText;
   final String cancelSubscriptionButtonText;
+  final bool showCancelButton;
   final VoidCallback? onUpdatePaymentPressed;
   final VoidCallback? onCancelSubscriptionPressed;
   final VoidCallback? onCardTap;
@@ -48,6 +49,7 @@ class SubscriptionDetailsCard extends StatelessWidget {
         'Your subscription will automatically renew on {date}',
     this.updatePaymentButtonText = 'Update Payment Method',
     this.cancelSubscriptionButtonText = 'Cancel Subscription',
+    this.showCancelButton = true,
     this.onUpdatePaymentPressed,
     this.onCancelSubscriptionPressed,
     this.onCardTap,
@@ -192,23 +194,24 @@ class SubscriptionDetailsCard extends StatelessWidget {
             // ),
             SizedBox(height: 10.h),
 
-            Align(
-              alignment: Alignment.center,
-              child: CustomButton(
-                text: cancelSubscriptionButtonText,
-                textColor: Colors.black,
-                backgroundColor: AppColors.yellow,
-                type: ButtonType.outlined,
-                minWidth: double.infinity,
-                borderRadius: 8.r,
-                height: 36.h,
-                onPressed: () {
-                  if (onCancelSubscriptionPressed != null) {
-                    onCancelSubscriptionPressed!();
-                  }
-                },
+            if (showCancelButton)
+              Align(
+                alignment: Alignment.center,
+                child: CustomButton(
+                  text: cancelSubscriptionButtonText,
+                  textColor: Colors.black,
+                  backgroundColor: AppColors.yellow,
+                  type: ButtonType.outlined,
+                  minWidth: double.infinity,
+                  borderRadius: 8.r,
+                  height: 36.h,
+                  onPressed: () {
+                    if (onCancelSubscriptionPressed != null) {
+                      onCancelSubscriptionPressed!();
+                    }
+                  },
+                ),
               ),
-            ),
           ],
         ),
       ),

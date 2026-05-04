@@ -11,6 +11,9 @@ import 'package:yasminaarsic/features/home/vendor_details/widgets/alert_dialogs/
 import 'package:yasminaarsic/features/home/vendor_details/widgets/vendor_details_card.dart';
 import 'package:yasminaarsic/features/home/vendor_details/widgets/vendor_details_card_shimmer.dart';
 import 'package:yasminaarsic/features/home/vendor_details/widgets/vendor_offer_card_shimmer.dart';
+import 'package:yasminaarsic/features/bottom_navbar/controller/bottom_navbar_controller.dart';
+import 'package:yasminaarsic/features/profile/controller/profile_controller.dart';
+
 
 class VendorDetailsScreen extends StatelessWidget {
   VendorDetailsScreen({super.key});
@@ -18,6 +21,110 @@ class VendorDetailsScreen extends StatelessWidget {
   final VendorDetailsController controller = Get.put(VendorDetailsController());
   late final CarouselSliderController carouselController =
       CarouselSliderController();
+
+  void _showSubscribeDialog(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'SubscribeDialog',
+      barrierColor: Colors.black.withValues(alpha: 0.5),
+      transitionDuration: const Duration(milliseconds: 200),
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Center(
+          child: Material(
+            type: MaterialType.transparency,
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 24.w),
+              padding: EdgeInsets.all(24.w),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(18),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 64.w,
+                    height: 64.w,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF6C63FE).withValues(alpha: 0.12),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.workspace_premium_rounded,
+                      size: 36.sp,
+                      color: const Color(0xFF6C63FE),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    'Subscription Required',
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Inter',
+                      color: const Color(0xFF101828),
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  Text(
+                    'Please subscribe to a plan to access this offer.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 13.sp,
+                      color: Colors.grey[600],
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  SizedBox(height: 24.h),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Get.until((route) => route.isFirst);
+                        Get.find<BottomNavController>().changeTab(1);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        side: BorderSide.none,
+                        backgroundColor: const Color(0xFF6C63FE),
+                        minimumSize: Size(0, 44.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'Go to Subscription',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(
+                      'Maybe Later',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 13.sp,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(opacity: animation, child: child);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -286,13 +393,16 @@ class VendorDetailsScreen extends StatelessWidget {
                         child: OfferCard(
                           offer: controller.offers[index],
                           onTap: () async {
-                            print(
-                              'VendorDetailsScreen: OfferCard tapped at index $index',
-                            );
+                            final profileController =
+                                Get.find<ProfileController>();
+
+                            if (!profileController.isSubscribed.value) {
+                              _showSubscribeDialog(context);
+                              return;
+                            }
 
                             final offerId = controller.offers[index].id;
                             if (offerId != null && offerId.isNotEmpty) {
-                              // Show shimmer dialog immediately
                               showGeneralDialog(
                                 context: context,
                                 barrierDismissible: false,
@@ -322,13 +432,9 @@ class VendorDetailsScreen extends StatelessWidget {
                                     },
                               );
 
-                              // Fetch offer details
                               await controller.fetchOfferDetails(offerId);
-
-                              // Close shimmer dialog
                               Navigator.of(context).pop();
 
-                              // Show actual offer dialog
                               showGeneralDialog(
                                 context: context,
                                 barrierDismissible: true,
@@ -339,9 +445,6 @@ class VendorDetailsScreen extends StatelessWidget {
                                 transitionDuration: Duration(milliseconds: 200),
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) {
-                                      print(
-                                        'VendorDetailsScreen: showGeneralDialog.pageBuilder called for index $index',
-                                      );
                                       return Center(
                                         child: Material(
                                           type: MaterialType.transparency,

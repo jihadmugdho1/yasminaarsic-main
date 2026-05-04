@@ -25,7 +25,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ProfileController());
+    final controller = Get.find<ProfileController>();
     final locale = Get.find<LocalizationController>();
 
     return Scaffold(
@@ -48,6 +48,7 @@ class ProfileScreen extends StatelessWidget {
                     name: p.name,
                     email: p.email,
                     avatarInitials: p.avatarInitials,
+                    imageUrl: p.imageUrl,
                     backgroundColor: const Color(0xFF6C63FE),
                     nameColor: Colors.white,
                     emailColor: Colors.white70,

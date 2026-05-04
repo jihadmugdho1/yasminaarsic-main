@@ -46,83 +46,76 @@ class SubscriptionStatusCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = Get.find<LocalizationController>();
-    // ✅ Set border color based on selection
-    Color borderColor = isSelected
-        ? const Color(0xFF6C63FE) // Selected: vibrant purple
-        : Colors.grey.withOpacity(0.2); // Default: light grey
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: padding,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(borderRadius),
-          border: Border.all(
-            color: borderColor,
-            width: isSelected ? 2.0 : 1.0, // Slightly thicker when selected
-          ),
+    return Container(
+      padding: padding,
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(borderRadius),
+        border: Border.all(
+          color: AppColors.primary.withValues(alpha: 0.3),
+          width: 1,
         ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(Icons.check_circle, color: AppColors.primary, size: 20),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '\$${price.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Arial',
-                      color: priceColor,
-                    ),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(Icons.check_circle, color: AppColors.primary, size: 20),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '\$${price.toStringAsFixed(2)}',
+                  style: TextStyle(
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Arial',
+                    color: priceColor,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${_formatDate(startDate)} to ${_formatDate(endDate)}',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontFamily: 'Arial',
-                      fontWeight: FontWeight.w400,
-                      color: textColor,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    locale
-                        .get('paid_on')
-                        .replaceFirst('{date}', _formatShortDate(paidDate)),
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontFamily: 'Arial',
-                      fontWeight: FontWeight.w400,
-                      color: textColor?.withOpacity(0.7),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: statusColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                statusText,
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: statusTextColor,
                 ),
+                const SizedBox(height: 4),
+                Text(
+                  '${_formatDate(startDate)} to ${_formatDate(endDate)}',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontFamily: 'Arial',
+                    fontWeight: FontWeight.w400,
+                    color: textColor,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  locale
+                      .get('paid_on')
+                      .replaceFirst('{date}', _formatShortDate(paidDate)),
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontFamily: 'Arial',
+                    fontWeight: FontWeight.w400,
+                    color: textColor?.withOpacity(0.7),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            decoration: BoxDecoration(
+              color: statusColor,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Text(
+              statusText,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: statusTextColor,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

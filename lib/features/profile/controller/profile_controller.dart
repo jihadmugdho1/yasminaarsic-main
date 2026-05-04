@@ -30,6 +30,7 @@ class ProfileController extends GetxController {
   final isLoading = false.obs;
   final errorMessage = ''.obs;
   var selectedLanguage = 'en'.obs;
+  final isSubscribed = false.obs;
 
   @override
   void onInit() {
@@ -61,6 +62,8 @@ class ProfileController extends GetxController {
 
       final user = profileResp.responseData as UserModel;
 
+      isSubscribed.value = user.isSubscribed;
+
       // Notification preferences come embedded in the profile response (notifications[0])
       final notifData = user.notifications.isNotEmpty ? user.notifications.first : null;
       AppLoggerHelper.debug('[ProfileController] notifications from profile: $notifData');
@@ -85,6 +88,7 @@ class ProfileController extends GetxController {
         location: user.location ?? 'Not specified',
         birthDate: formatBirthDate(user.dateOfBirth),
         avatarInitials: _getInitials(user.name),
+        imageUrl: user.imageUrl,
         notificationPreferences: prefs,
       );
     } catch (e) {
@@ -127,8 +131,8 @@ class ProfileController extends GetxController {
           ? '${updatedUserData.dateOfBirth!.year}-${updatedUserData.dateOfBirth!.month.toString().padLeft(2, '0')}-${updatedUserData.dateOfBirth!.day.toString().padLeft(2, '0')}'
           : 'Not specified',
       avatarInitials: _getInitials(updatedUserData.name),
-      notificationPreferences:
-          profile.value.notificationPreferences, // Preserve
+      imageUrl: updatedUserData.imageUrl,
+      notificationPreferences: profile.value.notificationPreferences,
     );
   }
 

@@ -57,8 +57,9 @@ class ApiConstants {
 
   // Subscription
   static String get subscriptionPlans => "${baseUrl}subscription-plan";
-  static String get currentSubscription => "${baseUrl}subscriptions/current";
-  static String get subscriptionHistory => "${baseUrl}subscriptions/history";
+  static String get currentSubscription => "${baseUrl}subscription/current";
+  static String getSubscriptionHistory({int page = 1, int limit = 10}) =>
+      "${baseUrl}subscription/history?page=$page&limit=$limit";
   static String get subscriptionCheckout => "${baseUrl}subscription/subscribe/checkout";
   
   static String getCheckoutPaymentForm(String paymentId) {

@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:yasminaarsic/core/localization/localization_controller.dart';
 import 'package:yasminaarsic/features/authentication/controllers/login_controller.dart';
 import 'package:yasminaarsic/features/authentication/data/services/authentication_service.dart';
+import 'package:yasminaarsic/features/profile/controller/profile_controller.dart';
 
 class ControllerBinder extends Bindings {
   @override
@@ -13,5 +14,6 @@ class ControllerBinder extends Bindings {
     Get.put<AuthenticationService>(AuthenticationService(), permanent: true);
 
     Get.lazyPut<LoginController>(() => LoginController(), fenix: true);
+    Get.lazyPut<ProfileController>(() => ProfileController(), fenix: true);
   }
 }
