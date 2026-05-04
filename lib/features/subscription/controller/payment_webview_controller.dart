@@ -1,13 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:yasminaarsic/core/core.dart';
+import 'package:yasminaarsic/features/bottom_navbar/controller/bottom_navbar_controller.dart';
 import 'package:yasminaarsic/routes/app_routes.dart' show AppRoute;
 
 class PaymentWebViewController extends GetxController {
-  PaymentWebViewController({
-    required this.paymentId,
-    this.authToken,
-  });
+  PaymentWebViewController({required this.paymentId, this.authToken});
 
   final String paymentId;
   final String? authToken;
@@ -59,22 +59,22 @@ class PaymentWebViewController extends GetxController {
             progress.value = 1;
             if (!_navigationHandled && _isPaymentSuccess(url)) {
               _navigationHandled = true;
-              Get.offAllNamed(AppRoute.subscriptionScreen);
+
+              Get.until((route) => route.isFirst);
+              Get.find<BottomNavController>().changeTab(1);
             }
           },
           onNavigationRequest: (NavigationRequest request) {
             if (!_navigationHandled && _isPaymentSuccess(request.url)) {
               _navigationHandled = true;
-              Get.offAllNamed(AppRoute.subscriptionScreen);
+              Get.until((route) => route.isFirst);
+              Get.find<BottomNavController>().changeTab(1);
               return NavigationDecision.prevent;
             }
             return NavigationDecision.navigate;
           },
           onWebResourceError: (WebResourceError error) {
-            AppLoggerHelper.error(
-              'WebView error: ${error.description}',
-              error,
-            );
+            AppLoggerHelper.error('WebView error: ${error.description}', error);
             if (!_initialPageLoaded) {
               showBlockingLoader.value = false;
             }

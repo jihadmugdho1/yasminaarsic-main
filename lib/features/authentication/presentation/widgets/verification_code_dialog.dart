@@ -169,6 +169,7 @@ class _VerificationCodeDialogState extends State<VerificationCodeDialog> {
                           }
                         },
                   style: ElevatedButton.styleFrom(
+                    side: BorderSide.none,
                     backgroundColor: (widget.loading?.value ?? false)
                         ? Colors.grey
                         : widget.primaryColor,
