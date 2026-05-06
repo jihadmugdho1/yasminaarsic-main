@@ -26,9 +26,12 @@ class SubscriptionScreen extends StatelessWidget {
         elevation: 0,
         toolbarHeight: 0,
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.zero,
-        child: SafeArea(
+      body: RefreshIndicator(
+        onRefresh: controller.refreshAll,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.zero,
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -377,6 +380,7 @@ class SubscriptionScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
       ),
     );
   }

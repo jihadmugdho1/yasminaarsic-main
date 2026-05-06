@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:yasminaarsic/core/models/response_data.dart';
 import 'package:yasminaarsic/core/services/network_caller.dart';
 import 'package:yasminaarsic/core/services/storage_service.dart';
@@ -7,7 +9,8 @@ import 'package:yasminaarsic/features/home/vendor_details/models/offer_response_
 
 class OfferService {
   final NetworkCaller _networkCaller = NetworkCaller();
-String?token="";
+  String? token = "";
+
   /// Fetch offers for a specific vendor by vendor ID
   ///
   /// Parameters:
@@ -63,7 +66,11 @@ String?token="";
           final offerResponse = OfferResponse.fromJson(responseData);
 
           AppLoggerHelper.debug(
-            'Offers loaded successfully: ${offerResponse.data.offers.length} offers found',
+            "Ofer load : ${jsonEncode(response.responseData)} offers fetched from API",
+          );
+          final list = responseData['data']['data'] as List;
+          AppLoggerHelper.debug(
+            "RedeemedCounts: ${list.map((e) => e['redeemedCount']).toList()}",
           );
 
           return ResponseData(
@@ -188,7 +195,6 @@ String?token="";
       final authToken = token != null ? 'Bearer $token' : null;
 
       final requestBody = {'offerId': offerId};
-      
 
       AppLoggerHelper.debug(
         'Generating QR code for offer: $offerId, URL: $url, Token: ${token != null ? 'Bearer token provided' : 'No token'}',
@@ -229,13 +235,16 @@ String?token="";
             isSuccess: false,
             statusCode: response.statusCode,
             responseData: null,
-            errorMessage: 'Error parsing QR code data: ${parseError.toString()}',
+            errorMessage:
+                'Error parsing QR code data: ${parseError.toString()}',
           );
         }
       } else {
         AppLoggerHelper.error(
           'Failed to generate QR code: ${response.errorMessage}',
         );
+        
+
         return ResponseData(
           isSuccess: false,
           statusCode: response.statusCode,

@@ -89,7 +89,15 @@ class HomeController extends GetxController {
       final response = await _heroSliderService.getActiveSliders();
       if (response.isSuccess && response.responseData != null) {
         final urls = response.responseData as List<String>;
-        if (urls.isNotEmpty) sliderImageUrls.assignAll(urls);
+        if (urls.isNotEmpty) {
+          final context = Get.context;
+          if (context != null) {
+            await Future.wait(
+              urls.map((url) => precacheImage(NetworkImage(url), context)),
+            );
+          }
+          sliderImageUrls.assignAll(urls);
+        }
       }
     } catch (e) {
       AppLoggerHelper.error('Error loading slider images', e);

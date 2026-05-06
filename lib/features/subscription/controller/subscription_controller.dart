@@ -39,6 +39,7 @@ class SubscriptionController extends GetxController {
   final selectedPlan = Rxn<SubscriptionPlanModel>();
   final TextEditingController promoCodeController = TextEditingController();
   final isPromoApplied = false.obs;
+  final appliedPromoCode = ''.obs;
   final discountAmount = 0.0.obs;
   final isCheckingOut = false.obs;
 
@@ -74,11 +75,10 @@ class SubscriptionController extends GetxController {
       if (response.isSuccess && response.responseData != null) {
         final plans = response.responseData as List<SubscriptionPlanModel>;
         subscriptionPlans.assignAll(plans);
-         // 🔥 DEBUG RAW RESPONSE
-      AppLoggerHelper.debug(
-        "RAW API RESPONSE: ${jsonEncode(response.responseData)}",
-      );
-      
+        // 🔥 DEBUG RAW RESPONSE
+        AppLoggerHelper.debug(
+          "RAW API RESPONSE: ${jsonEncode(response.responseData)}",
+        );
       } else {
         plansErrorMessage.value = response.errorMessage;
       }
@@ -97,7 +97,8 @@ class SubscriptionController extends GetxController {
       final response = await _subscriptionService.getCurrentSubscription();
 
       if (response.isSuccess && response.responseData != null) {
-        currentSubscription.value = response.responseData as SubscriptionHistoryModel;
+        currentSubscription.value =
+            response.responseData as SubscriptionHistoryModel;
       } else {
         currentSubscriptionError.value = response.errorMessage;
       }
@@ -132,6 +133,7 @@ class SubscriptionController extends GetxController {
     selectedPlan.value = plan;
     promoCodeController.clear();
     isPromoApplied.value = false;
+    appliedPromoCode.value = '';
     discountAmount.value = 0.0;
     isCheckingOut.value = false;
   }
@@ -140,6 +142,7 @@ class SubscriptionController extends GetxController {
     selectedPlan.value = null;
     promoCodeController.clear();
     isPromoApplied.value = false;
+    appliedPromoCode.value = '';
     discountAmount.value = 0.0;
     isCheckingOut.value = false;
   }
@@ -166,12 +169,9 @@ class SubscriptionController extends GetxController {
     }
 
     isPromoApplied.value = true;
-    discountAmount.value = (double.tryParse(plan.price) ?? 0) * 0.1;
+    appliedPromoCode.value = promoCode;
 
-    Get.snackbar(
-      'Promo Code',
-      'Promo code applied! Discount: \$${discountAmount.value.toStringAsFixed(2)}',
-    );
+    Get.snackbar('Promo Code', 'Promo code applied');
   }
 
   Future<void> checkoutSelectedPlan() async {
@@ -185,12 +185,19 @@ class SubscriptionController extends GetxController {
       final checkoutResult = await _subscriptionService.checkout(
         subscriptionPlanId: plan.id,
         idempotencyKey: idempotencyKey,
-        promoCode: isPromoApplied.value ? promoCodeController.text.trim() : null,
+        promoCode: isPromoApplied.value
+            ? promoCodeController.text.trim()
+            : null,
+      );
+      AppLoggerHelper.debug(
+        "checkout payload : ${jsonEncode(checkoutResult.responseData)}",
       );
 
       if (!checkoutResult.isSuccess || checkoutResult.responseData == null) {
         Get.snackbar('Checkout Failed', checkoutResult.errorMessage);
-        AppLoggerHelper.error("Checkout failed: ${checkoutResult.errorMessage}");
+        AppLoggerHelper.error(
+          "Checkout failed: ${checkoutResult.errorMessage}",
+        );
         return;
       }
 
@@ -246,6 +253,14 @@ class SubscriptionController extends GetxController {
         ),
       ],
     );
+  }
+
+  Future<void> refreshAll() async {
+    await Future.wait([
+      fetchCurrentSubscription(),
+      fetchSubscriptionPlans(),
+      fetchSubscriptionHistory(),
+    ]);
   }
 
   void onUpdatePaymentPressed() {

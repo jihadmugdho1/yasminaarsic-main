@@ -160,6 +160,8 @@ class SubscriptionService {
         token: token != null ? 'Bearer $token' : null,
       );
 
+      AppLoggerHelper.debug("checkout body : $body");
+
       AppLoggerHelper.debug("acces token: $token");
       AppLoggerHelper.debug("checkout response: ${response.responseData}");
 

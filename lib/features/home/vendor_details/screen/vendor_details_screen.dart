@@ -14,14 +14,13 @@ import 'package:yasminaarsic/features/home/vendor_details/widgets/vendor_offer_c
 import 'package:yasminaarsic/features/bottom_navbar/controller/bottom_navbar_controller.dart';
 import 'package:yasminaarsic/features/profile/controller/profile_controller.dart';
 
-
 class VendorDetailsScreen extends StatelessWidget {
   VendorDetailsScreen({super.key});
 
   final VendorDetailsController controller = Get.put(VendorDetailsController());
   late final CarouselSliderController carouselController =
       CarouselSliderController();
-
+  final profileController = Get.put(ProfileController());
   void _showSubscribeDialog(BuildContext context) {
     showGeneralDialog(
       context: context,
@@ -185,39 +184,37 @@ class VendorDetailsScreen extends StatelessWidget {
                                         item.imagePath,
                                         fit: BoxFit.cover,
                                         width: double.infinity,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                              return Container(
-                                                color: Colors.grey[300],
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons
-                                                        .image_not_supported_outlined,
-                                                    color: Colors.grey[600],
-                                                    size: 40,
-                                                  ),
-                                                ),
-                                              );
-                                            },
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Container(
+                                            color: Colors.grey[300],
+                                            child: Center(
+                                              child: Icon(
+                                                Icons
+                                                    .image_not_supported_outlined,
+                                                color: Colors.grey[600],
+                                                size: 40,
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       )
                                     : Image.asset(
                                         item.imagePath,
                                         fit: BoxFit.cover,
                                         width: double.infinity,
-                                        errorBuilder:
-                                            (context, error, stackTrace) {
-                                              return Container(
-                                                color: Colors.grey[300],
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons
-                                                        .image_not_supported_outlined,
-                                                    color: Colors.grey[600],
-                                                    size: 40,
-                                                  ),
-                                                ),
-                                              );
-                                            },
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Container(
+                                            color: Colors.grey[300],
+                                            child: Center(
+                                              child: Icon(
+                                                Icons
+                                                    .image_not_supported_outlined,
+                                                color: Colors.grey[600],
+                                                size: 40,
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       ),
                               ),
                             )
@@ -393,13 +390,11 @@ class VendorDetailsScreen extends StatelessWidget {
                         child: OfferCard(
                           offer: controller.offers[index],
                           onTap: () async {
-                            final profileController =
-                                Get.find<ProfileController>();
-
                             if (!profileController.isSubscribed.value) {
                               _showSubscribeDialog(context);
                               return;
                             }
+                            AppLoggerHelper.debug("subscription value : ${profileController.isSubscribed.value}");
 
                             final offerId = controller.offers[index].id;
                             if (offerId != null && offerId.isNotEmpty) {
@@ -433,8 +428,11 @@ class VendorDetailsScreen extends StatelessWidget {
                               );
 
                               await controller.fetchOfferDetails(offerId);
+
+                              if (!context.mounted) return;
                               Navigator.of(context).pop();
 
+                              if (!context.mounted) return;
                               showGeneralDialog(
                                 context: context,
                                 barrierDismissible: true,

@@ -11,33 +11,33 @@ class QrRedemptionController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Initialize with sample QR offers (can be replaced with API data)
-    qrOffers.addAll([
-      QrOffer(
-        qrCode: 'QR_BOGO_001',
-        title: 'Buy 1 Get 1 Free - Main Course',
-        vendor: 'Bella Vista Restaurant',
-        location: 'Downtown, City Center',
-        validUntil: '2025-12-31',
-        isRedeemed: false,
-      ),
-      QrOffer(
-        qrCode: 'QR_DISC_002',
-        title: '30% Off on Appetizers',
-        vendor: 'Bella Vista Restaurant',
-        location: 'Downtown, City Center',
-        validUntil: '2025-12-15',
-        isRedeemed: false,
-      ),
-      QrOffer(
-        qrCode: 'QR_FREE_003',
-        title: 'Free Dessert with Dinner',
-        vendor: 'Bella Vista Restaurant',
-        location: 'Downtown, City Center',
-        validUntil: '2025-12-25',
-        isRedeemed: false,
-      ),
-    ]);
+    // // Initialize with sample QR offers (can be replaced with API data)
+    // qrOffers.addAll([
+    //   QrOffer(
+    //     qrCode: 'QR_BOGO_001',
+    //     title: 'Buy 1 Get 1 Free - Main Course',
+    //     vendor: 'Bella Vista Restaurant',
+    //     location: 'Downtown, City Center',
+    //     validUntil: '2025-12-31',
+    //     isRedeemed: false,
+    //   ),
+    //   QrOffer(
+    //     qrCode: 'QR_DISC_002',
+    //     title: '30% Off on Appetizers',
+    //     vendor: 'Bella Vista Restaurant',
+    //     location: 'Downtown, City Center',
+    //     validUntil: '2025-12-15',
+    //     isRedeemed: false,
+    //   ),
+    //   QrOffer(
+    //     qrCode: 'QR_FREE_003',
+    //     title: 'Free Dessert with Dinner',
+    //     vendor: 'Bella Vista Restaurant',
+    //     location: 'Downtown, City Center',
+    //     validUntil: '2025-12-25',
+    //     isRedeemed: false,
+    //   ),
+    // ]);
   }
 
   // Set current offer for display in dialog

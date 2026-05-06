@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:yasminaarsic/core/models/response_data.dart';
 import 'package:yasminaarsic/core/services/network_caller.dart';
 import 'package:yasminaarsic/core/services/storage_service.dart';
@@ -35,6 +37,8 @@ class VendorService {
           AppLoggerHelper.debug(
             'Vendor details loaded successfully: ${vendor.name}',
           );
+
+          AppLoggerHelper.debug("Vendor response ${jsonEncode(response.responseData)}");
           return ResponseData(
             isSuccess: true,
             statusCode: response.statusCode,

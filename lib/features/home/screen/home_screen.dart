@@ -283,14 +283,6 @@ class HomeScreen extends StatelessWidget {
                                   url,
                                   fit: BoxFit.cover,
                                   width: double.infinity,
-                                  loadingBuilder: (context, child, progress) {
-                                    if (progress == null) return child;
-                                    return Shimmer.fromColors(
-                                      baseColor: Colors.grey.shade300,
-                                      highlightColor: Colors.grey.shade100,
-                                      child: Container(color: Colors.white),
-                                    );
-                                  },
                                   errorBuilder: (context, error, stackTrace) {
                                     return Container(color: Colors.grey.shade200);
                                   },

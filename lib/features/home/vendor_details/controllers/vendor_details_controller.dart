@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
 import 'package:yasminaarsic/core/localization/localization_controller.dart';
 import 'package:yasminaarsic/core/utils/constants/image_path.dart';
@@ -149,6 +151,8 @@ class VendorDetailsController extends GetxController {
         }).toList();
 
         offers.assignAll(offerList);
+       
+     
 
         // Update carousel with offer thumbnails from API
         final carouselList = offerList
@@ -158,8 +162,6 @@ class VendorDetailsController extends GetxController {
         if (carouselList.isNotEmpty) {
           carouselItems.assignAll(carouselList);
         }
-
-        AppLoggerHelper.debug('Offers loaded: ${offerList.length} offers');
       } else {
         AppLoggerHelper.error(
           'Failed to fetch offers: ${response.errorMessage}',

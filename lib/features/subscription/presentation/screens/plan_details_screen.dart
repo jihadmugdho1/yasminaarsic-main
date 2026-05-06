@@ -201,7 +201,7 @@ class _PlanDetailsScreenState extends State<PlanDetailsScreen> {
                     SizedBox(height: 12.h),
                     Obx(() {
                       final isApplied = _controller.isPromoApplied.value;
-                      final discount = _controller.discountAmount.value;
+
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -210,7 +210,7 @@ class _PlanDetailsScreenState extends State<PlanDetailsScreen> {
                               Expanded(
                                 child: TextField(
                                   controller: _controller.promoCodeController,
-                                  enabled: !isApplied,
+
                                   decoration: InputDecoration(
                                     hintText: 'Enter promo code',
                                     hintStyle: TextStyle(
@@ -245,7 +245,7 @@ class _PlanDetailsScreenState extends State<PlanDetailsScreen> {
                               ),
                               SizedBox(width: 12.w),
                               CustomButton(
-                                text: isApplied ? 'Applied' : 'Apply',
+                                text: 'Apply',
                                 textColor: Colors.white,
                                 backgroundColor: isApplied
                                     ? Colors.green
@@ -254,125 +254,34 @@ class _PlanDetailsScreenState extends State<PlanDetailsScreen> {
                                 minWidth: 80.w,
                                 borderRadius: 8.r,
                                 height: 45.h,
-                                onPressed: isApplied
-                                    ? null
-                                    : _controller.applyPromoCode,
+                                onPressed: () {
+                                  _controller.applyPromoCode();
+                                },
                               ),
                             ],
                           ),
-                          if (isApplied)
-                            Padding(
-                              padding: EdgeInsets.only(top: 8.h),
-                              child: Text(
-                                'Discount Applied: \$${discount.toStringAsFixed(2)}',
-                                style: TextStyle(
-                                  fontSize: 12.sp,
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
                         ],
                       );
                     }),
                   ],
                 ),
               ),
-              SizedBox(height: 24.h),
+              SizedBox(height: 10.h),
 
-              // Price Summary
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Container(
-                  padding: EdgeInsets.all(16.w),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFF3F3F5),
-                    borderRadius: BorderRadius.circular(12.r),
+              Obx(
+                () => Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Text(
+                    "Applied Promo Code: ${_controller.isPromoApplied.value ? _controller.appliedPromoCode.value : 'None'}",
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontStyle: FontStyle.italic,
+                      color: Colors.grey[600],
+                    ),
                   ),
-                  child: Obx(() {
-                    final isApplied = _controller.isPromoApplied.value;
-                    final discount = _controller.discountAmount.value;
-                    final finalPrice = _controller.finalPrice;
-
-                    return Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Base Price:',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: Colors.grey[700],
-                                fontFamily: 'Arial',
-                              ),
-                            ),
-                            Text(
-                              '${widget.plan.currency} ${basePrice.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Arial',
-                                color: const Color(0xFF101828),
-                              ),
-                            ),
-                          ],
-                        ),
-                        if (isApplied) ...[
-                          SizedBox(height: 12.h),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Discount:',
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  color: Colors.green[700],
-                                  fontFamily: 'Arial',
-                                ),
-                              ),
-                              Text(
-                                '-${widget.plan.currency} ${discount.toStringAsFixed(2)}',
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
-                                  fontFamily: 'Arial',
-                                  color: Colors.green,
-                                ),
-                              ),
-                            ],
-                          ),
-                          Divider(color: Colors.grey[300], height: 16.h),
-                        ],
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Final Price:',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
-                                fontFamily: 'Arial',
-                                color: const Color(0xFF101828),
-                              ),
-                            ),
-                            Text(
-                              '${widget.plan.currency} ${finalPrice.toStringAsFixed(2)}',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w700,
-                                fontFamily: 'Arial',
-                                color: const Color(0xFF6C63FE),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    );
-                  }),
                 ),
               ),
-              SizedBox(height: 24.h),
+              SizedBox(height: 8.h),
 
               // Action Buttons
               Padding(
