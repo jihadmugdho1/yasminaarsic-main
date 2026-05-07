@@ -16,17 +16,39 @@ class OfferService {
   }
 
   List<OfferApiModel> _parseOffers(Map<String, dynamic> responseData) {
-    final data = responseData['data'] as Map<String, dynamic>;
-    final offersData = data['offers'] as List<dynamic>;
+    final raw = responseData['data'];
+    if (raw == null) {
+      AppLoggerHelper.warning('_parseOffers: "data" key is null. Full response: ${responseData.keys.toList()}');
+      return [];
+    }
+
+    List<dynamic> offersData;
+    if (raw is List) {
+      offersData = raw;
+    } else if (raw is Map<String, dynamic>) {
+      final offers = raw['offers'];
+      if (offers == null) {
+        AppLoggerHelper.warning('_parseOffers: "data.offers" key is null. data keys: ${raw.keys.toList()}');
+        return [];
+      }
+      offersData = offers as List<dynamic>;
+    } else {
+      AppLoggerHelper.warning('_parseOffers: unexpected "data" type: ${raw.runtimeType}');
+      return [];
+    }
+
     return offersData
         .map((json) => OfferApiModel.fromJson(json as Map<String, dynamic>))
         .toList();
   }
 
   int _parseTotalPages(Map<String, dynamic> responseData) {
-    final data = responseData['data'] as Map<String, dynamic>;
-    final pagination = data['pagination'] as Map<String, dynamic>?;
-    return (pagination?['totalPages'] as int?) ?? 1;
+    final raw = responseData['data'];
+    if (raw is Map<String, dynamic>) {
+      final pagination = raw['pagination'] as Map<String, dynamic>?;
+      return (pagination?['totalPages'] as int?) ?? 1;
+    }
+    return 1;
   }
 
   /// Fetch all offers — used for "All Offers" category
@@ -96,10 +118,11 @@ class OfferService {
       AppLoggerHelper.debug('Fetching newest offers from: $url');
       final response = await _networkCaller.getRequest(url, token: _authToken);
 
+      AppLoggerHelper.debug('Newest offers raw response: ${jsonEncode(response.responseData)}');
       if (response.isSuccess) {
         final offers = _parseOffers(response.responseData);
         final totalPages = _parseTotalPages(response.responseData);
-        AppLoggerHelper.debug('Newest offers loaded: ${offers.length}');
+        AppLoggerHelper.debug('Newest offers loaded: ${offers.length}, totalPages: $totalPages');
         return ResponseData(
           isSuccess: true,
           statusCode: response.statusCode,
@@ -107,6 +130,7 @@ class OfferService {
           errorMessage: '',
         );
       }
+      AppLoggerHelper.error('Newest offers API failed [${response.statusCode}]: ${response.errorMessage}');
       return ResponseData(
         isSuccess: false,
         statusCode: response.statusCode,
@@ -139,10 +163,11 @@ class OfferService {
       AppLoggerHelper.debug('Fetching trending offers from: $url');
       final response = await _networkCaller.getRequest(url, token: _authToken);
 
+      AppLoggerHelper.debug('Trending offers raw response: ${jsonEncode(response.responseData)}');
       if (response.isSuccess) {
         final offers = _parseOffers(response.responseData);
         final totalPages = _parseTotalPages(response.responseData);
-        AppLoggerHelper.debug('Trending offers loaded: ${offers.length}');
+        AppLoggerHelper.debug('Trending offers loaded: ${offers.length}, totalPages: $totalPages');
         return ResponseData(
           isSuccess: true,
           statusCode: response.statusCode,
@@ -150,6 +175,7 @@ class OfferService {
           errorMessage: '',
         );
       }
+      AppLoggerHelper.error('Trending offers API failed [${response.statusCode}]: ${response.errorMessage}');
       return ResponseData(
         isSuccess: false,
         statusCode: response.statusCode,

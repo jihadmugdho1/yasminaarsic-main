@@ -187,11 +187,13 @@ class HomeController extends GetxController {
           final data = response.responseData as Map<String, dynamic>;
           final offers = data['offers'] as List<OfferApiModel>;
           final totalPages = data['totalPages'] as int;
+          AppLoggerHelper.debug('All offers loaded: ${offers.length} items, totalPages: $totalPages');
           newOffers.assignAll(offers.map((o) => _toOfferModel(o, 'All')));
           trendingOffers.assignAll(offers.map((o) => _toOfferModel(o, 'All')));
           hasMoreNewOffers.value = totalPages > 1;
           hasMoreTrendingOffers.value = totalPages > 1;
         } else {
+          AppLoggerHelper.error('Failed to load all offers: ${response.errorMessage}');
           hasMoreNewOffers.value = false;
           hasMoreTrendingOffers.value = false;
         }
@@ -216,9 +218,11 @@ class HomeController extends GetxController {
           final data = newestResponse.responseData as Map<String, dynamic>;
           final offers = data['offers'] as List<OfferApiModel>;
           final totalPages = data['totalPages'] as int;
+          AppLoggerHelper.debug('New offers for category ${selectedCat.id}: ${offers.length} items');
           newOffers.assignAll(offers.map((o) => _toOfferModel(o, selectedCat.name)));
           hasMoreNewOffers.value = newOffersPage.value < totalPages;
         } else {
+          AppLoggerHelper.error('Failed to load newest offers for category ${selectedCat.id}: ${newestResponse.errorMessage}');
           hasMoreNewOffers.value = false;
         }
 
@@ -226,9 +230,11 @@ class HomeController extends GetxController {
           final data = trendingResponse.responseData as Map<String, dynamic>;
           final offers = data['offers'] as List<OfferApiModel>;
           final totalPages = data['totalPages'] as int;
+          AppLoggerHelper.debug('Trending offers for category ${selectedCat.id}: ${offers.length} items');
           trendingOffers.assignAll(offers.map((o) => _toOfferModel(o, selectedCat.name)));
           hasMoreTrendingOffers.value = trendingOffersPage.value < totalPages;
         } else {
+          AppLoggerHelper.error('Failed to load trending offers for category ${selectedCat.id}: ${trendingResponse.errorMessage}');
           hasMoreTrendingOffers.value = false;
         }
       }
