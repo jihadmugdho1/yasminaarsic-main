@@ -110,6 +110,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Navigator.pop(context);
                       },
                       style: ElevatedButton.styleFrom(
+                        side: BorderSide.none,
                         backgroundColor: AppColors.blueColor,
                         minimumSize: Size(0, 45.h),
                         shape: RoundedRectangleBorder(

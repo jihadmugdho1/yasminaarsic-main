@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:yasminaarsic/core/core.dart';
@@ -73,6 +74,13 @@ class PaymentWebViewController extends GetxController {
               _navigationHandled = true;
               Get.until((route) => route.isFirst);
               _profileController.fetchProfileData();
+              Get.snackbar(
+                backgroundColor: Colors.green,
+                colorText: AppColors.white,
+
+                "Payment Success ",
+                "Complete Payment",
+              );
               Get.find<BottomNavController>().changeTab(1);
               return NavigationDecision.prevent;
             }
