@@ -189,9 +189,9 @@ class SubscriptionController extends GetxController {
             ? promoCodeController.text.trim()
             : null,
       );
-      AppLoggerHelper.debug(
-        "checkout payload : ${jsonEncode(checkoutResult.responseData)}",
-      );
+      // AppLoggerHelper.debug(
+      //   "checkout payload : ${jsonEncode(checkoutResult.responseData)}",
+      // );
 
       if (!checkoutResult.isSuccess || checkoutResult.responseData == null) {
         Get.snackbar('Checkout Failed', checkoutResult.errorMessage);

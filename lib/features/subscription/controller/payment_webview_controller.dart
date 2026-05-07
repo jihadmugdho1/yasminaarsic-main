@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart';
 import 'package:path/path.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:yasminaarsic/core/core.dart';
 import 'package:yasminaarsic/features/bottom_navbar/controller/bottom_navbar_controller.dart';
+import 'package:yasminaarsic/features/profile/controller/profile_controller.dart';
 import 'package:yasminaarsic/routes/app_routes.dart' show AppRoute;
 
 class PaymentWebViewController extends GetxController {
@@ -19,6 +21,7 @@ class PaymentWebViewController extends GetxController {
 
   bool _initialPageLoaded = false;
   bool _navigationHandled = false;
+  final ProfileController controller = Get.put(ProfileController());
 
   bool _isPaymentSuccess(String url) {
     final lower = url.toLowerCase();
@@ -30,7 +33,7 @@ class PaymentWebViewController extends GetxController {
   }
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
 
     final headers = <String, String>{
@@ -61,7 +64,9 @@ class PaymentWebViewController extends GetxController {
               _navigationHandled = true;
 
               Get.until((route) => route.isFirst);
+               controller.fetchProfileData();
               Get.find<BottomNavController>().changeTab(1);
+             
             }
           },
           onNavigationRequest: (NavigationRequest request) {

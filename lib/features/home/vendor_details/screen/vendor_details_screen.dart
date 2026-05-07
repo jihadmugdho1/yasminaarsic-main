@@ -391,6 +391,7 @@ class VendorDetailsScreen extends StatelessWidget {
                           offer: controller.offers[index],
                           onTap: () async {
                             if (!profileController.isSubscribed.value) {
+                              AppLoggerHelper.debug("User subscribe value : ${profileController.isSubscribed.value}");
                               _showSubscribeDialog(context);
                               return;
                             }

@@ -28,6 +28,7 @@ class AuthenticationService extends GetxService {
     required String name,
     required String email,
     required String password,
+    required String phone,
     String? role,
   }) async {
     try {
@@ -39,6 +40,7 @@ class AuthenticationService extends GetxService {
       final body = {
         'name': name,
         'email': email,
+        "mobileNumber":phone,
         'password': password,
         'role': role,
       };

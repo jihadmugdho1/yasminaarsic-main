@@ -2,6 +2,8 @@ class AppTranslations {
   static const Map<String, Map<String, String>> translations = {
     'en': {
       'login': 'Login',
+      'mobile number ': "Mobile Number",
+      'enter mobile number ': "Enter Mobile Number",
       'welcome': 'Welcome',
       'welcome_description': 'Welcome back! Please login to continue.',
       'email_or_mobile': 'Email or Mobile Number',
@@ -75,7 +77,8 @@ class AppTranslations {
 
       // Home Screen
       'discover_offers': 'Double the pleasure!',
-      'browse_amazing_BOGO_deals_from_top_vendors': 'Browse amazing BOGO deals from top vendors',
+      'browse_amazing_BOGO_deals_from_top_vendors':
+          'Browse amazing BOGO deals from top vendors',
       'search_vendors': 'Search vendors...',
       'searching': 'Searching...',
       'search_results': 'Search Results',
@@ -251,10 +254,12 @@ class AppTranslations {
     },
     'sr': {
       'login': 'Prijava',
+      'mobile number ': "Lambarka Mobilka",
+      'enter mobile number ': "geli nambarka gacanta",
       'welcome': 'Dobrodošli',
       'welcome_description':
           'Dobro došli u Vendora – vaše mesto za ekskluzivne ponude',
-      'email_or_mobile': 'Email ili telefon',
+   
       'example_email': 'primer@email.com',
       'enter_your_password': 'Unesite lozinku',
       'or_sign_up_with': 'ili se registrujte putem',
@@ -325,7 +330,8 @@ class AppTranslations {
 
       // Home Screen
       'discover_offers': 'Duplo uživanje!',
-      'browse_amazing_BOGO_deals_from_top_vendors': 'Pregledajte neverovatne BOGO ponude od vrhunskih prodavaca',
+      'browse_amazing_BOGO_deals_from_top_vendors':
+          'Pregledajte neverovatne BOGO ponude od vrhunskih prodavaca',
       'search_vendors': 'Pretraga prodavaca',
       'searching': 'Pretraga...',
       'search_results': 'Rezultati pretrage',

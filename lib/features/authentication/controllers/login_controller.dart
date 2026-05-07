@@ -30,6 +30,7 @@ class LoginController extends GetxController {
   final isLoading = false.obs;
 
   final nameController = TextEditingController();
+  final phonecontroller = TextEditingController();
   final emailControllerOne = TextEditingController();
   final emailControllerTwo = TextEditingController();
   final passwordControllerOne = TextEditingController();
@@ -215,6 +216,8 @@ class LoginController extends GetxController {
 
         // Call the register API
         final response = await authService.register(
+          phone: phonecontroller.text,
+
           name: nameController.text,
           email: emailControllerTwo.text,
           password: passwordControllerTwo.text,
@@ -711,6 +714,7 @@ class LoginController extends GetxController {
     }
     return null;
   }
+
 
   String? validatePasswordMatch(String? value, String referencePassword) {
     if (value == null || value.isEmpty) {

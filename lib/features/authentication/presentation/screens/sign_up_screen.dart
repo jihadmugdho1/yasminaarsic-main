@@ -114,7 +114,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                       // Email or Mobile
                       Text(
-                        locale.get('email_or_mobile'),
+                        locale.get('email'),
                         style: TextStyle(
                           fontFamily: 'Inter',
                           fontSize: 14.sp,
@@ -129,7 +129,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         validator: controller.validateEmail,
                       ),
                       SizedBox(height: 24.h),
-
+                      // Full Name
+                      Text(
+                        locale.get('Mobile Number'),
+                        style: TextStyle(
+                          fontFamily: 'Inter',
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(height: 8.h),
+                      CustomTextFormField(
+                        hintText: locale.get('Enter mobile number'),
+                        keyboardType: TextInputType.name,
+                        controller: controller.phonecontroller,
+                      ),
+                      SizedBox(height: 24.h),
                       // Password
                       Text(
                         locale.get('password'),

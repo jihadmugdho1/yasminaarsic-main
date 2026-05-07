@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:yasminaarsic/core/models/response_data.dart';
 import 'package:yasminaarsic/core/services/network_caller.dart';
 import 'package:yasminaarsic/core/services/storage_service.dart';
@@ -46,6 +48,13 @@ class OfferService {
         final offers = _parseOffers(response.responseData);
         final totalPages = _parseTotalPages(response.responseData);
         AppLoggerHelper.debug('Offers loaded: ${offers.length}');
+        AppLoggerHelper.debug("api endpoiunt :$url");
+        AppLoggerHelper.debug("loaded : ${jsonEncode(response.responseData)}");
+
+      
+
+
+          
         return ResponseData(
           isSuccess: true,
           statusCode: response.statusCode,
@@ -53,12 +62,14 @@ class OfferService {
           errorMessage: '',
         );
       }
+  
       return ResponseData(
         isSuccess: false,
         statusCode: response.statusCode,
         responseData: null,
         errorMessage: response.errorMessage,
       );
+
     } catch (e) {
       AppLoggerHelper.error('Exception while fetching offers', e);
       return ResponseData(
