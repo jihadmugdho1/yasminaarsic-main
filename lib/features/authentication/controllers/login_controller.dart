@@ -10,6 +10,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:yasminaarsic/core/services/storage_service.dart';
 import 'package:yasminaarsic/core/utils/logging/logger.dart';
 import 'package:yasminaarsic/features/authentication/data/services/authentication_service.dart';
+import 'package:yasminaarsic/features/authentication/data/services/terms_service.dart';
 import 'package:yasminaarsic/features/authentication/presentation/widgets/verification_code_dialog.dart';
 import 'package:yasminaarsic/features/bottom_navbar/controller/bottom_navbar_controller.dart';
 import 'package:yasminaarsic/features/bottom_navbar/screen/main_app_screen.dart';
@@ -28,6 +29,12 @@ class LoginController extends GetxController {
   final isForgotPasswordLoading = false.obs;
   final isVerifyLoading = false.obs;
   final isLoading = false.obs;
+
+  // Terms and Conditions
+  final isTermsAccepted = false.obs;
+  final termsContent = ''.obs;
+  final isTermsLoading = false.obs;
+  final _termsService = TermsService();
 
   final nameController = TextEditingController();
   final phonecontroller = TextEditingController();
@@ -206,7 +213,38 @@ class LoginController extends GetxController {
     }
   }
 
+  Future<void> fetchTermsAndCondition() async {
+    isTermsLoading.value = true;
+    try {
+      final response = await _termsService.getActiveTerms();
+      if (response.isSuccess && response.responseData != null) {
+        final data = response.responseData as Map<String, dynamic>;
+        termsContent.value =
+            data['data']?['content'] as String? ??
+            data['content'] as String? ??
+            '';
+        AppLoggerHelper.debug('Terms and conditions fetched successfully');
+      } else {
+        AppLoggerHelper.error('Failed to fetch terms: ${response.errorMessage}');
+      }
+    } catch (e) {
+      AppLoggerHelper.error('Error fetching terms', e);
+    } finally {
+      isTermsLoading.value = false;
+    }
+  }
+
   void signUp() async {
+    if (!isTermsAccepted.value) {
+      Get.snackbar(
+        'Terms Required',
+        'Please accept the Terms and Conditions to continue.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
     // Validate form before proceeding
     if (signUpFormKey.currentState?.validate() ?? false) {
       isSignUpLoading.value = true;

@@ -94,6 +94,7 @@ class VendorProfileModel {
   final String city;
   final String? contactEmail;
   final String? logoUrl;
+  final List<String> images;
   final String streetAddress;
   final String vendorId;
   final String zipCode;
@@ -110,6 +111,7 @@ class VendorProfileModel {
     required this.city,
     this.contactEmail,
     this.logoUrl,
+    required this.images,
     required this.streetAddress,
     required this.vendorId,
     required this.zipCode,
@@ -128,6 +130,11 @@ class VendorProfileModel {
       city: json['city'] ?? '',
       contactEmail: json['contactEmail'],
       logoUrl: json['logoUrl'],
+      images: (json['images'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .where((url) => url.isNotEmpty)
+              .toList() ??
+          [],
       streetAddress: json['streetAddress'] ?? '',
       vendorId: json['vendorId'] ?? '',
       zipCode: json['zipCode'] ?? '',
@@ -149,6 +156,7 @@ class VendorProfileModel {
       'city': city,
       'contactEmail': contactEmail,
       'logoUrl': logoUrl,
+      'images': images,
       'streetAddress': streetAddress,
       'vendorId': vendorId,
       'zipCode': zipCode,

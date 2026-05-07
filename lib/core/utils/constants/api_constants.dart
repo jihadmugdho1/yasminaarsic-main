@@ -111,4 +111,7 @@ class ApiConstants {
 
   // Hero Slider
   static String get heroSlider => "${baseUrl}app-hero-slider/active";
+
+  // Terms and Conditions
+  static String get termsAndCondition => "${baseUrl}terms-and-condition/active";
 }

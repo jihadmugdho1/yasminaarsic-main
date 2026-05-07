@@ -130,14 +130,13 @@ class OfferDialog extends StatelessWidget {
                           padding: EdgeInsets.symmetric(horizontal: 16.w),
                           child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Obx(
-                              () => Text(
-                                locale.get('bella_vista_restaurant'),
-                                style: TextStyle(
-                                  color: Colors.grey[700],
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                            child: Text(
+                              offerDetail?['VendorProfile']?['businessName'] ??
+                                  offer.restaurantName,
+                              style: TextStyle(
+                                color: Colors.grey[700],
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w400,
                               ),
                             ),
                           ),
@@ -320,14 +319,12 @@ class OfferDialog extends StatelessWidget {
                 color: AppColors.yellow,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Obx(
-                () => Text(
-                  locale.get('dining'),
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13.sp,
-                  ),
+              child: Text(
+                offerDetail?['type'] ?? offer.category,
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13.sp,
                 ),
               ),
             ),

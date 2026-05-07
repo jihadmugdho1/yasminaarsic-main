@@ -1,12 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
-import 'package:path/path.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:yasminaarsic/core/core.dart';
 import 'package:yasminaarsic/features/bottom_navbar/controller/bottom_navbar_controller.dart';
 import 'package:yasminaarsic/features/profile/controller/profile_controller.dart';
-import 'package:yasminaarsic/routes/app_routes.dart' show AppRoute;
 
 class PaymentWebViewController extends GetxController {
   PaymentWebViewController({required this.paymentId, this.authToken});
@@ -15,13 +11,13 @@ class PaymentWebViewController extends GetxController {
   final String? authToken;
 
   late final WebViewController webViewController;
+  late final ProfileController _profileController;
 
   final RxBool showBlockingLoader = true.obs;
   final RxDouble progress = 0.0.obs;
 
   bool _initialPageLoaded = false;
   bool _navigationHandled = false;
-  final ProfileController controller = Get.put(ProfileController());
 
   bool _isPaymentSuccess(String url) {
     final lower = url.toLowerCase();
@@ -35,6 +31,10 @@ class PaymentWebViewController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+
+    _profileController = Get.isRegistered<ProfileController>()
+        ? Get.find<ProfileController>()
+        : Get.put(ProfileController());
 
     final headers = <String, String>{
       'accept': '*/*',
@@ -64,15 +64,15 @@ class PaymentWebViewController extends GetxController {
               _navigationHandled = true;
 
               Get.until((route) => route.isFirst);
-               controller.fetchProfileData();
+              _profileController.fetchProfileData();
               Get.find<BottomNavController>().changeTab(1);
-             
             }
           },
           onNavigationRequest: (NavigationRequest request) {
             if (!_navigationHandled && _isPaymentSuccess(request.url)) {
               _navigationHandled = true;
               Get.until((route) => route.isFirst);
+              _profileController.fetchProfileData();
               Get.find<BottomNavController>().changeTab(1);
               return NavigationDecision.prevent;
             }

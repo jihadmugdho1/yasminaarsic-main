@@ -130,6 +130,7 @@ class OfferService {
       AppLoggerHelper.debug(
         'Single offer API Response - Status: ${response.statusCode}, Success: ${response.isSuccess}',
       );
+       AppLoggerHelper.debug("offer curl : $url");
 
       if (response.isSuccess) {
         try {

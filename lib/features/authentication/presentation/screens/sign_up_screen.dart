@@ -1,5 +1,6 @@
 // lib/features/authentication/presentation/screens/sign_up_screen.dart
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,6 +23,117 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   late final LoginController controller = Get.find<LoginController>();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.fetchTermsAndCondition();
+  }
+
+  void _showTermsBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.75,
+          maxChildSize: 0.95,
+          minChildSize: 0.4,
+          expand: false,
+          builder: (context, scrollController) {
+            return Padding(
+              padding: EdgeInsets.all(20.r),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40.w,
+                      height: 4.h,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.h),
+                  Text(
+                    'Terms and Conditions',
+                    style: TextStyle(
+                      fontSize: 18.sp,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Inter',
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Expanded(
+                    child: Obx(() {
+                      if (controller.isTermsLoading.value) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      final content = controller.termsContent.value;
+                      if (content.isEmpty) {
+                        return Center(
+                          child: Text(
+                            'Terms and Conditions not available.',
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.grey,
+                              fontFamily: 'Inter',
+                            ),
+                          ),
+                        );
+                      }
+                      return SingleChildScrollView(
+                        controller: scrollController,
+                        child: Text(
+                          content,
+                          style: TextStyle(
+                            fontSize: 13.sp,
+                            fontFamily: 'Inter',
+                            color: const Color(0xFF252525),
+                            height: 1.6,
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                  SizedBox(height: 16.h),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        controller.isTermsAccepted.value = true;
+                        Navigator.pop(context);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.blueColor,
+                        minimumSize: Size(0, 45.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                      ),
+                      child: Text(
+                        'I Agree',
+                        style: TextStyle(
+                          color: AppColors.yellowAccent,
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -206,45 +318,50 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       SizedBox(height: 16.h),
 
                       // Terms Agreement
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        child: RichText(
-                          textAlign: TextAlign.center,
-                          text: TextSpan(
-                            text: '${locale.get('by_continuing')} ',
-                            style: TextStyle(
-                              color: const Color(0xFF252525),
-                              fontSize: 14.sp,
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w400,
+                      Obx(
+                        () => Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 24.w,
+                              height: 24.h,
+                              child: Checkbox(
+                                value: controller.isTermsAccepted.value,
+                                activeColor: AppColors.blueColor,
+                                onChanged: (val) =>
+                                    controller.isTermsAccepted.value =
+                                        val ?? false,
+                              ),
                             ),
-                            children: [
-                              TextSpan(
-                                text: locale.get('terms_of_use'),
-                                style: TextStyle(
-                                  color: const Color(0xFF6C63FE),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14.sp,
+                            SizedBox(width: 8.w),
+                            Expanded(
+                              child: RichText(
+                                text: TextSpan(
+                                  text: 'I agree to the ',
+                                  style: TextStyle(
+                                    color: const Color(0xFF252525),
+                                    fontSize: 14.sp,
+                                    fontFamily: 'Inter',
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: 'Terms and Conditions',
+                                      style: TextStyle(
+                                        color: const Color(0xFF6C63FE),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14.sp,
+                                        fontFamily: 'Inter',
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = _showTermsBottomSheet,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              TextSpan(
-                                text: ' ${locale.get('and')} ',
-                                style: TextStyle(
-                                  color: const Color(0xFF252525),
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                              TextSpan(
-                                text: locale.get('privacy_policy'),
-                                style: TextStyle(
-                                  color: const Color(0xFF6C63FE),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14.sp,
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(height: 24.h),

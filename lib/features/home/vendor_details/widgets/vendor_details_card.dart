@@ -8,30 +8,60 @@ import 'package:yasminaarsic/features/home/vendor_details/controllers/vendor_det
 class VendorDetailsCard extends StatelessWidget {
   final VendorDetailsController controller = Get.find();
 
-   VendorDetailsCard({super.key});
+  VendorDetailsCard({super.key});
 
-  /// Build vendor image with fallback to default image
   Widget _buildVendorImage() {
     final imageUrl = controller.restaurant.value.imageUrl;
 
-    // Check if URL is empty or null
     if (imageUrl.isEmpty) {
-      return Image.asset(
-        ImagePath.appLogo,
+      return Container(
         width: 60.w,
-        height: 50.h,
-        fit: BoxFit.cover,
+        height: 60.w, // equal width & height for perfect circle
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: AppColors.primary.withValues(alpha: 0.5),
+            width: 3,
+          ),
+        ),
+        child: ClipOval(
+          child: Image.asset(
+            "assets/images/noSummaryImage.jpg",
+            width: 60.w,
+            height: 60.w,
+            fit: BoxFit.cover,
+          ),
+        ),
       );
     }
 
-    // Try to load network image with timeout and fallback
-    return _NetworkImageWithTimeout(
-      imageUrl: imageUrl,
+    return Image.network(
+      imageUrl,
       width: 63.w,
       height: 63.h,
       fit: BoxFit.cover,
-      timeoutSeconds: 5,
-      fallbackImage: ImagePath.appLogo,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Container(
+          width: 63.w,
+          height: 63.h,
+          color: Colors.grey[200],
+          child: Center(
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+              strokeWidth: 2,
+            ),
+          ),
+        );
+      },
+      errorBuilder: (context, error, stackTrace) {
+        return Image.asset(
+          ImagePath.appLogo,
+          width: 60.w,
+          height: 50.h,
+          fit: BoxFit.cover,
+        );
+      },
     );
   }
 
@@ -258,92 +288,6 @@ class VendorDetailsCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _NetworkImageWithTimeout extends StatefulWidget {
-  final String imageUrl;
-  final double width;
-  final double height;
-  final BoxFit fit;
-  final int timeoutSeconds;
-  final String fallbackImage;
-
-  const _NetworkImageWithTimeout({
-    required this.imageUrl,
-    required this.width,
-    required this.height,
-    required this.fit,
-    required this.timeoutSeconds,
-    required this.fallbackImage,
-  });
-
-  @override
-  _NetworkImageWithTimeoutState createState() =>
-      _NetworkImageWithTimeoutState();
-}
-
-class _NetworkImageWithTimeoutState extends State<_NetworkImageWithTimeout> {
-  bool _showFallback = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // Start a timer to show fallback after timeout
-    Future.delayed(Duration(seconds: widget.timeoutSeconds), () {
-      if (mounted && !_showFallback) {
-        setState(() {
-          _showFallback = true;
-        });
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (_showFallback) {
-      // Show fallback image after timeout
-      return Image.asset(
-        widget.fallbackImage,
-        width: widget.width,
-        height: widget.height,
-        fit: widget.fit,
-      );
-    }
-
-    return Image.network(
-      widget.imageUrl,
-      width: widget.width,
-      height: widget.height,
-      fit: widget.fit,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) {
-          // Image loaded successfully
-          return child;
-        }
-        // Show loading indicator while loading
-        return Container(
-          width: widget.width,
-          height: widget.height,
-          color: Colors.grey[200],
-          child: Center(
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-              strokeWidth: 2,
-            ),
-          ),
-        );
-      },
-      errorBuilder: (context, error, stackTrace) {
-        // Show fallback on error
-        return Image.asset(
-          widget.fallbackImage,
-          width: widget.width,
-          height: widget.height,
-          fit: widget.fit,
-        );
-      },
     );
   }
 }

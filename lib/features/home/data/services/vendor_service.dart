@@ -28,6 +28,20 @@ class VendorService {
       AppLoggerHelper.debug(
         'Vendor Details API Response - Status: ${response.statusCode}, Success: ${response.isSuccess}',
       );
+      AppLoggerHelper.debug(
+        'Vendor Details photo : ${response.responseData as Map<String, dynamic>}',
+      );
+       AppLoggerHelper.debug(
+        'Vendor Details api curl : ${url}',
+      );
+
+
+      final images =
+          (response.responseData
+              as Map<String, dynamic>)['data']?['vendorProfile']?['images'] ??
+          [];
+
+      AppLoggerHelper.debug('Vendor Images : $images');
 
       if (response.isSuccess) {
         try {
@@ -38,7 +52,9 @@ class VendorService {
             'Vendor details loaded successfully: ${vendor.name}',
           );
 
-          AppLoggerHelper.debug("Vendor response ${jsonEncode(response.responseData)}");
+          AppLoggerHelper.debug(
+            "Vendor response ${jsonEncode(response.responseData)}",
+          );
           return ResponseData(
             isSuccess: true,
             statusCode: response.statusCode,

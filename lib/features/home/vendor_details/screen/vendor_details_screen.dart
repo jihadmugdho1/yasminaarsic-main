@@ -164,8 +164,21 @@ class VendorDetailsScreen extends StatelessWidget {
                 padding: EdgeInsets.only(left: 16.w, right: 16.w),
                 child: Stack(
                   children: [
-                    Obx(
-                      () => CarouselSlider(
+                    Obx(() {
+                      if (controller.isLoading.value) {
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(16),
+                          child: Container(
+                            height: 180.h,
+                            width: double.infinity,
+                            color: Colors.grey[200],
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                        );
+                      }
+                      return CarouselSlider(
                         carouselController: carouselController,
                         options: CarouselOptions(
                           height: 180.h,
@@ -175,52 +188,72 @@ class VendorDetailsScreen extends StatelessWidget {
                             controller.setCurrentIndex(index);
                           },
                         ),
-                        items: controller.carouselItems
-                            .map(
-                              (item) => ClipRRect(
-                                borderRadius: BorderRadius.circular(16),
-                                child: item.imagePath.startsWith('http')
-                                    ? Image.network(
-                                        item.imagePath,
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return Container(
-                                            color: Colors.grey[300],
-                                            child: Center(
-                                              child: Icon(
-                                                Icons
-                                                    .image_not_supported_outlined,
-                                                color: Colors.grey[600],
-                                                size: 40,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      )
-                                    : Image.asset(
-                                        item.imagePath,
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return Container(
-                                            color: Colors.grey[300],
-                                            child: Center(
-                                              child: Icon(
-                                                Icons
-                                                    .image_not_supported_outlined,
-                                                color: Colors.grey[600],
-                                                size: 40,
-                                              ),
-                                            ),
-                                          );
-                                        },
+                        items: controller.carouselItems.isEmpty
+                            ? [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(16),
+                                  child: Image.asset(
+                                    'assets/images/noSummaryImage.jpg',
+                                    fit: BoxFit.cover,
+                                    width: double.infinity,
+                                    errorBuilder: (context, error, stackTrace) =>
+                                        Container(
+                                      color: Colors.grey[300],
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.image_not_supported_outlined,
+                                          color: Colors.grey[600],
+                                          size: 40,
+                                        ),
                                       ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
+                                    ),
+                                  ),
+                                ),
+                              ]
+                            : controller.carouselItems
+                                .map(
+                                  (item) => ClipRRect(
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: item.imagePath.startsWith('http')
+                                        ? Image.network(
+                                            item.imagePath,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return Container(
+                                                color: Colors.grey[300],
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.image_not_supported_outlined,
+                                                    color: Colors.grey[600],
+                                                    size: 40,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        : Image.asset(
+                                            item.imagePath,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            errorBuilder: (context, error, stackTrace) {
+                                              return Container(
+                                                color: Colors.grey[300],
+                                                child: Center(
+                                                  child: Icon(
+                                                    Icons.image_not_supported_outlined,
+                                                    color: Colors.grey[600],
+                                                    size: 40,
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                  ),
+                                )
+                                .toList(),
+                      );
+                    }),
                     Positioned(
                       left: 10.w,
                       top: 80.h,

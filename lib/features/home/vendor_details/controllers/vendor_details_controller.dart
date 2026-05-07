@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:path/path.dart';
 import 'package:yasminaarsic/core/localization/localization_controller.dart';
 import 'package:yasminaarsic/core/utils/constants/image_path.dart';
 import 'package:yasminaarsic/core/utils/logging/logger.dart';
@@ -90,8 +91,11 @@ class VendorDetailsController extends GetxController {
           email: vendor.email,
           website: '',
           hours: {},
-          imageUrl: vendor.imageUrl ?? '',
+          imageUrl: vendor.vendorProfile?.logoUrl ?? vendor.imageUrl ?? '',
         );
+
+        // Build carousel from vendorProfile images + logoUrl
+        _buildCarouselFromProfile(vendor.vendorProfile);
 
         AppLoggerHelper.debug(
           'Vendor details loaded: ${vendor.vendorProfile?.businessName ?? vendor.name}',
@@ -151,17 +155,6 @@ class VendorDetailsController extends GetxController {
         }).toList();
 
         offers.assignAll(offerList);
-       
-     
-
-        // Update carousel with offer thumbnails from API
-        final carouselList = offerList
-            .where((o) => o.imageUrl.isNotEmpty)
-            .map((o) => CarouselItem(imagePath: o.imageUrl))
-            .toList();
-        if (carouselList.isNotEmpty) {
-          carouselItems.assignAll(carouselList);
-        }
       } else {
         AppLoggerHelper.error(
           'Failed to fetch offers: ${response.errorMessage}',
@@ -175,6 +168,19 @@ class VendorDetailsController extends GetxController {
       _initializeDefaultOffers();
     } finally {
       offersLoading.value = false;
+    }
+  }
+
+  void _buildCarouselFromProfile(VendorProfileModel? profile) {
+    final List<String> urls = [];
+    if (profile != null) {
+      urls.addAll(profile.images);
+      if (profile.logoUrl != null && profile.logoUrl!.isNotEmpty) {
+        urls.add(profile.logoUrl!);
+      }
+    }
+    if (urls.isNotEmpty) {
+      carouselItems.assignAll(urls.map((url) => CarouselItem(imagePath: url)));
     }
   }
 
@@ -284,6 +290,8 @@ class VendorDetailsController extends GetxController {
         AppLoggerHelper.debug(
           'Offer details fetched: ${selectedOfferDetail.value?['title']}',
         );
+
+       
       } else {
         AppLoggerHelper.error(
           'Failed to fetch offer details: ${response.errorMessage}',
@@ -325,8 +333,11 @@ class VendorDetailsController extends GetxController {
           email: vendor.email,
           website: '',
           hours: {},
-          imageUrl: vendor.imageUrl ?? '',
+          imageUrl: vendor.vendorProfile?.logoUrl ?? vendor.imageUrl ?? '',
         );
+
+        // Rebuild carousel from vendorProfile images + logoUrl
+        _buildCarouselFromProfile(vendor.vendorProfile);
 
         AppLoggerHelper.debug(
           'Vendor details refreshed: ${vendor.vendorProfile?.businessName ?? vendor.name}',
