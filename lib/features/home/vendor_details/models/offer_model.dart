@@ -8,7 +8,7 @@ class Offer {
   final String category;
   final DateTime expiryDate;
   final bool isReuseable;
-  final bool isRedeemed; // ✅ Make it final and immutable
+ 
 
   Offer({
     this.id,
@@ -20,7 +20,7 @@ class Offer {
     required this.category,
     required this.expiryDate,
     this.isReuseable = false,
-    this.isRedeemed = false, // ✅ Default to not redeemed
+  
   });
 
   // ✅ Copy constructor for creating modified copies (immutable)
@@ -46,7 +46,7 @@ class Offer {
       category: category ?? this.category,
       expiryDate: expiryDate ?? this.expiryDate,
       isReuseable: isReuseable ?? this.isReuseable,
-      isRedeemed: isRedeemed ?? this.isRedeemed,
+
     );
   }
 }

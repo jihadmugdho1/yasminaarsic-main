@@ -101,28 +101,7 @@ class OfferCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                // ✅ Show "Redeemed" badge if offer is redeemed
-                if (offer.isRedeemed)
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.5),
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(16),
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          'REDEEMED',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+              
               ],
             ),
             Padding(

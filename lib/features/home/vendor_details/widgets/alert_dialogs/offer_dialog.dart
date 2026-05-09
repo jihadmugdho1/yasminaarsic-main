@@ -243,49 +243,39 @@ class OfferDialog extends StatelessWidget {
                     child: Row(
                       children: [
                         Expanded(
-                          flex: 3,
+                          flex: 2,
+                   
                           child: Obx(() {
                             // Get fresh state from VendorDetailsController
-                            final vendorController =
-                                Get.find<VendorDetailsController>();
-                            final currentOffer =
-                                vendorController.offers[offerIndex];
 
                             return ElevatedButton(
-                              onPressed: currentOffer.isRedeemed
-                                  ? () {}
-                                  : () => controller.redeemOffer(context),
+                              onPressed: () {
+                                controller.redeemOffer(context);
+                              },
                               style: ElevatedButton.styleFrom(
                                 side: BorderSide.none,
-                                backgroundColor: currentOffer.isRedeemed
-                                    ? Colors.yellow
-                                    : AppColors.primary,
+                                backgroundColor: AppColors.yellow,
+
                                 minimumSize: Size(0, 40.h),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                               ),
                               child: Text(
-                                currentOffer.isRedeemed
-                                    ? locale.get('already_redeemed_offer')
-                                    : locale.get('redeem_offer_action'),
-                                style: TextStyle(
-                                  color: currentOffer.isRedeemed
-                                      ? Colors.black
-                                      : Colors.white,
-                                ),
+                                locale.get('redeem_offer_action'),
+                                style: TextStyle(color: Colors.black),
                               ),
                             );
                           }),
                         ),
                         SizedBox(width: 8.w),
                         Expanded(
-                          flex: 1, // Close button takes 1/4 width
+                     
                           child: OutlinedButton(
                             onPressed: () => Get.back(),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: Colors.deepPurple,
-                              side: BorderSide(color: Colors.yellow),
+                              side: BorderSide(color: AppColors.textSecondary),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               ),

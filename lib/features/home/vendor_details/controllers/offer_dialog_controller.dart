@@ -39,7 +39,7 @@ class OfferController extends GetxController {
         offerDetail?['termsAndConditions'] ??
         'Valid on dine-in only. Not valid with other offers. Valid Mon-Thu only.',
     imageUrl: offerDetail?['imageUrl'] ?? offerData?.imageUrl ?? '',
-    isRedeemed: offerData?.isRedeemed ?? false,
+
     isReuseable: isReuseable,
   ).obs;
 
@@ -90,16 +90,6 @@ class OfferController extends GetxController {
           isReuseable: offerDetail?['isReusable'] ?? offer.value.isReuseable,
         );
 
-        // Log the final QrOffer object
-        print('✅ Final QrOffer Object:');
-        print('  - QR Code (Token): ${qrOffer.qrCode}');
-        print('  - Title: ${qrOffer.title}');
-        print('  - Description: ${qrOffer.description}');
-        print('  - Vendor: ${qrOffer.vendor}');
-        print('  - Location: ${qrOffer.location}');
-        print('  - Valid Until: ${qrOffer.validUntil}');
-        print('  - Is Reusable: ${qrOffer.isReuseable}');
-        print('  - Is Redeemed: ${qrOffer.isRedeemed}');
 
         // Show QR code dialog - pass QrOffer directly
         showGeneralDialog(
@@ -122,14 +112,6 @@ class OfferController extends GetxController {
                         val?.isRedeemed = true;
                       });
 
-                      // ✅ Use the dedicated method to update only this specific offer
-                      try {
-                        final vendorController =
-                            Get.find<VendorDetailsController>();
-                        vendorController.markOfferAsRedeemed(offerIndex);
-                      } catch (e) {
-                        print('Error updating offer: $e');
-                      }
                     }
                     Get.back();
                   },

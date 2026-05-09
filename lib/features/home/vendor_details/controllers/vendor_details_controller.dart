@@ -150,7 +150,7 @@ class VendorDetailsController extends GetxController {
             category: offerItem.type,
             expiryDate: offerItem.validUntil,
             isReuseable: offerItem.isReusable,
-            isRedeemed: offerItem.redeemedCount > 0,
+        
           );
         }).toList();
 
@@ -253,30 +253,14 @@ class VendorDetailsController extends GetxController {
   // ✅ Method to update a specific offer
   void updateOfferAtIndex(int index, Offer updatedOffer) {
     if (index >= 0 && index < offers.length) {
-      print(
-        'Updating offer at index $index - Title: ${updatedOffer.title}, isRedeemed: ${updatedOffer.isRedeemed}',
-      );
+     
       offers[index] = updatedOffer;
       offers.refresh(); // Force UI update
-      print(
-        'Offers list after update: ${offers.map((o) => '${o.title}: ${o.isRedeemed}').toList()}',
-      );
+      
     }
   }
 
-  // ✅ Method to mark a specific offer as redeemed
-  void markOfferAsRedeemed(int index) {
-    if (index >= 0 && index < offers.length) {
-      print(
-        'Marking offer at index $index as redeemed - Before: ${offers[index].title}, isRedeemed: ${offers[index].isRedeemed}',
-      );
-      final updatedOffer = offers[index].copyWith(isRedeemed: true);
-      print(
-        'Created updated offer - Title: ${updatedOffer.title}, isRedeemed: ${updatedOffer.isRedeemed}',
-      );
-      updateOfferAtIndex(index, updatedOffer);
-    }
-  }
+
 
   /// Fetch detailed offer information by offer ID
   Future<void> fetchOfferDetails(String offerId) async {
