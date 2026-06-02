@@ -366,7 +366,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: 12.h),
 
                     // Divider Text
                     Align(
@@ -382,10 +382,10 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: 12.h),
 
                     // Social Login Icons
-                    SizedBox(width: 20.w),
+                 
                     Center(
                       child: InkWell(
                         onTap: controller.signUpWithGoogle,
@@ -396,7 +396,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: 10.h),
 
                     // Sign Up Link
                     Row(
