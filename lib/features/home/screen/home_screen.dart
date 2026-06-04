@@ -415,9 +415,10 @@ class HomeScreen extends StatelessWidget {
                       child: Row(
                         children: controller.newOffers.map((offer) {
                           int index = controller.newOffers.indexOf(offer);
+                        
                           return Padding(
                             padding: EdgeInsets.only(
-                              left: index == 0 ? 18.w : 12.w,
+                              left: index == 0 ? 18.w : 10.w,
                             ),
                             child: OfferCard(
                               imagePath: offer.imagePath,

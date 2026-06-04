@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:yasminaarsic/core/core.dart';
 import 'package:yasminaarsic/core/localization/localization_controller.dart';
 import 'package:yasminaarsic/features/home/vendor_details/controllers/vendor_details_controller.dart';
@@ -15,6 +16,7 @@ import 'package:yasminaarsic/features/bottom_navbar/controller/bottom_navbar_con
 import 'package:yasminaarsic/features/profile/controller/profile_controller.dart';
 
 class VendorDetailsScreen extends StatelessWidget {
+  final String vendorname = Get.arguments;
   VendorDetailsScreen({super.key});
 
   final VendorDetailsController controller = Get.put(VendorDetailsController());
@@ -166,17 +168,7 @@ class VendorDetailsScreen extends StatelessWidget {
                   children: [
                     Obx(() {
                       if (controller.isLoading.value) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(16),
-                          child: Container(
-                            height: 180.h,
-                            width: double.infinity,
-                            color: Colors.grey[200],
-                            child: const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                          ),
-                        );
+                        return const _VendorCarouselShimmer();
                       }
                       return CarouselSlider(
                         carouselController: carouselController,
@@ -196,131 +188,142 @@ class VendorDetailsScreen extends StatelessWidget {
                                     'assets/images/noSummaryImage.jpg',
                                     fit: BoxFit.cover,
                                     width: double.infinity,
-                                    errorBuilder: (context, error, stackTrace) =>
-                                        Container(
-                                      color: Colors.grey[300],
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.image_not_supported_outlined,
-                                          color: Colors.grey[600],
-                                          size: 40,
+                                    errorBuilder:
+                                        (
+                                          context,
+                                          error,
+                                          stackTrace,
+                                        ) => Container(
+                                          color: Colors.grey[300],
+                                          child: Center(
+                                            child: Icon(
+                                              Icons
+                                                  .image_not_supported_outlined,
+                                              color: Colors.grey[600],
+                                              size: 40,
+                                            ),
+                                          ),
                                         ),
-                                      ),
-                                    ),
                                   ),
                                 ),
                               ]
                             : controller.carouselItems
-                                .map(
-                                  (item) => ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: item.imagePath.startsWith('http')
-                                        ? Image.network(
-                                            item.imagePath,
-                                            fit: BoxFit.cover,
-                                            width: double.infinity,
-                                            errorBuilder: (context, error, stackTrace) {
-                                              return Container(
-                                                color: Colors.grey[300],
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.image_not_supported_outlined,
-                                                    color: Colors.grey[600],
-                                                    size: 40,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          )
-                                        : Image.asset(
-                                            item.imagePath,
-                                            fit: BoxFit.cover,
-                                            width: double.infinity,
-                                            errorBuilder: (context, error, stackTrace) {
-                                              return Container(
-                                                color: Colors.grey[300],
-                                                child: Center(
-                                                  child: Icon(
-                                                    Icons.image_not_supported_outlined,
-                                                    color: Colors.grey[600],
-                                                    size: 40,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                  ),
-                                )
-                                .toList(),
+                                  .map(
+                                    (item) => ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: item.imagePath.startsWith('http')
+                                          ? Image.network(
+                                              item.imagePath,
+                                              fit: BoxFit.cover,
+                                              width: double.infinity,
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                    return Container(
+                                                      color: Colors.grey[300],
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons
+                                                              .image_not_supported_outlined,
+                                                          color:
+                                                              Colors.grey[600],
+                                                          size: 40,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                            )
+                                          : Image.asset(
+                                              item.imagePath,
+                                              fit: BoxFit.cover,
+                                              width: double.infinity,
+                                              errorBuilder:
+                                                  (context, error, stackTrace) {
+                                                    return Container(
+                                                      color: Colors.grey[300],
+                                                      child: Center(
+                                                        child: Icon(
+                                                          Icons
+                                                              .image_not_supported_outlined,
+                                                          color:
+                                                              Colors.grey[600],
+                                                          size: 40,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                            ),
+                                    ),
+                                  )
+                                  .toList(),
                       );
                     }),
-                    Positioned(
-                      left: 10.w,
-                      top: 80.h,
-                      child: Container(
-                        height: 25.h,
-                        width: 25.h,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.5),
-                        ),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_back_ios_new_sharp,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            int prevIndex =
-                                (controller.currentIndex.value - 1) %
-                                controller.carouselItems.length;
-                            if (prevIndex < 0) {
-                              prevIndex = controller.carouselItems.length - 1;
-                            }
-                            controller.setCurrentIndex(prevIndex);
-                            carouselController.animateToPage(
-                              prevIndex,
-                              duration: Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                          },
-                          iconSize: 18.sp,
-                          padding: EdgeInsets.all(5),
-                          constraints: BoxConstraints(),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      right: 10.w,
-                      top: 80.h,
-                      child: Container(
-                        height: 25.h,
-                        width: 25.h,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(0.5),
-                        ),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            int nextIndex =
-                                (controller.currentIndex.value + 1) %
-                                controller.carouselItems.length;
-                            controller.setCurrentIndex(nextIndex);
-                            carouselController.animateToPage(
-                              nextIndex,
-                              duration: Duration(milliseconds: 300),
-                              curve: Curves.easeInOut,
-                            );
-                          },
-                          iconSize: 18.sp,
-                          padding: EdgeInsets.all(5),
-                          constraints: BoxConstraints(),
-                        ),
-                      ),
-                    ),
+                    // Positioned(
+                    //   left: 10.w,
+                    //   top: 80.h,
+                    //   child: Container(
+                    //     height: 25.h,
+                    //     width: 25.h,
+                    //     decoration: BoxDecoration(
+                    //       shape: BoxShape.circle,
+                    //       color: Colors.white.withOpacity(0.5),
+                    //     ),
+                    //     child: IconButton(
+                    //       icon: Icon(
+                    //         Icons.arrow_back_ios_new_sharp,
+                    //         color: Colors.black,
+                    //       ),
+                    //       onPressed: () {
+                    //         int prevIndex =
+                    //             (controller.currentIndex.value - 1) %
+                    //             controller.carouselItems.length;
+                    //         if (prevIndex < 0) {
+                    //           prevIndex = controller.carouselItems.length - 1;
+                    //         }
+                    //         controller.setCurrentIndex(prevIndex);
+                    //         carouselController.animateToPage(
+                    //           prevIndex,
+                    //           duration: Duration(milliseconds: 300),
+                    //           curve: Curves.easeInOut,
+                    //         );
+                    //       },
+                    //       iconSize: 18.sp,
+                    //       padding: EdgeInsets.all(5),
+                    //       constraints: BoxConstraints(),
+                    //     ),
+                    //   ),
+                    // ),
+                    // Positioned(
+                    //   right: 10.w,
+                    //   top: 80.h,
+                    //   child: Container(
+                    //     height: 25.h,
+                    //     width: 25.h,
+                    //     decoration: BoxDecoration(
+                    //       shape: BoxShape.circle,
+                    //       color: Colors.white.withOpacity(0.5),
+                    //     ),
+                    //     child: IconButton(
+                    //       icon: Icon(
+                    //         Icons.arrow_forward_ios,
+                    //         color: Colors.black,
+                    //       ),
+                    //       onPressed: () {
+                    //         int nextIndex =
+                    //             (controller.currentIndex.value + 1) %
+                    //             controller.carouselItems.length;
+                    //         controller.setCurrentIndex(nextIndex);
+                    //         carouselController.animateToPage(
+                    //           nextIndex,
+                    //           duration: Duration(milliseconds: 300),
+                    //           curve: Curves.easeInOut,
+                    //         );
+                    //       },
+                    //       iconSize: 18.sp,
+                    //       padding: EdgeInsets.all(5),
+                    //       constraints: BoxConstraints(),
+                    //     ),
+                    //   ),
+                    // ),
                     Positioned(
                       bottom: 14.h,
                       left: 0,
@@ -424,11 +427,15 @@ class VendorDetailsScreen extends StatelessWidget {
                           offer: controller.offers[index],
                           onTap: () async {
                             if (!profileController.isSubscribed.value) {
-                              AppLoggerHelper.debug("User subscribe value : ${profileController.isSubscribed.value}");
+                              AppLoggerHelper.debug(
+                                "User subscribe value : ${profileController.isSubscribed.value}",
+                              );
                               _showSubscribeDialog(context);
                               return;
                             }
-                            AppLoggerHelper.debug("subscription value : ${profileController.isSubscribed.value}");
+                            AppLoggerHelper.debug(
+                              "subscription value : ${profileController.isSubscribed.value}",
+                            );
 
                             final offerId = controller.offers[index].id;
                             if (offerId != null && offerId.isNotEmpty) {
@@ -514,6 +521,101 @@ class VendorDetailsScreen extends StatelessWidget {
               SizedBox(height: 32.h),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _VendorCarouselShimmer extends StatelessWidget {
+  const _VendorCarouselShimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: const Color(0xFFF0F3F8),
+      highlightColor: const Color(0xFFFFFFFF),
+      period: const Duration(milliseconds: 1400),
+      child: Container(
+        height: 180,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFFF4F7FB), Color(0xFFE9EEF6)],
+          ),
+        ),
+        child: Stack(
+          children: [
+            Positioned(
+              top: 18,
+              left: 18,
+              child: Container(
+                width: 88,
+                height: 26,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF0F3F8),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 18,
+              right: 72,
+              bottom: 34,
+              child: Container(
+                height: 20,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF0F3F8),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+            Positioned(
+              left: 18,
+              right: 120,
+              bottom: 12,
+              child: Container(
+                height: 12,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF0F3F8),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+            Positioned(
+              right: -8,
+              top: -10,
+              child: Container(
+                width: 96,
+                height: 96,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.5),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+            Positioned(
+              right: 18,
+              bottom: 16,
+              child: Row(
+                children: List.generate(
+                  3,
+                  (index) => Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                    width: index == 0 ? 18 : 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF0F3F8),
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

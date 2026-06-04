@@ -29,6 +29,18 @@ class OfferCard extends StatelessWidget {
     this.offerData,
   });
 
+  String _buildLocationText(LocalizationController locale) {
+    final vendorName =
+        offerData?.vendorProfile?.businessName ??
+        offerData?.vendorProfile?.user?.name;
+
+    if (vendorName != null && vendorName.trim().isNotEmpty) {
+      return vendorName.trim();
+    }
+
+    return locale.get(locationKey);
+  }
+
   @override
   Widget build(BuildContext context) {
     final locale = Get.find<LocalizationController>();
@@ -41,6 +53,7 @@ class OfferCard extends StatelessWidget {
       },
       child: Container(
         width: 164.w,
+
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
@@ -96,18 +109,14 @@ class OfferCard extends StatelessWidget {
                   SizedBox(height: 5.h),
                   Row(
                     children: [
-                      Icon(
-                        Icons.location_on_outlined,
-                        size: 18.sp,
-                        color: Colors.grey,
-                      ),
+                      Icon(Icons.store, size: 18.sp, color: Colors.grey),
                       SizedBox(width: 5.w),
                       Expanded(
                         child: Obx(() {
                           locale.currentLanguage.value; // Trigger reactivity
                           return Text(
-                            locale.get(locationKey),
-                            // maxLines: 1,
+                            _buildLocationText(locale),
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: secondaryFontStyle(
                               color: AppColors.textSecondary,
