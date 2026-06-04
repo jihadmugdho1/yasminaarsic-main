@@ -64,9 +64,9 @@ class SubscriptionHistoryModel {
       case 'CANCELED':
         return Colors.red;
       case 'EXPIRED':
-        return Colors.grey;
+        return Colors.red;
       default:
-        return Colors.grey;
+        return Colors.red;
     }
   }
 }

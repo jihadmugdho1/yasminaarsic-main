@@ -372,17 +372,17 @@ class VendorDetailsScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: Obx(
-                  () => Text(
-                    controller.isLoading.value
-                        ? '${locale.get('available_offers')} (0)'
-                        : '${locale.get('available_offers')} (${controller.offers.length})',
-                    textAlign: TextAlign.start,
-                    style: primaryFontStyle(
-                      color: const Color(0xFF101727),
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
+                  () => controller.isLoading.value
+                      ? const SizedBox.shrink()
+                      : Text(
+                          '${locale.get('available_offers')} (${controller.offers.length})',
+                          textAlign: TextAlign.start,
+                          style: primaryFontStyle(
+                            color: const Color(0xFF101727),
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
                 ),
               ),
 
@@ -421,98 +421,96 @@ class VendorDetailsScreen extends StatelessWidget {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: controller.offers.length,
                     itemBuilder: (context, index) {
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: 16.h),
-                        child: OfferCard(
-                          offer: controller.offers[index],
-                          onTap: () async {
-                            if (!profileController.isSubscribed.value) {
-                              AppLoggerHelper.debug(
-                                "User subscribe value : ${profileController.isSubscribed.value}",
-                              );
-                              _showSubscribeDialog(context);
-                              return;
-                            }
-                            AppLoggerHelper.debug(
-                              "subscription value : ${profileController.isSubscribed.value}",
+                      return OfferCard(
+                        offer: controller.offers[index],
+                        onTap: () async {
+                          // if (!profileController.isSubscribed.value) {
+                          //   AppLoggerHelper.debug(
+                          //     "User subscribe value : ${profileController.isSubscribed.value}",
+                          //   );
+                          //   _showSubscribeDialog(context);
+                          //   return;
+                          // }
+                          AppLoggerHelper.debug(
+                            "subscription value : ${profileController.isSubscribed.value}",
+                          );
+                           _showSubscribeDialog(context);
+                      
+                          final offerId = controller.offers[index].id;
+                          if (offerId != null && offerId.isNotEmpty) {
+                            showGeneralDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              barrierLabel: 'LoadingOfferDialog',
+                              barrierColor: Colors.black.withOpacity(0.5),
+                              transitionDuration: Duration(milliseconds: 200),
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) {
+                                    return Center(
+                                      child: Material(
+                                        type: MaterialType.transparency,
+                                        child: const OfferDialogShimmer(),
+                                      ),
+                                    );
+                                  },
+                              transitionBuilder:
+                                  (
+                                    context,
+                                    animation,
+                                    secondaryAnimation,
+                                    child,
+                                  ) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    );
+                                  },
                             );
-
-                            final offerId = controller.offers[index].id;
-                            if (offerId != null && offerId.isNotEmpty) {
-                              showGeneralDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                barrierLabel: 'LoadingOfferDialog',
-                                barrierColor: Colors.black.withOpacity(0.5),
-                                transitionDuration: Duration(milliseconds: 200),
-                                pageBuilder:
-                                    (context, animation, secondaryAnimation) {
-                                      return Center(
-                                        child: Material(
-                                          type: MaterialType.transparency,
-                                          child: const OfferDialogShimmer(),
+                      
+                            await controller.fetchOfferDetails(offerId);
+                      
+                            if (!context.mounted) return;
+                            Navigator.of(context).pop();
+                      
+                            if (!context.mounted) return;
+                            showGeneralDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              barrierLabel: 'OfferDialog',
+                              barrierColor: Colors.transparent.withOpacity(
+                                0.5,
+                              ),
+                              transitionDuration: Duration(milliseconds: 200),
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) {
+                                    return Center(
+                                      child: Material(
+                                        type: MaterialType.transparency,
+                                        child: OfferDialog(
+                                          offer: controller.offers[index],
+                                          offerIndex: index,
+                                          offerDetail: controller
+                                              .selectedOfferDetail
+                                              .value,
                                         ),
-                                      );
-                                    },
-                                transitionBuilder:
-                                    (
-                                      context,
-                                      animation,
-                                      secondaryAnimation,
-                                      child,
-                                    ) {
-                                      return FadeTransition(
-                                        opacity: animation,
-                                        child: child,
-                                      );
-                                    },
-                              );
-
-                              await controller.fetchOfferDetails(offerId);
-
-                              if (!context.mounted) return;
-                              Navigator.of(context).pop();
-
-                              if (!context.mounted) return;
-                              showGeneralDialog(
-                                context: context,
-                                barrierDismissible: true,
-                                barrierLabel: 'OfferDialog',
-                                barrierColor: Colors.transparent.withOpacity(
-                                  0.5,
-                                ),
-                                transitionDuration: Duration(milliseconds: 200),
-                                pageBuilder:
-                                    (context, animation, secondaryAnimation) {
-                                      return Center(
-                                        child: Material(
-                                          type: MaterialType.transparency,
-                                          child: OfferDialog(
-                                            offer: controller.offers[index],
-                                            offerIndex: index,
-                                            offerDetail: controller
-                                                .selectedOfferDetail
-                                                .value,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                transitionBuilder:
-                                    (
-                                      context,
-                                      animation,
-                                      secondaryAnimation,
-                                      child,
-                                    ) {
-                                      return FadeTransition(
-                                        opacity: animation,
-                                        child: child,
-                                      );
-                                    },
-                              );
-                            }
-                          },
-                        ),
+                                      ),
+                                    );
+                                  },
+                              transitionBuilder:
+                                  (
+                                    context,
+                                    animation,
+                                    secondaryAnimation,
+                                    child,
+                                  ) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    );
+                                  },
+                            );
+                          }
+                        },
                       );
                     },
                   );

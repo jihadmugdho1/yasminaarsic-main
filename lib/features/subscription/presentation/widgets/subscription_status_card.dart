@@ -111,7 +111,7 @@ class SubscriptionStatusCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: statusTextColor,
+                color: Colors.white,
               ),
             ),
           ),

@@ -13,7 +13,8 @@ class OfferCard extends StatelessWidget {
   static const String _fallbackImage = 'assets/images/app_logo.png';
 
   Widget _buildImage(String imageUrl, double width, double height) {
-    final isRemote = imageUrl.startsWith('http://') ||
+    final isRemote =
+        imageUrl.startsWith('http://') ||
         imageUrl.startsWith('https://') ||
         imageUrl.startsWith('/');
 
@@ -61,7 +62,7 @@ class OfferCard extends StatelessWidget {
         margin: EdgeInsets.all(10.w),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -96,12 +97,11 @@ class OfferCard extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.black87,
                         fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
                 ),
-              
               ],
             ),
             Padding(
@@ -185,4 +185,3 @@ class OfferCard extends StatelessWidget {
     );
   }
 }
-

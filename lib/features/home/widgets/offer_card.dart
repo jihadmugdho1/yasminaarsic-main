@@ -213,24 +213,11 @@ class _NetworkImageWithTimeoutState extends State<_NetworkImageWithTimeout> {
       height: widget.height,
       width: widget.width,
       fit: widget.fit,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) {
+      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+        if (wasSynchronouslyLoaded || frame != null) {
           _imageLoaded = true;
-          return child;
         }
-        return Container(
-          height: widget.height,
-          width: widget.width,
-          color: Colors.grey[200],
-          child: Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                        loadingProgress.expectedTotalBytes!
-                  : null,
-            ),
-          ),
-        );
+        return child;
       },
       errorBuilder: (context, error, stackTrace) {
         return Image.asset(

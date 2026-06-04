@@ -107,13 +107,13 @@ class VendorDetailsCard extends StatelessWidget {
                             vertical: 4.w,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.blue.shade50,
+                            color: AppColors.primary,
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             controller.restaurant.value.category,
                             style: primaryFontStyle(
-                              color: AppColors.primary,
+                              color: AppColors.white,
                               fontSize: 12.sp,
                               fontWeight: FontWeight.w500,
                             ),
