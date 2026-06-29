@@ -25,6 +25,7 @@ class IconPath{
   static const String crossIcon = 'assets/icons/cross_icon.svg';
   static const String lockIcon = 'assets/icons/lock_icon.svg';
   static const String logoutIcon = 'assets/icons/logout_icon.svg';
+  static const String corruptedfile = 'assets/icons/corruptedfile.png';
 
 
 
