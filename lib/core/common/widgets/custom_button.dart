@@ -138,7 +138,9 @@ class CustomButton extends StatelessWidget {
         button = FilledButton(
           onPressed: onPressed,
           style: FilledButton.styleFrom(
+            side: BorderSide.none,
             backgroundColor: bg,
+            
             foregroundColor: textCol,
             disabledBackgroundColor: disabledBackgroundColor,
             disabledForegroundColor: disabledTextColor,

@@ -89,7 +89,7 @@ class _ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
                 alignment: Alignment.topRight,
                 child: GestureDetector(
                   onTap: widget.onClosePressed,
-                  child: SvgPicture.asset(IconPath.crossIcon),
+                  child: SvgPicture.asset(IconPath.crossIcon,color: AppColors.blueColor,),
                 ),
               ),
               const SizedBox(height: 8),
@@ -182,6 +182,7 @@ class _ForgotPasswordDialogState extends State<ForgotPasswordDialog> {
                       backgroundColor: (widget.loading?.value ?? false)
                           ? Colors.grey
                           : widget.primaryColor,
+                          side: BorderSide.none,
                       foregroundColor: widget.buttonTextColor,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(

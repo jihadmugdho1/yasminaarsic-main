@@ -344,7 +344,7 @@ class LoginScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: 10.h),
 
                     // Login Button
                     Align(
@@ -385,18 +385,16 @@ class LoginScreen extends StatelessWidget {
                     SizedBox(height: 12.h),
 
                     // Social Login Icons
-                 
                     Center(
                       child: InkWell(
                         onTap: controller.signUpWithGoogle,
                         child: Image.asset(
                           ImagePath.googleImage,
-                          height: 32.h,
-                          width: 32.w,
+                          height: 40.h,
+                          width: 40.h,
                         ),
                       ),
                     ),
-                    SizedBox(height: 10.h),
 
                     // Sign Up Link
                     Row(
