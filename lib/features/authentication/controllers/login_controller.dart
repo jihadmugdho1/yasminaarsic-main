@@ -675,14 +675,13 @@ class LoginController extends GetxController {
       if (idToken == null) {
         throw Exception('Failed to get Firebase ID token');
       }
-
       StorageService.saveName(googleUser.displayName ?? '');
-
       final String? fcmToken =
           StorageService.fcmToken ??
           await FirebaseMessaging.instance.getToken();
 
       final authService = Get.find<AuthenticationService>();
+      
       final requestBody = {'idToken': idToken, 'fcmToken': fcmToken ?? ''};
 
       AppLoggerHelper.debug(
