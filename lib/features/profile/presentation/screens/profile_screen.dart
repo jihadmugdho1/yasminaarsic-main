@@ -166,7 +166,33 @@ class ProfileScreen extends StatelessWidget {
                   minWidth: double.infinity,
                   borderRadius: 8.r,
                   height: 36.h,
-                  onPressed: controller.onLogoutPressed,
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      backgroundColor: AppColors.white,
+                      title: Text(locale.get('logout')),
+                      content: const Text('Are you sure you want to logout?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.of(ctx).pop(),
+                          child: const Text(
+                            'Cancel',
+                            style: TextStyle(color: Color(0xFF4F39F6)),
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(ctx).pop();
+                            controller.onLogoutPressed();
+                          },
+                          child: const Text(
+                            'Yes',
+                            style: TextStyle(color: Color(0xFF4F39F6)),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],

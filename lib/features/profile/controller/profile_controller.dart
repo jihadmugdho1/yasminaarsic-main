@@ -7,6 +7,7 @@ import 'package:yasminaarsic/features/profile/data/models/notification_model.dar
 import 'package:yasminaarsic/features/profile/data/models/notification_preference_model.dart';
 import 'package:yasminaarsic/features/profile/data/models/user_model.dart';
 import 'package:yasminaarsic/features/profile/data/profile_model.dart';
+import 'package:yasminaarsic/features/authentication/controllers/login_controller.dart';
 import 'package:yasminaarsic/features/profile/data/services/notification_preference_service.dart';
 import 'package:yasminaarsic/features/profile/data/services/profile_service.dart';
 import 'package:yasminaarsic/routes/app_routes.dart';
@@ -234,13 +235,11 @@ class ProfileController extends GetxController {
   }
 
   void onLogoutPressed() async {
-    // Clear stored token and user data
     await StorageService.logoutUser();
+    await Get.find<LoginController>().signOutGoogle();
     AppLoggerHelper.info(
       '🚪 User logged out, token and data cleared from storage',
     );
-
-    // Navigate to login screen
     Get.offAllNamed(AppRoute.loginScreen);
   }
 

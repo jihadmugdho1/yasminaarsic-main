@@ -48,7 +48,7 @@ class NotificationPreferencesCard extends StatelessWidget {
             // Header: Title + Icon
             Row(
               children: [
-                Icon(Icons.notifications_outlined, size: 20, color: iconColor),
+                Icon(Icons.notifications_outlined, size: 20.h, color: AppColors.primary),
                 const SizedBox(width: 8),
                 Text(
                   title,

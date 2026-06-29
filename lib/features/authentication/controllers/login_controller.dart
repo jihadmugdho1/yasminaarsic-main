@@ -621,6 +621,15 @@ class LoginController extends GetxController {
     }
   }
 
+  Future<void> signOutGoogle() async {
+    try {
+      await _googleSignIn.signOut();
+      await _googleSignIn.disconnect();
+    } catch (e) {
+      AppLoggerHelper.error('Google sign-out error: $e');
+    }
+  }
+
   Future<void> signUpWithGoogle() async {
     try {
       EasyLoading.show(status: 'Signing in...');
@@ -681,7 +690,7 @@ class LoginController extends GetxController {
           await FirebaseMessaging.instance.getToken();
 
       final authService = Get.find<AuthenticationService>();
-      
+
       final requestBody = {'idToken': idToken, 'fcmToken': fcmToken ?? ''};
 
       AppLoggerHelper.debug(
