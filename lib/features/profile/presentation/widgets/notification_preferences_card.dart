@@ -83,7 +83,7 @@ class NotificationPreferencesCard extends StatelessWidget {
                 Text(
                   pref.label,
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
                     fontFamily: 'Inter',
                     color: labelColor,

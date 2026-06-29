@@ -16,13 +16,7 @@ class OfferCardShimmer extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.grey.shade200, width: 1),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 8,
-              offset: Offset(0, 2),
-            ),
-          ],
+       
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
