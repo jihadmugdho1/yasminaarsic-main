@@ -1,6 +1,6 @@
 class ApiConstants {
   static const String baseUrl =
-      "https://api.vendora.rs/api/v1/";
+      "https://vendora-backend-p6d9.onrender.com/api/v1/";
 
   static String get register => "${baseUrl}auth/register";
   static String get verifyEmail => "${baseUrl}auth/verify-email";

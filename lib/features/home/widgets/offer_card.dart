@@ -106,7 +106,7 @@ class OfferCard extends StatelessWidget {
                       ),
                     );
                   }),
-                  SizedBox(height: 5.h),
+                  SizedBox(height: 10.h),
                   Row(
                     children: [
                       Icon(Icons.store, size: 18.sp, color: Colors.grey),
@@ -116,7 +116,7 @@ class OfferCard extends StatelessWidget {
                           locale.currentLanguage.value; // Trigger reactivity
                           return Text(
                             _buildLocationText(locale),
-                            maxLines: 2,
+                            maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: secondaryFontStyle(
                               color: AppColors.textSecondary,
@@ -127,28 +127,6 @@ class OfferCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 7.h),
-                  // Container(
-                  //   padding: EdgeInsets.symmetric(
-                  //     horizontal: 10.w,
-                  //     vertical: 5.h,
-                  //   ),
-                  //   decoration: BoxDecoration(
-                  //     color: Colors.yellow[600],
-                  //     borderRadius: BorderRadius.circular(8),
-                  //   ),
-                  //   child: Obx(() {
-                  //     locale.currentLanguage.value; // Trigger reactivity
-                  //     return Text(
-                  //       locale.get(categoryLabelKey),
-                  //       style: TextStyle(
-                  //         color: Colors.black87,
-                  //         fontSize: 12.sp,
-                  //         fontWeight: FontWeight.w500,
-                  //       ),
-                  //     );
-                  //   }),
-                  // ),
                 ],
               ),
             ),
