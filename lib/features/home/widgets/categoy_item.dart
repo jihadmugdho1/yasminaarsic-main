@@ -84,23 +84,8 @@ class CategoryGridItem extends StatelessWidget {
               color: isSelected
                   ? AppColors.primary.withOpacity(0.0)
                   : Colors.grey.withOpacity(0.22),
-              width: 2,
+              width: 1.5,
             ),
-            boxShadow: isSelected
-                ? [
-                    BoxShadow(
-                      color: AppColors.primary.withOpacity(0.10),
-                      blurRadius: 2,
-                      offset: Offset(0, 2),
-                    ),
-                  ]
-                : [
-                    BoxShadow(
-                      color: AppColors.yellow.withOpacity(0.20),
-                      blurRadius: 2,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
           ),
           child: Center(
             child: Column(

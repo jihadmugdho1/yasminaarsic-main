@@ -71,7 +71,9 @@ class HomeScreen extends StatelessWidget {
                               SizedBox(height: 10.h),
                               Obx(
                                 () => Text(
-                                  locale.get('browse_amazing_BOGO_deals_from_top_vendors'),
+                                  locale.get(
+                                    'browse_amazing_BOGO_deals_from_top_vendors',
+                                  ),
                                   style: secondaryFontStyle(
                                     color: Colors.white.withOpacity(0.85),
                                     fontSize: 12.sp,
@@ -273,7 +275,9 @@ class HomeScreen extends StatelessWidget {
                                 enlargeCenterPage: false,
                                 autoPlay: true,
                                 autoPlayInterval: const Duration(seconds: 3),
-                                autoPlayAnimationDuration: const Duration(milliseconds: 600),
+                                autoPlayAnimationDuration: const Duration(
+                                  milliseconds: 600,
+                                ),
                                 onPageChanged: (index, reason) {
                                   controller.setCurrentIndex(index);
                                 },
@@ -284,7 +288,9 @@ class HomeScreen extends StatelessWidget {
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                   errorBuilder: (context, error, stackTrace) {
-                                    return Container(color: Colors.grey.shade200);
+                                    return Container(
+                                      color: Colors.grey.shade200,
+                                    );
                                   },
                                 );
                               }).toList(),
@@ -302,12 +308,18 @@ class HomeScreen extends StatelessWidget {
                                     return Container(
                                       width: 12.w,
                                       height: 12.h,
-                                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 4,
+                                      ),
                                       decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: controller.currentIndex.value == entry.key
+                                        color:
+                                            controller.currentIndex.value ==
+                                                entry.key
                                             ? AppColors.primary
-                                            : Colors.white.withValues(alpha: 0.7),
+                                            : Colors.white.withValues(
+                                                alpha: 0.7,
+                                              ),
                                       ),
                                     );
                                   }).toList(),
@@ -351,7 +363,6 @@ class HomeScreen extends StatelessWidget {
                               icon: cat.icon,
                               isSelected: isSelected,
                               onTap: () {
-                            
                                 controller.setSelectedCategory(index);
                               },
                             );
@@ -398,14 +409,19 @@ class HomeScreen extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 18.w),
                         child: SizedBox(
                           height: 180.h,
-                          child: Center(
-                            child: Text(
-                              'No new offers available',
-                              style: primaryFontStyle(
-                                fontSize: 14.sp,
-                                color: AppColors.textSecondary,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(height: 40.h, IconPath.corruptedfile),
+                              SizedBox(width: 10.w),
+                              Text(
+                                'No new offers available',
+                                style: primaryFontStyle(
+                                  fontSize: 14.sp,
+                                  color: AppColors.textSecondary,
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
                       );
@@ -415,7 +431,7 @@ class HomeScreen extends StatelessWidget {
                       child: Row(
                         children: controller.newOffers.map((offer) {
                           int index = controller.newOffers.indexOf(offer);
-                        
+
                           return Padding(
                             padding: EdgeInsets.only(
                               left: index == 0 ? 18.w : 10.w,
@@ -495,14 +511,19 @@ class HomeScreen extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 18.w),
                         child: SizedBox(
                           height: 180.h,
-                          child: Center(
-                            child: Text(
-                              'No trending offers available',
-                              style: primaryFontStyle(
-                                fontSize: 14.sp,
-                                color: AppColors.textSecondary,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.asset(height: 40.h, IconPath.corruptedfile),
+                              SizedBox(width: 10.w),
+                              Text(
+                                'No trending offers available',
+                                style: primaryFontStyle(
+                                  fontSize: 14.sp,
+                                  color: AppColors.textSecondary,
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
                       );
@@ -535,8 +556,8 @@ class HomeScreen extends StatelessWidget {
                       ),
                     );
                   }),
+
                   // Load more trending offers
-                
                   SizedBox(height: 16.h),
                   Builder(
                     builder: (context) {
