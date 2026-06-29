@@ -51,19 +51,19 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAx6yRp8L2Cc-CrCuj9ANeTxGpFH795B54',
-    appId: '1:972184746650:android:2395b78579c51bc0933d23',
+    appId: '1:972184746650:android:8c3e5be5d9b710e3933d23',
     messagingSenderId: '972184746650',
     projectId: 'yasmina-6f263',
     storageBucket: 'yasmina-6f263.firebasestorage.app',
   );
-
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAQN76nj_CBdSPmT8FlG63EeQZ8gjuJ09Y',
-    appId: '1:972184746650:ios:6e12458ae1745335933d23',
+    appId: '1:972184746650:ios:40a037b643de9c55933d23',
     messagingSenderId: '972184746650',
     projectId: 'yasmina-6f263',
     storageBucket: 'yasmina-6f263.firebasestorage.app',
+    androidClientId: '972184746650-qmt1piskfjrjrsr9gib30k9j7o9p4hda.apps.googleusercontent.com',
+    iosClientId: '972184746650-5os0e0ei82f2pkf0sevdmo95b5t22j0a.apps.googleusercontent.com',
     iosBundleId: 'com.yasminaarsic.vendora',
   );
-
 }

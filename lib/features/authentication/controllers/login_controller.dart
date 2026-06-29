@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -225,7 +226,9 @@ class LoginController extends GetxController {
             '';
         AppLoggerHelper.debug('Terms and conditions fetched successfully');
       } else {
-        AppLoggerHelper.error('Failed to fetch terms: ${response.errorMessage}');
+        AppLoggerHelper.error(
+          'Failed to fetch terms: ${response.errorMessage}',
+        );
       }
     } catch (e) {
       AppLoggerHelper.error('Error fetching terms', e);
@@ -429,7 +432,6 @@ class LoginController extends GetxController {
   }
 
   void verifyResetCode(String code) async {
-    print('🔑 DEBUG: verifyResetCode() called with code: $code');
     try {
       final authService = Get.find<AuthenticationService>();
       final response = await authService.verifyResetCode(
@@ -438,48 +440,32 @@ class LoginController extends GetxController {
         code: code,
       );
 
-      print(
-        '🔑 DEBUG: Response received - statusCode: ${response?.statusCode}',
-      );
-      print('🔑 DEBUG: Response body: ${response?.body}');
-
       if (response != null &&
           (response.statusCode == 200 || response.statusCode == 201)) {
         AppLoggerHelper.info('✅ Reset code verification successful!');
         AppLoggerHelper.info('📥 Verify Reset Code Response: ${response.body}');
 
         // Parse the response to extract data
-        print('🔑 DEBUG: About to parse response body');
         final responseData = jsonDecode(response.body);
-        print('🔑 DEBUG: responseData = $responseData');
 
         final success = responseData['success'];
         final message = responseData['message'];
         final data = responseData['data'];
 
-        print('🔑 DEBUG: success = $success');
-        print('🔑 DEBUG: message = $message');
-        print('🔑 DEBUG: data = $data');
-
         AppLoggerHelper.info('📄 Message: $message');
 
         if (success == true) {
-          print('🔑 DEBUG: Extracting token from data...');
           // Store the reset token in persistent storage and controller memory
           final token = data is Map
               ? (data['resetToken'] ?? data['token'])
               : null;
-          print('🔑 DEBUG: Extracted token = $token');
 
           if (token != null) {
             resetToken = token; // Store in memory
-            print('🔑 DEBUG: Token stored in memory: $resetToken');
             await StorageService.saveResetToken(token);
-            print('🔑 DEBUG: Token saved to storage');
             AppLoggerHelper.info('🔑 Reset token stored: $token');
           } else {
             AppLoggerHelper.error('❌ No reset token found in response data');
-            print('🔑 DEBUG: Token extraction failed - data is: $data');
           }
 
           Get.back(); // Close dialog
@@ -502,10 +488,6 @@ class LoginController extends GetxController {
   }
 
   void setPassword([String? token]) async {
-    print('🔑 DEBUG: setPassword called with token param: $token');
-    print('🔑 DEBUG: resetToken in memory: $resetToken');
-    print('🔑 DEBUG: StorageService.resetToken: ${StorageService.resetToken}');
-
     // Priority: provided token > memory token > storage token
     final resetTokenValue = token ?? resetToken ?? StorageService.resetToken;
     AppLoggerHelper.info(
@@ -516,9 +498,6 @@ class LoginController extends GetxController {
     if (setPasswordFormKey.currentState?.validate() ?? false) {
       if (resetTokenValue == null) {
         AppLoggerHelper.error('❌ No reset token available');
-        print(
-          '🔑 ERROR: resetToken is null! token=$token, resetToken=$resetToken, storage=${StorageService.resetToken}',
-        );
         return;
       }
 
@@ -650,26 +629,71 @@ class LoginController extends GetxController {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         isLoading.value = false;
+        EasyLoading.dismiss();
         return; // user cancelled
       }
 
-      // Get selected account email from Google and send ONLY the email to backend
-      final String email = googleUser.email;
-      final String? displayName = googleUser.displayName;
-      final String? photoUrl = googleUser.photoUrl;
+      AppLoggerHelper.debug('Google account selected: $googleUser');
 
-      StorageService.saveName(displayName ?? '');
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
-      debugPrint('Selected Google email: $email');
-      debugPrint('Selected Google displayName: $displayName');
-      debugPrint('Selected Google photoUrl: $photoUrl');
+      AppLoggerHelper.debug(
+        'Google authentication tokens: ${jsonEncode({'idToken': googleAuth.idToken, 'accessToken': googleAuth.accessToken, 'serverAuthCode': googleUser.serverAuthCode})}',
+      );
+
+      if (googleAuth.idToken == null) {
+        throw Exception('Failed to get Google ID token');
+      }
+
+      // Sign into Firebase with the Google credential to get a Firebase ID token
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      AppLoggerHelper.debug(
+        'Firebase auth credential: ${jsonEncode(credential.asMap())}',
+      );
+
+      final userCredential = await FirebaseAuth.instance.signInWithCredential(
+        credential,
+      );
+
+      AppLoggerHelper.debug(
+        'Firebase userCredential response: $userCredential',
+      );
+      AppLoggerHelper.debug(
+        'Firebase additional user info: ${userCredential.additionalUserInfo}',
+      );
+      AppLoggerHelper.debug('Firebase user object: ${userCredential.user}');
+
+      final String? idToken = await userCredential.user?.getIdToken();
+
+      AppLoggerHelper.debug('Firebase ID token: $idToken');
+
+      if (idToken == null) {
+        throw Exception('Failed to get Firebase ID token');
+      }
+
+      StorageService.saveName(googleUser.displayName ?? '');
+
+      final String? fcmToken =
+          StorageService.fcmToken ??
+          await FirebaseMessaging.instance.getToken();
 
       final authService = Get.find<AuthenticationService>();
-      final response = await authService.googleLogin({
-        'email': email,
-        'name': displayName ?? '',
-        'imageUrl': photoUrl ?? '',
-      });
+      final requestBody = {'idToken': idToken, 'fcmToken': fcmToken ?? ''};
+
+      AppLoggerHelper.debug(
+        'Google login request payload: ${jsonEncode(requestBody)}',
+      );
+
+      final response = await authService.googleLogin(requestBody);
+
+      AppLoggerHelper.debug(
+        'Google login API response: ${jsonEncode(response)}',
+      );
 
       if (response == null || response['success'] != true) {
         throw Exception(
@@ -678,31 +702,35 @@ class LoginController extends GetxController {
       }
 
       final responseData = response['data'];
+
+      AppLoggerHelper.debug(
+        'Google login response data: ${jsonEncode(responseData)}',
+      );
+
       if (responseData == null || responseData['accessToken'] == null) {
         throw Exception('Google login failed: No access token from server');
       }
 
-      // Persist backend access token and user id for authorized requests
       await StorageService.saveToken(
         responseData['accessToken'] as String,
         responseData['user']?['id']?.toString() ?? '',
       );
 
-      // Now that we have a valid backend token stored, send the FCM token
-      final String? fcmToken = await FirebaseMessaging.instance.getToken();
-      debugPrint('FCM Token (post-login): $fcmToken');
       if (fcmToken != null) {
-        await authService.registerFcmToken(
+        final fcmResponse = await authService.registerFcmToken(
           token: fcmToken,
           platform: Platform.isIOS ? 'ios' : 'android',
-          deviceId: 'device_id', // You might need to get actual device ID
+          deviceId: 'device_id',
+        );
+
+        AppLoggerHelper.debug(
+          'Register FCM token response: status=${fcmResponse?.statusCode}, body=${fcmResponse?.body}',
         );
       }
 
-      // Navigate to home
       Get.offAllNamed(AppRoute.mainAppScreen);
     } on PlatformException catch (e) {
-      print('Google Sign-In Platform Exception: $e');
+      AppLoggerHelper.error('Google Sign-In Platform Exception: $e');
       if (e.code == 'channel-error') {
         EasyLoading.showError(
           'Google Sign-In not configured. Please check your Firebase setup.',
@@ -711,8 +739,8 @@ class LoginController extends GetxController {
         EasyLoading.showError('Google Sign-In failed. Please try again.');
       }
     } catch (e) {
-      print('Google sign up error: $e');
-      EasyLoading.showError('Google sign-up failed. Try again.');
+      AppLoggerHelper.error('Google sign-in error: $e');
+      EasyLoading.showError('Google sign-in failed. Try again.');
     } finally {
       isLoading.value = false;
       EasyLoading.dismiss();
@@ -752,7 +780,6 @@ class LoginController extends GetxController {
     }
     return null;
   }
-
 
   String? validatePasswordMatch(String? value, String referencePassword) {
     if (value == null || value.isEmpty) {
