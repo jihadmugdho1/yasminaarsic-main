@@ -13,7 +13,6 @@ import 'package:yasminaarsic/features/home/widgets/category_skeleton_loader.dart
 import 'package:yasminaarsic/features/home/widgets/offer_card.dart';
 import 'package:yasminaarsic/features/home/widgets/offer_card_shimmer.dart';
 import 'package:yasminaarsic/features/home/vendor_details/screen/vendor_details_screen.dart';
-import 'package:yasminaarsic/features/home/widgets/pop_up_offer_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});

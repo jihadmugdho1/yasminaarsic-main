@@ -32,15 +32,8 @@ class CategorySkeletonLoader extends StatelessWidget {
             color: Colors.white,
             border: Border.all(
               color: Colors.grey.withValues(alpha: 0.22),
-              width: 2,
+              width: 1,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.yellow.withValues(alpha: 0.20),
-                blurRadius: 2,
-                offset: Offset(0, 2),
-              ),
-            ],
           ),
           child: Center(
             child: Shimmer.fromColors(
