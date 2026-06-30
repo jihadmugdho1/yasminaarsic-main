@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:yasminaarsic/core/core.dart';
 import 'package:yasminaarsic/core/utils/constants/colors.dart';
 import 'package:yasminaarsic/core/localization/localization_controller.dart';
 import 'package:yasminaarsic/features/alerts/controller/alerts_controller.dart';
@@ -89,11 +90,16 @@ class AlertsScreen extends StatelessWidget {
 
                 // Empty state
                 if (controller.notifications.isEmpty) {
-                  return Center(
-                    child: Text(
-                      'No notifications yet',
-                      style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                    ),
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(IconPath.notificationIcon,height: 20.h,),
+                      SizedBox(width: 5.w,),
+                      Text(
+                        'No notifications yet',
+                        style: TextStyle(fontSize: 16.sp, color: AppColors.textPrimary),
+                      ),
+                    ],
                   );
                 }
 

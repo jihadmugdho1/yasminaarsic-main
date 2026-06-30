@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:yasminaarsic/core/core.dart';
 
 class CategorySkeletonLoader extends StatelessWidget {
   final int itemCount;
@@ -32,15 +31,8 @@ class CategorySkeletonLoader extends StatelessWidget {
             color: Colors.white,
             border: Border.all(
               color: Colors.grey.withValues(alpha: 0.22),
-              width: 2,
+              width: 1,
             ),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.yellow.withValues(alpha: 0.20),
-                blurRadius: 2,
-                offset: Offset(0, 2),
-              ),
-            ],
           ),
           child: Center(
             child: Shimmer.fromColors(
