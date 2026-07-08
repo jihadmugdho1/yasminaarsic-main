@@ -50,20 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAx6yRp8L2Cc-CrCuj9ANeTxGpFH795B54',
-    appId: '1:972184746650:android:8c3e5be5d9b710e3933d23',
-    messagingSenderId: '972184746650',
-    projectId: 'yasmina-6f263',
-    storageBucket: 'yasmina-6f263.firebasestorage.app',
+    apiKey: 'AIzaSyCZWWCrLoxKiEp8yzCnSg-6sJEwtijplK0',
+    appId: '1:760103787556:android:c06af362d8f9c86b858cb1',
+    messagingSenderId: '760103787556',
+    projectId: 'vendora-7bfbe',
+    storageBucket: 'vendora-7bfbe.firebasestorage.app',
   );
+
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAQN76nj_CBdSPmT8FlG63EeQZ8gjuJ09Y',
-    appId: '1:972184746650:ios:40a037b643de9c55933d23',
-    messagingSenderId: '972184746650',
-    projectId: 'yasmina-6f263',
-    storageBucket: 'yasmina-6f263.firebasestorage.app',
-    androidClientId: '972184746650-qmt1piskfjrjrsr9gib30k9j7o9p4hda.apps.googleusercontent.com',
-    iosClientId: '972184746650-5os0e0ei82f2pkf0sevdmo95b5t22j0a.apps.googleusercontent.com',
+    apiKey: 'AIzaSyBqnw6owqLzoahCU3MD_KxVIE0Zkq3ILuQ',
+    appId: '1:760103787556:ios:3c9a5806f9ea69aa858cb1',
+    messagingSenderId: '760103787556',
+    projectId: 'vendora-7bfbe',
+    storageBucket: 'vendora-7bfbe.firebasestorage.app',
     iosBundleId: 'com.yasminaarsic.vendora',
   );
 }
