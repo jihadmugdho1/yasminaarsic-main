@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:yasminaarsic/core/services/storage_service.dart';
-import 'package:yasminaarsic/core/utils/constants/api_constants.dart';
-import 'package:yasminaarsic/core/utils/logging/logger.dart';
+import 'package:vendora/core/services/storage_service.dart';
+import 'package:vendora/core/utils/constants/api_constants.dart';
+import 'package:vendora/core/utils/logging/logger.dart';
 
 class AuthenticationService extends GetxService {
   // Get headers with Bearer token for authenticated requests

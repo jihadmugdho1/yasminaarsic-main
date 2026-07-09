@@ -1,8 +1,8 @@
-import 'package:yasminaarsic/core/services/network_caller.dart';
-import 'package:yasminaarsic/core/services/storage_service.dart';
-import 'package:yasminaarsic/core/models/response_data.dart';
-import 'package:yasminaarsic/core/utils/constants/api_constants.dart';
-import 'package:yasminaarsic/features/savings/data/models/redeemed_offers_response_model.dart';
+import 'package:vendora/core/services/network_caller.dart';
+import 'package:vendora/core/services/storage_service.dart';
+import 'package:vendora/core/models/response_data.dart';
+import 'package:vendora/core/utils/constants/api_constants.dart';
+import 'package:vendora/features/savings/data/models/redeemed_offers_response_model.dart';
 
 class SavingsService {
   final NetworkCaller _networkCaller = NetworkCaller();

@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:yasminaarsic/core/services/storage_service.dart';
-import 'package:yasminaarsic/core/utils/constants/api_constants.dart';
-import 'package:yasminaarsic/features/editProfile/data/edit_profile_model.dart';
+import 'package:vendora/core/services/storage_service.dart';
+import 'package:vendora/core/utils/constants/api_constants.dart';
+import 'package:vendora/features/editProfile/data/edit_profile_model.dart';
 
 class EditProfileService {
   static const String _contentType = 'application/json; charset=utf-8';

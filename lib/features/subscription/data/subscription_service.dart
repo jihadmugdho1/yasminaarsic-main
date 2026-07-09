@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:http/http.dart' as http;
-import 'package:yasminaarsic/core/core.dart';
-import 'package:yasminaarsic/features/subscription/data/subscription_history_model.dart';
-import 'package:yasminaarsic/features/subscription/data/subscription_plan_model.dart';
-import 'package:yasminaarsic/features/subscription/data/checkout_response_model.dart';
+import 'package:vendora/core/core.dart';
+import 'package:vendora/features/subscription/data/subscription_history_model.dart';
+import 'package:vendora/features/subscription/data/subscription_plan_model.dart';
+import 'package:vendora/features/subscription/data/checkout_response_model.dart';
 
 class SubscriptionService {
   final NetworkCaller _networkCaller = NetworkCaller();

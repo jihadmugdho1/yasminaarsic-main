@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:yasminaarsic/features/home/vendor_details/models/alert_dialogs/qr_dialog_model.dart';
+import 'package:vendora/features/home/vendor_details/models/alert_dialogs/qr_dialog_model.dart';
 
 class QrRedemptionController extends GetxController {
   // MVC Pattern: Store QR offers as RxList like vendor_details_controller

@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:yasminaarsic/core/core.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/features/home/vendor_details/controllers/vendor_details_controller.dart';
-import 'package:yasminaarsic/features/home/vendor_details/widgets/offer_card.dart';
-import 'package:yasminaarsic/features/home/vendor_details/widgets/alert_dialogs/offer_dialog.dart';
-import 'package:yasminaarsic/features/home/vendor_details/widgets/alert_dialogs/offer_dialog_shimmer.dart';
-import 'package:yasminaarsic/features/home/vendor_details/widgets/vendor_details_card.dart';
-import 'package:yasminaarsic/features/home/vendor_details/widgets/vendor_details_card_shimmer.dart';
-import 'package:yasminaarsic/features/home/vendor_details/widgets/vendor_offer_card_shimmer.dart';
-import 'package:yasminaarsic/features/bottom_navbar/controller/bottom_navbar_controller.dart';
-import 'package:yasminaarsic/features/profile/controller/profile_controller.dart';
+import 'package:vendora/core/core.dart';
+import 'package:vendora/core/localization/localization_controller.dart';
+import 'package:vendora/features/home/vendor_details/controllers/vendor_details_controller.dart';
+import 'package:vendora/features/home/vendor_details/widgets/offer_card.dart';
+import 'package:vendora/features/home/vendor_details/widgets/alert_dialogs/offer_dialog.dart';
+import 'package:vendora/features/home/vendor_details/widgets/alert_dialogs/offer_dialog_shimmer.dart';
+import 'package:vendora/features/home/vendor_details/widgets/vendor_details_card.dart';
+import 'package:vendora/features/home/vendor_details/widgets/vendor_details_card_shimmer.dart';
+import 'package:vendora/features/home/vendor_details/widgets/vendor_offer_card_shimmer.dart';
+import 'package:vendora/features/bottom_navbar/controller/bottom_navbar_controller.dart';
+import 'package:vendora/features/profile/controller/profile_controller.dart';
 
 class VendorDetailsScreen extends StatelessWidget {
   final String vendorname = Get.arguments;

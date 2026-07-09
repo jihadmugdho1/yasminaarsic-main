@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:yasminaarsic/core/core.dart';
-import 'package:yasminaarsic/features/bottom_navbar/controller/bottom_navbar_controller.dart';
-import 'package:yasminaarsic/features/profile/controller/profile_controller.dart';
+import 'package:vendora/core/core.dart';
+import 'package:vendora/features/bottom_navbar/controller/bottom_navbar_controller.dart';
+import 'package:vendora/features/profile/controller/profile_controller.dart';
 
 class PaymentWebViewController extends GetxController {
   PaymentWebViewController({required this.paymentId, this.authToken});

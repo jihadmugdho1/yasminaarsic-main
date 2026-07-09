@@ -51,7 +51,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyCZWWCrLoxKiEp8yzCnSg-6sJEwtijplK0',
-    appId: '1:760103787556:android:c06af362d8f9c86b858cb1',
+    appId: '1:760103787556:android:5b3bde015841ac77858cb1',
     messagingSenderId: '760103787556',
     projectId: 'vendora-7bfbe',
     storageBucket: 'vendora-7bfbe.firebasestorage.app',
@@ -59,10 +59,10 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBqnw6owqLzoahCU3MD_KxVIE0Zkq3ILuQ',
-    appId: '1:760103787556:ios:3c9a5806f9ea69aa858cb1',
+    appId: '1:760103787556:ios:844b957633e5e374858cb1',
     messagingSenderId: '760103787556',
     projectId: 'vendora-7bfbe',
     storageBucket: 'vendora-7bfbe.firebasestorage.app',
-    iosBundleId: 'com.yasminaarsic.vendora',
+    iosBundleId: 'com.vendora.vendora',
   );
 }

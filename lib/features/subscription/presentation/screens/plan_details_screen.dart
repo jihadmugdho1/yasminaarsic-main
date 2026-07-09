@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/utils/constants/colors.dart';
-import 'package:yasminaarsic/features/subscription/controller/subscription_controller.dart';
-import 'package:yasminaarsic/features/subscription/data/subscription_plan_model.dart';
-import 'package:yasminaarsic/core/common/widgets/custom_button.dart';
+import 'package:vendora/core/utils/constants/colors.dart';
+import 'package:vendora/features/subscription/controller/subscription_controller.dart';
+import 'package:vendora/features/subscription/data/subscription_plan_model.dart';
+import 'package:vendora/core/common/widgets/custom_button.dart';
 
 class PlanDetailsScreen extends StatefulWidget {
   final SubscriptionPlanModel plan;

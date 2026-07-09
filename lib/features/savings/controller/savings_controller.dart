@@ -1,12 +1,12 @@
 // lib/features/savings/controller/savings_controller.dart
 
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/core/utils/logging/logger.dart';
-import 'package:yasminaarsic/features/savings/data/models/savings_model.dart';
-import 'package:yasminaarsic/features/savings/data/models/savings_offer_model.dart';
-import 'package:yasminaarsic/features/savings/data/models/redeemed_offers_response_model.dart';
-import 'package:yasminaarsic/features/savings/data/services/savings_service.dart';
+import 'package:vendora/core/localization/localization_controller.dart';
+import 'package:vendora/core/utils/logging/logger.dart';
+import 'package:vendora/features/savings/data/models/savings_model.dart';
+import 'package:vendora/features/savings/data/models/savings_offer_model.dart';
+import 'package:vendora/features/savings/data/models/redeemed_offers_response_model.dart';
+import 'package:vendora/features/savings/data/services/savings_service.dart';
 
 class SavingsController extends GetxController {
   late Rx<SavingsModel> savingsData;

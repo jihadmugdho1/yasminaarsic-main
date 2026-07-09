@@ -1,5 +1,5 @@
-import 'package:yasminaarsic/core/core.dart';
-import 'package:yasminaarsic/features/alerts/data/alert_notification_model.dart';
+import 'package:vendora/core/core.dart';
+import 'package:vendora/features/alerts/data/alert_notification_model.dart';
 
 class AlertsNotificationService {
   static Future<NotificationResponse> getNotifications({

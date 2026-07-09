@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/utils/constants/icon_path.dart';
+import 'package:vendora/core/utils/constants/icon_path.dart';
 
 class VerificationCodeDialog extends StatefulWidget {
   final String title;

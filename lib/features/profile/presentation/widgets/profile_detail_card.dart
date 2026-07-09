@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart';
+import 'package:vendora/core/localization/localization_controller.dart';
 
 class ProfileDetailsCard extends StatelessWidget {
   final String? name;

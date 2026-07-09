@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/core.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/features/home/data/services/category_service.dart';
-import 'package:yasminaarsic/features/home/data/services/hero_slider_service.dart';
-import 'package:yasminaarsic/features/home/data/services/offer_service.dart';
-import 'package:yasminaarsic/features/home/data/services/vendor_service.dart';
-import 'package:yasminaarsic/features/home/models/carousel_model.dart';
-import 'package:yasminaarsic/features/home/models/category_model.dart';
-import 'package:yasminaarsic/features/home/models/offer_model.dart';
-import 'package:yasminaarsic/features/home/models/offer_api_model.dart';
-import 'package:yasminaarsic/features/home/models/vendor_model.dart'
+import 'package:vendora/core/core.dart';
+import 'package:vendora/core/localization/localization_controller.dart';
+import 'package:vendora/features/home/data/services/category_service.dart';
+import 'package:vendora/features/home/data/services/hero_slider_service.dart';
+import 'package:vendora/features/home/data/services/offer_service.dart';
+import 'package:vendora/features/home/data/services/vendor_service.dart';
+import 'package:vendora/features/home/models/carousel_model.dart';
+import 'package:vendora/features/home/models/category_model.dart';
+import 'package:vendora/features/home/models/offer_model.dart';
+import 'package:vendora/features/home/models/offer_api_model.dart';
+import 'package:vendora/features/home/models/vendor_model.dart'
     as vendor_models;
-import 'package:yasminaarsic/routes/app_routes.dart';
+import 'package:vendora/routes/app_routes.dart';
 
 OfferModel _toOfferModel(OfferApiModel api, String categoryLabel) {
   return OfferModel(

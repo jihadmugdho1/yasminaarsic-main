@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:yasminaarsic/features/home/models/pop_up_offer_model.dart';
+import 'package:vendora/features/home/models/pop_up_offer_model.dart';
 
 class PopupOfferController extends GetxController {
   var isVisible = false.obs;

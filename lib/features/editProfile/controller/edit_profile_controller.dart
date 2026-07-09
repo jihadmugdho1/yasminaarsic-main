@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:yasminaarsic/features/editProfile/data/edit_profile_model.dart';
-import 'package:yasminaarsic/features/editProfile/service/edit_profile_service.dart';
-import 'package:yasminaarsic/features/editProfile/service/upload_image_service.dart';
-import 'package:yasminaarsic/features/profile/controller/profile_controller.dart';
+import 'package:vendora/features/editProfile/data/edit_profile_model.dart';
+import 'package:vendora/features/editProfile/service/edit_profile_service.dart';
+import 'package:vendora/features/editProfile/service/upload_image_service.dart';
+import 'package:vendora/features/profile/controller/profile_controller.dart';
 
 class EditProfileController extends GetxController {
   final EditProfileService _editProfileService = EditProfileService();

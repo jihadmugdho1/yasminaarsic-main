@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'package:yasminaarsic/core/services/storage_service.dart';
-import 'package:yasminaarsic/core/services/firebase/app_notification_initializer.dart';
+import 'package:vendora/core/services/storage_service.dart';
+import 'package:vendora/core/services/firebase/app_notification_initializer.dart';
 import 'firebase_options.dart';
 
 import 'app.dart';

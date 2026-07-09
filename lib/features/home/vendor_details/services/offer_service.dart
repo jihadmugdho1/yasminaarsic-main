@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:yasminaarsic/core/models/response_data.dart';
-import 'package:yasminaarsic/core/services/network_caller.dart';
-import 'package:yasminaarsic/core/services/storage_service.dart';
-import 'package:yasminaarsic/core/utils/constants/api_constants.dart';
-import 'package:yasminaarsic/core/utils/logging/logger.dart';
-import 'package:yasminaarsic/features/home/vendor_details/models/offer_response_model.dart';
+import 'package:vendora/core/models/response_data.dart';
+import 'package:vendora/core/services/network_caller.dart';
+import 'package:vendora/core/services/storage_service.dart';
+import 'package:vendora/core/utils/constants/api_constants.dart';
+import 'package:vendora/core/utils/logging/logger.dart';
+import 'package:vendora/features/home/vendor_details/models/offer_response_model.dart';
 
 class OfferService {
   final NetworkCaller _networkCaller = NetworkCaller();

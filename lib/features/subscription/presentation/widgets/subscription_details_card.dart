@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/common/widgets/custom_button.dart';
-import 'package:yasminaarsic/core/utils/constants/colors.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart'; 
+import 'package:vendora/core/common/widgets/custom_button.dart';
+import 'package:vendora/core/utils/constants/colors.dart';
+import 'package:vendora/core/localization/localization_controller.dart'; 
 
 class SubscriptionDetailsCard extends StatelessWidget {
   final String planTitle;

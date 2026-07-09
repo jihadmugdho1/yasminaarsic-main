@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
-import 'package:yasminaarsic/features/editProfile/presentation/screens/edit_profile_screen.dart';
-import 'package:yasminaarsic/features/authentication/presentation/screens/set_password_screen.dart';
-import 'package:yasminaarsic/features/authentication/presentation/screens/sign_up_screen.dart';
-import 'package:yasminaarsic/features/authentication/presentation/screens/login_screen.dart';
-import 'package:yasminaarsic/features/bottom_navbar/screen/main_app_screen.dart';
-import 'package:yasminaarsic/features/home/screen/home_screen.dart';
-import 'package:yasminaarsic/features/home/vendor_details/screen/vendor_details_screen.dart';
-import 'package:yasminaarsic/features/onboarding/screen/onborading_screen.dart';
-import 'package:yasminaarsic/features/splash/screen/splash_screen.dart';
-import 'package:yasminaarsic/features/subscription/presentation/screens/subscription_screen.dart';
+import 'package:vendora/features/editProfile/presentation/screens/edit_profile_screen.dart';
+import 'package:vendora/features/authentication/presentation/screens/set_password_screen.dart';
+import 'package:vendora/features/authentication/presentation/screens/sign_up_screen.dart';
+import 'package:vendora/features/authentication/presentation/screens/login_screen.dart';
+import 'package:vendora/features/bottom_navbar/screen/main_app_screen.dart';
+import 'package:vendora/features/home/screen/home_screen.dart';
+import 'package:vendora/features/home/vendor_details/screen/vendor_details_screen.dart';
+import 'package:vendora/features/onboarding/screen/onborading_screen.dart';
+import 'package:vendora/features/splash/screen/splash_screen.dart';
+import 'package:vendora/features/subscription/presentation/screens/subscription_screen.dart';
 
 
 class AppRoute {

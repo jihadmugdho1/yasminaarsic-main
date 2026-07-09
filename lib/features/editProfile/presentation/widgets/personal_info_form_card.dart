@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/features/authentication/presentation/widgets/custom_text_form_field.dart'; // ✅ Your widget
+import 'package:vendora/core/localization/localization_controller.dart';
+import 'package:vendora/features/authentication/presentation/widgets/custom_text_form_field.dart'; // ✅ Your widget
 
 class PersonalInfoFormCard extends StatelessWidget {
   final String title;

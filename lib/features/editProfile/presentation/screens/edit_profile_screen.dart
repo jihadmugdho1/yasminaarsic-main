@@ -3,12 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/utils/constants/colors.dart';
-import 'package:yasminaarsic/features/editProfile/controller/edit_profile_controller.dart';
-import 'package:yasminaarsic/features/editProfile/presentation/widgets/edit_profile_card.dart';
-import 'package:yasminaarsic/features/editProfile/presentation/widgets/personal_info_form_card.dart';
-import 'package:yasminaarsic/features/editProfile/presentation/widgets/edit_profile_card_shimmer.dart';
-import 'package:yasminaarsic/features/editProfile/presentation/widgets/personal_info_form_card_shimmer.dart';
+import 'package:vendora/core/utils/constants/colors.dart';
+import 'package:vendora/features/editProfile/controller/edit_profile_controller.dart';
+import 'package:vendora/features/editProfile/presentation/widgets/edit_profile_card.dart';
+import 'package:vendora/features/editProfile/presentation/widgets/personal_info_form_card.dart';
+import 'package:vendora/features/editProfile/presentation/widgets/edit_profile_card_shimmer.dart';
+import 'package:vendora/features/editProfile/presentation/widgets/personal_info_form_card_shimmer.dart';
 
 class EditProfileScreen extends StatelessWidget {
   const EditProfileScreen({super.key});

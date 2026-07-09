@@ -2,16 +2,16 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:path/path.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/core/utils/constants/image_path.dart';
-import 'package:yasminaarsic/core/utils/logging/logger.dart';
-import 'package:yasminaarsic/features/home/data/services/vendor_service.dart';
-import 'package:yasminaarsic/features/home/models/vendor_model.dart';
-import 'package:yasminaarsic/features/home/vendor_details/models/offer_model.dart';
-import 'package:yasminaarsic/features/home/vendor_details/models/vendor_carousel_model.dart';
-import 'package:yasminaarsic/features/home/vendor_details/models/vendor_details_model.dart';
-import 'package:yasminaarsic/features/home/vendor_details/services/offer_service.dart';
-import 'package:yasminaarsic/features/home/vendor_details/models/offer_response_model.dart';
+import 'package:vendora/core/localization/localization_controller.dart';
+import 'package:vendora/core/utils/constants/image_path.dart';
+import 'package:vendora/core/utils/logging/logger.dart';
+import 'package:vendora/features/home/data/services/vendor_service.dart';
+import 'package:vendora/features/home/models/vendor_model.dart';
+import 'package:vendora/features/home/vendor_details/models/offer_model.dart';
+import 'package:vendora/features/home/vendor_details/models/vendor_carousel_model.dart';
+import 'package:vendora/features/home/vendor_details/models/vendor_details_model.dart';
+import 'package:vendora/features/home/vendor_details/services/offer_service.dart';
+import 'package:vendora/features/home/vendor_details/models/offer_response_model.dart';
 
 class VendorDetailsController extends GetxController {
   final currentIndex = 0.obs;

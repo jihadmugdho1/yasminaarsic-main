@@ -1,16 +1,16 @@
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/core/services/storage_service.dart';
-import 'package:yasminaarsic/core/utils/logging/logger.dart';
-import 'package:yasminaarsic/features/editProfile/data/edit_profile_model.dart';
-import 'package:yasminaarsic/features/profile/data/models/notification_model.dart';
-import 'package:yasminaarsic/features/profile/data/models/notification_preference_model.dart';
-import 'package:yasminaarsic/features/profile/data/models/user_model.dart';
-import 'package:yasminaarsic/features/profile/data/profile_model.dart';
-import 'package:yasminaarsic/features/authentication/controllers/login_controller.dart';
-import 'package:yasminaarsic/features/profile/data/services/notification_preference_service.dart';
-import 'package:yasminaarsic/features/profile/data/services/profile_service.dart';
-import 'package:yasminaarsic/routes/app_routes.dart';
+import 'package:vendora/core/localization/localization_controller.dart';
+import 'package:vendora/core/services/storage_service.dart';
+import 'package:vendora/core/utils/logging/logger.dart';
+import 'package:vendora/features/editProfile/data/edit_profile_model.dart';
+import 'package:vendora/features/profile/data/models/notification_model.dart';
+import 'package:vendora/features/profile/data/models/notification_preference_model.dart';
+import 'package:vendora/features/profile/data/models/user_model.dart';
+import 'package:vendora/features/profile/data/profile_model.dart';
+import 'package:vendora/features/authentication/controllers/login_controller.dart';
+import 'package:vendora/features/profile/data/services/notification_preference_service.dart';
+import 'package:vendora/features/profile/data/services/profile_service.dart';
+import 'package:vendora/routes/app_routes.dart';
 
 class ProfileController extends GetxController {
   late LocalizationController _localeController;

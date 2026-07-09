@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/features/home/controller/pop_up_controller.dart';
-import 'package:yasminaarsic/features/home/models/pop_up_offer_model.dart';
+import 'package:vendora/features/home/controller/pop_up_controller.dart';
+import 'package:vendora/features/home/models/pop_up_offer_model.dart';
 
 class PopupOfferWidget extends StatelessWidget {
   final PopupOfferController controller;

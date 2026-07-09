@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/core.dart';
-import 'package:yasminaarsic/features/bottom_navbar/screen/main_app_screen.dart';
-import 'package:yasminaarsic/features/onboarding/screen/onborading_screen.dart';
+import 'package:vendora/core/core.dart';
+import 'package:vendora/features/bottom_navbar/screen/main_app_screen.dart';
+import 'package:vendora/features/onboarding/screen/onborading_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
