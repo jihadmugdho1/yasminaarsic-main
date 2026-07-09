@@ -8,14 +8,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:yasminaarsic/core/services/storage_service.dart';
-import 'package:yasminaarsic/core/utils/logging/logger.dart';
-import 'package:yasminaarsic/features/authentication/data/services/authentication_service.dart';
-import 'package:yasminaarsic/features/authentication/data/services/terms_service.dart';
-import 'package:yasminaarsic/features/authentication/presentation/widgets/verification_code_dialog.dart';
-import 'package:yasminaarsic/features/bottom_navbar/controller/bottom_navbar_controller.dart';
-import 'package:yasminaarsic/features/bottom_navbar/screen/main_app_screen.dart';
-import 'package:yasminaarsic/routes/app_routes.dart';
+import 'package:vendora/core/services/storage_service.dart';
+import 'package:vendora/core/utils/logging/logger.dart';
+import 'package:vendora/features/authentication/data/services/authentication_service.dart';
+import 'package:vendora/features/authentication/data/services/terms_service.dart';
+import 'package:vendora/features/authentication/presentation/widgets/verification_code_dialog.dart';
+import 'package:vendora/features/bottom_navbar/controller/bottom_navbar_controller.dart';
+import 'package:vendora/features/bottom_navbar/screen/main_app_screen.dart';
+import 'package:vendora/routes/app_routes.dart';
 
 class LoginController extends GetxController {
   // ✅ Form keys for validation
@@ -51,7 +51,10 @@ class LoginController extends GetxController {
   final currentPasswordController = TextEditingController();
   String? resetToken;
 
-  final GoogleSignIn _googleSignIn = GoogleSignIn.standard(scopes: ['email']);
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email'],
+    serverClientId: '760103787556-PLACEHOLDER.apps.googleusercontent.com',
+  );
 
   var obscurePasswordOne = true.obs;
   var obscurePasswordTwo = true.obs;

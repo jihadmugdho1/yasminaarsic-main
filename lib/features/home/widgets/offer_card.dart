@@ -3,11 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/common/styles/global_text_style.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/core/utils/constants/colors.dart';
-import 'package:yasminaarsic/core/utils/constants/image_path.dart';
-import 'package:yasminaarsic/features/home/models/offer_api_model.dart';
+import 'package:vendora/core/common/styles/global_text_style.dart';
+import 'package:vendora/core/localization/localization_controller.dart';
+import 'package:vendora/core/utils/constants/colors.dart';
+import 'package:vendora/core/utils/constants/image_path.dart';
+import 'package:vendora/features/home/models/offer_api_model.dart';
 
 class OfferCard extends StatelessWidget {
   final String imagePath;

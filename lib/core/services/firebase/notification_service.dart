@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:yasminaarsic/features/home/screen/home_screen.dart';
+import 'package:vendora/features/home/screen/home_screen.dart';
 
 class NotificationService {
   static final _localNotifications = FlutterLocalNotificationsPlugin();

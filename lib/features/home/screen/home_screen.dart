@@ -3,16 +3,16 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:yasminaarsic/core/core.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/features/home/controller/home_controller.dart';
-import 'package:yasminaarsic/features/home/controller/pop_up_controller.dart';
-import 'package:yasminaarsic/features/home/models/pop_up_offer_model.dart';
-import 'package:yasminaarsic/features/home/widgets/categoy_item.dart';
-import 'package:yasminaarsic/features/home/widgets/category_skeleton_loader.dart';
-import 'package:yasminaarsic/features/home/widgets/offer_card.dart';
-import 'package:yasminaarsic/features/home/widgets/offer_card_shimmer.dart';
-import 'package:yasminaarsic/features/home/vendor_details/screen/vendor_details_screen.dart';
+import 'package:vendora/core/core.dart';
+import 'package:vendora/core/localization/localization_controller.dart';
+import 'package:vendora/features/home/controller/home_controller.dart';
+import 'package:vendora/features/home/controller/pop_up_controller.dart';
+import 'package:vendora/features/home/models/pop_up_offer_model.dart';
+import 'package:vendora/features/home/widgets/categoy_item.dart';
+import 'package:vendora/features/home/widgets/category_skeleton_loader.dart';
+import 'package:vendora/features/home/widgets/offer_card.dart';
+import 'package:vendora/features/home/widgets/offer_card_shimmer.dart';
+import 'package:vendora/features/home/vendor_details/screen/vendor_details_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});

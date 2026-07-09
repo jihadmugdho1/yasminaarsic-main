@@ -5,14 +5,14 @@ import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
-import 'package:yasminaarsic/core/core.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/features/subscription/data/checkout_response_model.dart';
-import 'package:yasminaarsic/features/subscription/data/subscription_history_model.dart';
-import 'package:yasminaarsic/features/subscription/data/subscription_model.dart';
-import 'package:yasminaarsic/features/subscription/data/subscription_plan_model.dart';
-import 'package:yasminaarsic/features/subscription/data/subscription_service.dart';
-import 'package:yasminaarsic/features/subscription/presentation/screens/payment_webview_screen.dart';
+import 'package:vendora/core/core.dart';
+import 'package:vendora/core/localization/localization_controller.dart';
+import 'package:vendora/features/subscription/data/checkout_response_model.dart';
+import 'package:vendora/features/subscription/data/subscription_history_model.dart';
+import 'package:vendora/features/subscription/data/subscription_model.dart';
+import 'package:vendora/features/subscription/data/subscription_plan_model.dart';
+import 'package:vendora/features/subscription/data/subscription_service.dart';
+import 'package:vendora/features/subscription/presentation/screens/payment_webview_screen.dart';
 
 class SubscriptionController extends GetxController {
   late final subscriptionData = _initializeSubscriptionData().obs;

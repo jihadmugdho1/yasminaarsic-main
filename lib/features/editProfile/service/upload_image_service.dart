@@ -2,9 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:yasminaarsic/core/services/storage_service.dart';
-import 'package:yasminaarsic/core/utils/constants/api_constants.dart';
-import 'package:yasminaarsic/features/editProfile/data/upload_image_model.dart';
+import 'package:vendora/core/services/storage_service.dart';
+import 'package:vendora/core/utils/constants/api_constants.dart';
+import 'package:vendora/features/editProfile/data/upload_image_model.dart';
 
 class UploadImageService {
   String? _getAuthHeader() {

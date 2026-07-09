@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/core.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/features/home/vendor_details/controllers/vendor_details_controller.dart';
+import 'package:vendora/core/core.dart';
+import 'package:vendora/core/localization/localization_controller.dart';
+import 'package:vendora/features/home/vendor_details/controllers/vendor_details_controller.dart';
 
 class VendorDetailsCard extends StatelessWidget {
   final VendorDetailsController controller = Get.find();

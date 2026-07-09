@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/common/widgets/custom_button.dart';
-import 'package:yasminaarsic/core/utils/constants/colors.dart';
-import 'package:yasminaarsic/core/utils/constants/icon_path.dart';
-import 'package:yasminaarsic/core/utils/constants/image_path.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/features/authentication/controllers/login_controller.dart';
-import 'package:yasminaarsic/features/authentication/presentation/widgets/custom_text_form_field.dart';
-import 'package:yasminaarsic/routes/app_routes.dart';
+import 'package:vendora/core/common/widgets/custom_button.dart';
+import 'package:vendora/core/utils/constants/colors.dart';
+import 'package:vendora/core/utils/constants/icon_path.dart';
+import 'package:vendora/core/utils/constants/image_path.dart';
+import 'package:vendora/core/localization/localization_controller.dart';
+import 'package:vendora/features/authentication/controllers/login_controller.dart';
+import 'package:vendora/features/authentication/presentation/widgets/custom_text_form_field.dart';
+import 'package:vendora/routes/app_routes.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});

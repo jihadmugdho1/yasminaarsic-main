@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:yasminaarsic/routes/app_routes.dart';
-import 'package:yasminaarsic/core/utils/constants/icon_path.dart';
+import 'package:vendora/routes/app_routes.dart';
+import 'package:vendora/core/utils/constants/icon_path.dart';
 
 class OnboardingController extends GetxController {
     final List<String> icons = [

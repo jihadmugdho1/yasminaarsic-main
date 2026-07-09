@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/features/authentication/controllers/login_controller.dart';
-import 'package:yasminaarsic/features/authentication/data/services/authentication_service.dart';
-import 'package:yasminaarsic/features/profile/controller/profile_controller.dart';
+import 'package:vendora/core/localization/localization_controller.dart';
+import 'package:vendora/features/authentication/controllers/login_controller.dart';
+import 'package:vendora/features/authentication/data/services/authentication_service.dart';
+import 'package:vendora/features/profile/controller/profile_controller.dart';
 
 class ControllerBinder extends Bindings {
   @override

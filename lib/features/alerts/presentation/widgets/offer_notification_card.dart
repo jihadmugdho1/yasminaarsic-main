@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:yasminaarsic/core/common/widgets/custom_button.dart';
+import 'package:vendora/core/common/widgets/custom_button.dart';
 
 class OfferNotificationCard extends StatelessWidget {
   final String title;

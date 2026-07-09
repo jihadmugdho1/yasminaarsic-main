@@ -1,5 +1,5 @@
 // import 'package:flutter/material.dart';
-// import 'package:yasminaarsic/features/subscription/data/payment_method_model.dart';
+// import 'package:vendora/features/subscription/data/payment_method_model.dart';
 
 // class PaymentController extends ChangeNotifier {
 //   PaymentMethod _paymentMethod = PaymentMethod();

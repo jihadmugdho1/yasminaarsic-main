@@ -1,10 +1,10 @@
 // lib/features/home/screens/main_app_screen.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/services/storage_service.dart';
-import 'package:yasminaarsic/core/utils/logging/logger.dart';
-import 'package:yasminaarsic/features/bottom_navbar/controller/bottom_navbar_controller.dart';
-import 'package:yasminaarsic/features/bottom_navbar/widget/bottom_navbar_widget.dart';
+import 'package:vendora/core/services/storage_service.dart';
+import 'package:vendora/core/utils/logging/logger.dart';
+import 'package:vendora/features/bottom_navbar/controller/bottom_navbar_controller.dart';
+import 'package:vendora/features/bottom_navbar/widget/bottom_navbar_widget.dart';
 
 class MainAppScreen extends StatelessWidget {
   MainAppScreen({super.key}) {

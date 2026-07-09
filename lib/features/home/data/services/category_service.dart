@@ -1,10 +1,10 @@
 import 'dart:convert';
 
-import 'package:yasminaarsic/core/models/response_data.dart';
-import 'package:yasminaarsic/core/services/network_caller.dart';
-import 'package:yasminaarsic/core/utils/constants/api_constants.dart';
-import 'package:yasminaarsic/core/utils/logging/logger.dart';
-import 'package:yasminaarsic/features/home/models/category_model.dart';
+import 'package:vendora/core/models/response_data.dart';
+import 'package:vendora/core/services/network_caller.dart';
+import 'package:vendora/core/utils/constants/api_constants.dart';
+import 'package:vendora/core/utils/logging/logger.dart';
+import 'package:vendora/features/home/models/category_model.dart';
 
 class CategoryService {
   final NetworkCaller _networkCaller = NetworkCaller();

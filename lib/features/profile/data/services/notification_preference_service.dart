@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:yasminaarsic/core/models/response_data.dart';
-import 'package:yasminaarsic/core/services/storage_service.dart';
-import 'package:yasminaarsic/core/utils/constants/api_constants.dart';
-import 'package:yasminaarsic/core/utils/logging/logger.dart';
+import 'package:vendora/core/models/response_data.dart';
+import 'package:vendora/core/services/storage_service.dart';
+import 'package:vendora/core/utils/constants/api_constants.dart';
+import 'package:vendora/core/utils/logging/logger.dart';
 
 class NotificationPreferenceService {
   static const String _contentType = 'application/json; charset=utf-8';

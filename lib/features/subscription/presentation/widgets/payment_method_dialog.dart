@@ -1,8 +1,8 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:yasminaarsic/core/utils/constants/colors.dart';
-// import 'package:yasminaarsic/features/subscription/controller/payment_method_controller.dart';
+// import 'package:vendora/core/utils/constants/colors.dart';
+// import 'package:vendora/features/subscription/controller/payment_method_controller.dart';
 
 // class UpdatePaymentMethodDialog extends StatefulWidget {
 //   const UpdatePaymentMethodDialog({Key? key}) : super(key: key);

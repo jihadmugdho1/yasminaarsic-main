@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/features/home/vendor_details/models/alert_dialogs/offer_dialog_model.dart';
-import 'package:yasminaarsic/features/home/vendor_details/widgets/alert_dialogs/qr_dialog.dart';
-import 'package:yasminaarsic/features/home/vendor_details/models/alert_dialogs/qr_dialog_model.dart';
-import 'package:yasminaarsic/features/home/vendor_details/models/offer_model.dart';
-import 'package:yasminaarsic/features/home/vendor_details/controllers/vendor_details_controller.dart';
-import 'package:yasminaarsic/features/home/vendor_details/services/offer_service.dart';
+import 'package:vendora/features/home/vendor_details/models/alert_dialogs/offer_dialog_model.dart';
+import 'package:vendora/features/home/vendor_details/widgets/alert_dialogs/qr_dialog.dart';
+import 'package:vendora/features/home/vendor_details/models/alert_dialogs/qr_dialog_model.dart';
+import 'package:vendora/features/home/vendor_details/models/offer_model.dart';
+import 'package:vendora/features/home/vendor_details/controllers/vendor_details_controller.dart';
+import 'package:vendora/features/home/vendor_details/services/offer_service.dart';
 
 class OfferController extends GetxController {
   final bool isReuseable;

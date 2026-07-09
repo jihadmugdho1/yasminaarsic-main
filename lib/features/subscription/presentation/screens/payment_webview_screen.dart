@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:yasminaarsic/core/utils/constants/colors.dart';
-import 'package:yasminaarsic/features/subscription/controller/payment_webview_controller.dart';
+import 'package:vendora/core/utils/constants/colors.dart';
+import 'package:vendora/features/subscription/controller/payment_webview_controller.dart';
 
 class PaymentWebViewScreen extends StatelessWidget {
   final String paymentId;

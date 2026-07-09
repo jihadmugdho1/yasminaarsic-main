@@ -2,9 +2,9 @@
 
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
-import 'package:yasminaarsic/core/utils/logging/logger.dart';
-import 'package:yasminaarsic/features/alerts/data/alert_notification_model.dart';
-import 'package:yasminaarsic/features/alerts/data/notification_service.dart';
+import 'package:vendora/core/utils/logging/logger.dart';
+import 'package:vendora/features/alerts/data/alert_notification_model.dart';
+import 'package:vendora/features/alerts/data/notification_service.dart';
 
 class AlertsController extends GetxController {
   // API-based notification data

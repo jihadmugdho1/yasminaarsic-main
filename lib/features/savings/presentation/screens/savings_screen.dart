@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:yasminaarsic/core/utils/constants/colors.dart';
-import 'package:yasminaarsic/core/localization/localization_controller.dart';
-import 'package:yasminaarsic/features/savings/controller/savings_controller.dart';
-import 'package:yasminaarsic/features/savings/presentation/widgets/monthly_savings_card.dart';
-import 'package:yasminaarsic/features/savings/presentation/widgets/offer_card.dart';
-import 'package:yasminaarsic/features/savings/presentation/widgets/savings_summary_card.dart';
-import 'package:yasminaarsic/features/subscription/presentation/widgets/subscription_card.dart';
+import 'package:vendora/core/utils/constants/colors.dart';
+import 'package:vendora/core/localization/localization_controller.dart';
+import 'package:vendora/features/savings/controller/savings_controller.dart';
+import 'package:vendora/features/savings/presentation/widgets/monthly_savings_card.dart';
+import 'package:vendora/features/savings/presentation/widgets/offer_card.dart';
+import 'package:vendora/features/savings/presentation/widgets/savings_summary_card.dart';
+import 'package:vendora/features/subscription/presentation/widgets/subscription_card.dart';
 
 class SavingsScreen extends StatelessWidget {
   const SavingsScreen({super.key});

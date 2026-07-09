@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yasminaarsic/core/core.dart';
-import 'package:yasminaarsic/features/home/vendor_details/models/offer_model.dart';
+import 'package:vendora/core/core.dart';
+import 'package:vendora/features/home/vendor_details/models/offer_model.dart';
 
 class OfferCard extends StatelessWidget {
   final Offer offer;
