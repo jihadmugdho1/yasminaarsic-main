@@ -676,10 +676,6 @@ class LoginController extends GetxController {
       AppLoggerHelper.debug(
         'Firebase userCredential response: $userCredential',
       );
-      AppLoggerHelper.debug(
-        'Firebase additional user info: ${userCredential.additionalUserInfo}',
-      );
-      AppLoggerHelper.debug('Firebase user object: ${userCredential.user}');
 
       final String? idToken = await userCredential.user?.getIdToken();
 
