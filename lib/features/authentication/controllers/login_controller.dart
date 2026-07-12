@@ -53,7 +53,8 @@ class LoginController extends GetxController {
 
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email'],
-    serverClientId: '760103787556-PLACEHOLDER.apps.googleusercontent.com',
+    serverClientId:
+        '760103787556-in8ppsm1lpnq2b56ogvigv7nspfljjo4.apps.googleusercontent.com',
   );
 
   var obscurePasswordOne = true.obs;

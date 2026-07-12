@@ -171,7 +171,7 @@ class AuthenticationService extends GetxService {
       );
       AppLoggerHelper.info('📥 Google Login Response Body: ${response.body}');
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
+      if (response.body.isNotEmpty) {
         return jsonDecode(response.body);
       } else {
         return null;
