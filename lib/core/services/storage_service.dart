@@ -32,6 +32,7 @@ class StorageService {
   static Future<void> logoutUser() async {
     await _preferences?.remove(_tokenKey);
     await _preferences?.remove(_idKey);
+    await _preferences?.remove(_imageUrlKey);
     // Navigate to the login screen
     // Get.offAllNamed('/login');
   }
@@ -66,4 +67,13 @@ class StorageService {
   }
 
   static String? get name => _preferences?.getString(_nameKey);
+
+  // Image methods
+  static const String _imageUrlKey = 'imageUrl';
+  
+  static Future<void> saveImageUrl(String imageUrl) async {
+    await _preferences?.setString(_imageUrlKey, imageUrl);
+  }
+
+  static String? get imageUrl => _preferences?.getString(_imageUrlKey);
 }

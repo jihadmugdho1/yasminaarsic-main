@@ -89,7 +89,7 @@ class ProfileController extends GetxController {
         location: user.location ?? 'Not specified',
         birthDate: formatBirthDate(user.dateOfBirth),
         avatarInitials: _getInitials(user.name),
-        imageUrl: user.imageUrl,
+        imageUrl: (user.imageUrl != null && user.imageUrl!.isNotEmpty) ? user.imageUrl : StorageService.imageUrl,
         notificationPreferences: prefs,
       );
     } catch (e) {

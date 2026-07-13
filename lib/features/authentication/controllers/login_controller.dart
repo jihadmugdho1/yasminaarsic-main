@@ -689,9 +689,16 @@ class LoginController extends GetxController {
           StorageService.fcmToken ??
           await FirebaseMessaging.instance.getToken();
 
+      AppLoggerHelper.debug("profile image :${googleUser.photoUrl}");
       final authService = Get.find<AuthenticationService>();
 
-      final requestBody = {'idToken': idToken, 'fcmToken': fcmToken ?? ''};
+      final requestBody = {
+        'idToken': idToken,
+        'fcmToken': fcmToken ?? '',
+        'email': googleUser.email,
+        'name': googleUser.displayName ?? '',
+        'imageUrl': googleUser.photoUrl ?? '',
+      };
 
       AppLoggerHelper.debug(
         'Google login request payload: ${jsonEncode(requestBody)}',
@@ -723,6 +730,10 @@ class LoginController extends GetxController {
         responseData['accessToken'] as String,
         responseData['user']?['id']?.toString() ?? '',
       );
+
+      if (googleUser.photoUrl != null) {
+        await StorageService.saveImageUrl(googleUser.photoUrl!);
+      }
 
       if (fcmToken != null) {
         final fcmResponse = await authService.registerFcmToken(
