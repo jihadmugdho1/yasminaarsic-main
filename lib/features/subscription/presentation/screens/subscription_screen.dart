@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:lottie/lottie.dart';
 import 'package:vendora/core/utils/constants/colors.dart';
 import 'package:vendora/core/localization/localization_controller.dart';
 import 'package:vendora/features/subscription/controller/subscription_controller.dart';
@@ -107,10 +108,10 @@ class SubscriptionScreen extends StatelessWidget {
                                   color: Colors.grey[100],
                                   shape: BoxShape.circle,
                                 ),
-                                child: Icon(
-                                  Iconsax.card_slash,
-                                  size: 40.sp,
-                                  color: Colors.grey[400],
+                                child: Lottie.asset(
+                                  height: 50.h,
+                                  width: 50.h,
+                                  "assets/icons/Premium Subscription.json",
                                 ),
                               ),
                               SizedBox(height: 16.h),
@@ -270,7 +271,7 @@ class SubscriptionScreen extends StatelessWidget {
                                   ? 'Active'
                                   : 'Inactive',
                               trailingBadgeColor: plan.isActive
-                                  ? const Color(0xFFF4DB35)
+                                  ? AppColors.warning
                                   : Colors.grey,
                               planDescription: plan.description,
                               pricePerYear: plan.currentPriceDisplay.isNotEmpty
@@ -284,6 +285,7 @@ class SubscriptionScreen extends StatelessWidget {
                                   transition: Transition.rightToLeft,
                                 );
                               },
+                              
                               onCancelSubscriptionPressed: () {
                                 Get.to(
                                   () => PlanDetailsScreen(plan: plan),

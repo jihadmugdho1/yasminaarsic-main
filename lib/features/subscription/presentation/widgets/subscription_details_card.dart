@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:vendora/core/common/widgets/custom_button.dart';
 import 'package:vendora/core/utils/constants/colors.dart';
-import 'package:vendora/core/localization/localization_controller.dart'; 
+import 'package:vendora/core/localization/localization_controller.dart';
 
 class SubscriptionDetailsCard extends StatelessWidget {
   final String planTitle;
@@ -39,7 +39,7 @@ class SubscriptionDetailsCard extends StatelessWidget {
     this.planTitle = 'Current Plan',
     this.planSubtitle = 'Annual Subscription',
     this.trailingBadgeText = 'Active',
-    this.trailingBadgeColor = const Color(0xFFF4DB35), // Yellow
+    this.trailingBadgeColor = const Color(0xFF17A34A), // Green
     this.startDate,
     this.renewalDate,
     this.planDescription = 'Subscription Plan for One Year',
@@ -56,21 +56,18 @@ class SubscriptionDetailsCard extends StatelessWidget {
     this.backgroundColor = Colors.white,
     this.titleColor = const Color(0xFF101828),
     this.subtitleColor = const Color(0xFF4A5565),
-    this.badgeTextColor = Colors.black,
+    this.badgeTextColor = Colors.white,
     this.dividerColor = Colors.grey,
     this.buttonTextColor = Colors.white,
     this.primaryButtonColor = const Color(0xFF6C5CE7), // Purple
-    this.secondaryButtonColor = const Color(0xFFFFD700), // Yellow
-    this.borderRadius = 16.0,
+    this.secondaryButtonColor = AppColors.blueColor, // Yellow
+    this.borderRadius = 18.0,
     this.padding = const EdgeInsets.all(20),
   });
 
-  // ✅ Helper to format date as "Month dd, yyyy"
   String _formatDate(DateTime date) {
     return DateFormat('MMMM d, y').format(date);
   }
-
-  // ✅ Helper to format date as "dd/MM/yyyy"
 
   @override
   Widget build(BuildContext context) {
@@ -82,86 +79,114 @@ class SubscriptionDetailsCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(borderRadius),
-          border: Border.all(color: dividerColor.withOpacity(0.2)),
+          border: Border.all(color: dividerColor.withOpacity(0.1)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header: Plan Title + Badge
+            // Header: Icon chip + Title/Subtitle + Status badge
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Container(
+                  height: 44.h,
+                  width: 44.h,
+                  padding: EdgeInsets.all(8.r),
+
+                  child: Image.asset(
+                    "assets/icons/image.png",
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                SizedBox(width: 12.w),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         planTitle,
                         style: TextStyle(
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w400,
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w700,
                           fontFamily: 'Arial',
                           color: titleColor,
+                          letterSpacing: -0.2,
                         ),
                       ),
-                      if (planSubtitle.isNotEmpty)
+                      if (planSubtitle.isNotEmpty) ...[
+                        SizedBox(height: 3.h),
                         Text(
                           planSubtitle,
                           style: TextStyle(
-                            fontSize: 16.sp,
+                            fontSize: 13.sp,
                             fontFamily: 'Arial',
                             fontWeight: FontWeight.w400,
                             color: subtitleColor,
                           ),
                         ),
+                      ],
                     ],
                   ),
                 ),
-                if (trailingBadgeText != null)
+                if (trailingBadgeText != null) ...[
+                  SizedBox(width: 8.w),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 5.h,
                     ),
                     decoration: BoxDecoration(
-                      color: trailingBadgeColor,
-                      borderRadius: BorderRadius.circular(8),
+                      color: const Color(0xFFFFD700),
+                      borderRadius: BorderRadius.circular(20.r),
                     ),
-                    child: Text(
-                      trailingBadgeText!,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: badgeTextColor,
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          trailingBadgeText!,
+                          style: TextStyle(
+                            fontSize: 11.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black.withValues(alpha: 0.7),
+                            letterSpacing: 0.2,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                ],
               ],
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: 22.h),
 
             // Subscription Info List
             _buildInfoRow(
-              context: context,
               icon: Icons.calendar_today_outlined,
               label: locale.get('subscription_start'),
               value: startDate != null ? _formatDate(startDate!) : '-',
             ),
-            Divider(color: dividerColor.withOpacity(0.3)),
+            _buildDivider(),
             _buildInfoRow(
-              context: context,
               icon: Icons.event_available_outlined,
               label: locale.get('renewal_date'),
               value: renewalDate != null ? _formatDate(renewalDate!) : '-',
               trailing: renewalDate != null
                   ? Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 5.h,
                       ),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(12),
+                        color: primaryButtonColor.withOpacity(0.08),
+                        borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
                         locale
@@ -170,29 +195,23 @@ class SubscriptionDetailsCard extends StatelessWidget {
                               '{days}',
                               _daysLeft(renewalDate!).toString(),
                             ),
-                        style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+                        style: TextStyle(
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w600,
+                          color: primaryButtonColor,
+                        ),
                       ),
                     )
                   : null,
             ),
-            Divider(color: dividerColor.withOpacity(0.3)),
+            _buildDivider(),
             _buildInfoRow(
-              context: context,
               icon: Icons.card_membership_outlined,
               label: planDescription ?? '',
               value: pricePerYear ?? '',
+              emphasizeValue: true,
             ),
-            Divider(color: dividerColor.withOpacity(0.3)),
-
-            // // apply promo code
-            // _buildPromoCodeInputWidget(
-            //   locale: locale,
-            //   labelText: locale.get('have_promo_code'),
-            //   hintText: locale.get('enter_promo_code'),
-            //   applyButtonText: locale.get('apply'),
-            //   onApplyPressed: () {},
-            // ),
-            SizedBox(height: 10.h),
+            SizedBox(height: 20.h),
 
             if (showCancelButton)
               Align(
@@ -203,8 +222,8 @@ class SubscriptionDetailsCard extends StatelessWidget {
                   backgroundColor: AppColors.yellow,
                   type: ButtonType.outlined,
                   minWidth: double.infinity,
-                  borderRadius: 8.r,
-                  height: 36.h,
+                  borderRadius: 10.r,
+                  height: 44.h,
                   onPressed: () {
                     if (onCancelSubscriptionPressed != null) {
                       onCancelSubscriptionPressed!();
@@ -218,51 +237,61 @@ class SubscriptionDetailsCard extends StatelessWidget {
     );
   }
 
+  Widget _buildDivider() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 2.h),
+      child: Divider(color: dividerColor.withOpacity(0.1), height: 1),
+    );
+  }
+
   Widget _buildInfoRow({
-    required BuildContext context,
     required IconData icon,
     required String label,
     required String value,
     Widget? trailing,
+    bool emphasizeValue = false,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: 12.h),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(icon, size: 20, color: Colors.grey[600]),
-          const SizedBox(width: 12),
+          Container(
+            height: 34.h,
+            width: 34.h,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: subtitleColor.withOpacity(0.06),
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Icon(icon, size: 17.sp, color: subtitleColor),
+          ),
+          SizedBox(width: 12.w),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Arial',
-                    color: titleColor,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontFamily: 'Arial',
-                    fontWeight: FontWeight.w400,
-                    color: subtitleColor,
-                  ),
-                ),
-              ],
+            child: Text(
+              label,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Arial',
+                color: subtitleColor,
+              ),
             ),
           ),
-          if (trailing != null) trailing,
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: emphasizeValue ? 16.sp : 14.sp,
+              fontFamily: 'Arial',
+              fontWeight: emphasizeValue ? FontWeight.w700 : FontWeight.w500,
+              color: titleColor,
+            ),
+          ),
+          if (trailing != null) ...[SizedBox(width: 8.w), trailing],
         ],
       ),
     );
   }
-
 
   int _daysLeft(DateTime date) {
     final now = DateTime.now();
