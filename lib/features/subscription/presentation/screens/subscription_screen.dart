@@ -105,16 +105,14 @@ class SubscriptionScreen extends StatelessWidget {
                               Container(
                                 padding: EdgeInsets.all(16.w),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[100],
                                   shape: BoxShape.circle,
                                 ),
-                                child: Lottie.asset(
-                                  height: 50.h,
-                                  width: 50.h,
-                                  "assets/icons/Premium Subscription.json",
+                                child: Image.asset(
+                                  height: 70.h,
+                                  width: 70.h,
+                                  "assets/icons/image.png",
                                 ),
                               ),
-                              SizedBox(height: 16.h),
                               Text(
                                 locale.get('No active subscriptions'),
                                 style: TextStyle(
@@ -285,7 +283,7 @@ class SubscriptionScreen extends StatelessWidget {
                                   transition: Transition.rightToLeft,
                                 );
                               },
-                              
+
                               onCancelSubscriptionPressed: () {
                                 Get.to(
                                   () => PlanDetailsScreen(plan: plan),
