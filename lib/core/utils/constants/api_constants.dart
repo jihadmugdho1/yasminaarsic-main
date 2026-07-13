@@ -1,6 +1,5 @@
 class ApiConstants {
-  static const String baseUrl =
-      "https://vendora-backend-p6d9.onrender.com/api/v1/";
+  static const String baseUrl = "https://api.vendora.rs/api/v1/";
 
   static String get register => "${baseUrl}auth/register";
   static String get verifyEmail => "${baseUrl}auth/verify-email";
@@ -60,8 +59,9 @@ class ApiConstants {
   static String get currentSubscription => "${baseUrl}subscription/current";
   static String getSubscriptionHistory({int page = 1, int limit = 10}) =>
       "${baseUrl}subscription/history?page=$page&limit=$limit";
-  static String get subscriptionCheckout => "${baseUrl}subscription/subscribe/checkout";
-  
+  static String get subscriptionCheckout =>
+      "${baseUrl}subscription/subscribe/checkout";
+
   static String getCheckoutPaymentForm(String paymentId) {
     return "${baseUrl}subscription/checkout/$paymentId/form";
   }

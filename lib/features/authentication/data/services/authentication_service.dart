@@ -40,7 +40,7 @@ class AuthenticationService extends GetxService {
       final body = {
         'name': name,
         'email': email,
-        "mobileNumber":phone,
+        "mobileNumber": phone,
         'password': password,
         'role': role,
       };
