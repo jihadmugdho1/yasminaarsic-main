@@ -13,12 +13,15 @@ import 'package:vendora/features/home/widgets/category_skeleton_loader.dart';
 import 'package:vendora/features/home/widgets/offer_card.dart';
 import 'package:vendora/features/home/widgets/offer_card_shimmer.dart';
 import 'package:vendora/features/home/vendor_details/screen/vendor_details_screen.dart';
+import 'package:vendora/features/profile/controller/profile_controller.dart';
+import 'package:vendora/features/home/widgets/pop_up_offer_widget.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
   final HomeController controller = Get.put(HomeController());
   final popupController = Get.put(PopupOfferController());
+  final ProfileController profileController = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
@@ -558,36 +561,43 @@ class HomeScreen extends StatelessWidget {
 
                   // Load more trending offers
                   SizedBox(height: 16.h),
-                  Builder(
-                    builder: (context) {
+                  Obx(() {
+                    final trialDays =
+                        profileController.trialDaysRemaining.value;
+
+                    if (trialDays <= 7) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                        popupController.showPopup(
-                          PopupOfferModel(
-                            title: locale.get('free_redemptions_title'),
-                            description: "",
-                            actionLabel: locale.get('sign_up_action'),
-                            trialDuration: locale.get('free_trial_duration'),
-                            iconPath: "", // Not used with built-in icon here
-                          ),
-                        );
+                        if (!popupController.isVisible.value) {
+                          popupController.showPopup(
+                            PopupOfferModel(
+                              title: locale.get('free_redemptions_title'),
+                              description: "",
+                              actionLabel: locale.get('sign_up_action'),
+                              trialDuration: locale.get('free_trial_duration'),
+                              iconPath: "",
+                            ),
+                          );
+                        }
                       });
-                      return SizedBox.shrink();
-                    },
-                  ),
+                    } else {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (popupController.isVisible.value) {
+                          popupController.hidePopup();
+                        }
+                      });
+                    }
+                    return const SizedBox.shrink();
+                  }),
                 ],
               ),
             ),
-            // // Popup positioned at the bottom
-            // Positioned(
-            //   bottom: 20,
-            //   left: 0,
-            //   right: 0,
-            //   child: Builder(
-            //     builder: (context) {
-            //       return PopupOfferWidget(controller: popupController);
-            //     },
-            //   ),
-            // ),
+            // Popup positioned at the bottom
+            Positioned(
+              bottom: 20.h,
+              left: 0,
+              right: 0,
+              child: PopupOfferWidget(controller: popupController),
+            ),
           ],
         ),
       ),

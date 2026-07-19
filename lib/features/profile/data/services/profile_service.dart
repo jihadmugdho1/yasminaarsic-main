@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:vendora/core/models/response_data.dart';
 import 'package:vendora/core/services/network_caller.dart';
+import 'package:vendora/core/services/storage_service.dart';
 import 'package:vendora/core/utils/constants/api_constants.dart';
 import 'package:vendora/core/utils/logging/logger.dart';
 import 'package:vendora/features/profile/data/models/user_model.dart';
@@ -29,6 +30,18 @@ class ProfileService {
         try {
           final userData =
               response.responseData['data'] as Map<String, dynamic>;
+          
+          final trialDays = userData['trialDaysRemaining'];
+          final hasSubscription = userData['hasActiveSubscription'] ?? userData['isSubscribed'];
+          if (trialDays != null) {
+            await StorageService.saveTrialAndSubscription(
+              trialDaysRemaining: trialDays is int
+                  ? trialDays
+                  : int.tryParse(trialDays.toString()) ?? 0,
+              hasActiveSubscription: hasSubscription == true,
+            );
+          }
+
           final user = UserModel.fromJson(userData);
           AppLoggerHelper.debug("User data : ${jsonEncode(response.responseData)}");
           AppLoggerHelper.debug('User loaded successfully: ${user.name}');

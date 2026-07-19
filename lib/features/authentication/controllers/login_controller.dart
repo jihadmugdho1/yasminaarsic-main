@@ -160,6 +160,18 @@ class LoginController extends GetxController {
               '💾 Token and User ID saved to shared preferences',
             );
 
+            final trialDays = data['trialDaysRemaining'];
+            final hasSubscription = data['hasActiveSubscription'];
+            if (trialDays != null || hasSubscription != null) {
+              await StorageService.saveTrialAndSubscription(
+                trialDaysRemaining: trialDays is int
+                    ? trialDays
+                    : int.tryParse(trialDays.toString()) ?? 0,
+                hasActiveSubscription: hasSubscription == true,
+              );
+              AppLoggerHelper.info('💾 Saved trialDaysRemaining: $trialDays, hasActiveSubscription: $hasSubscription to storage from login.');
+            }
+
             // Register FCM token
             await _registerFcmToken();
 
@@ -273,6 +285,23 @@ class LoginController extends GetxController {
         if (response != null &&
             (response.statusCode == 201 || response.statusCode == 200)) {
           AppLoggerHelper.info('✅ Registration successful! OTP sent to email.');
+          try {
+            final responseData = jsonDecode(response.body);
+            final data = responseData['data'];
+            if (data != null) {
+              final trialDays = data['trialDaysRemaining'];
+              final hasSubscription = data['hasActiveSubscription'];
+              await StorageService.saveTrialAndSubscription(
+                trialDaysRemaining: trialDays is int
+                    ? trialDays
+                    : int.tryParse(trialDays.toString()) ?? 0,
+                hasActiveSubscription: hasSubscription == true,
+              );
+              AppLoggerHelper.info('💾 Saved trialDaysRemaining: $trialDays, hasActiveSubscription: $hasSubscription to storage from register.');
+            }
+          } catch (e) {
+            AppLoggerHelper.error('Error saving trial/subscription from register: $e');
+          }
           _showVerificationDialog();
         } else if (response != null) {
           AppLoggerHelper.error(
@@ -343,6 +372,17 @@ class LoginController extends GetxController {
 
         if (success == true) {
           await StorageService.saveToken(accessToken, userId);
+          final trialDays = data['trialDaysRemaining'];
+          final hasSubscription = data['hasActiveSubscription'];
+          if (trialDays != null || hasSubscription != null) {
+            await StorageService.saveTrialAndSubscription(
+              trialDaysRemaining: trialDays is int
+                  ? trialDays
+                  : int.tryParse(trialDays.toString()) ?? 0,
+              hasActiveSubscription: hasSubscription == true,
+            );
+            AppLoggerHelper.info('💾 Saved trialDaysRemaining: $trialDays, hasActiveSubscription: $hasSubscription to storage from login verify.');
+          }
           Get.back();
           await _registerFcmToken();
           Future.delayed(const Duration(milliseconds: 800), () {
@@ -412,6 +452,18 @@ class LoginController extends GetxController {
           AppLoggerHelper.info(
             '💾 Token and User ID saved to shared preferences',
           );
+
+          final trialDays = data['trialDaysRemaining'];
+          final hasSubscription = data['hasActiveSubscription'];
+          if (trialDays != null || hasSubscription != null) {
+            await StorageService.saveTrialAndSubscription(
+              trialDaysRemaining: trialDays is int
+                  ? trialDays
+                  : int.tryParse(trialDays.toString()) ?? 0,
+              hasActiveSubscription: hasSubscription == true,
+            );
+            AppLoggerHelper.info('💾 Saved trialDaysRemaining: $trialDays, hasActiveSubscription: $hasSubscription to storage from verify.');
+          }
 
           Get.back(); // Close dialog
           // Register FCM token
@@ -730,6 +782,18 @@ class LoginController extends GetxController {
         responseData['accessToken'] as String,
         responseData['user']?['id']?.toString() ?? '',
       );
+
+      final trialDays = responseData['trialDaysRemaining'];
+      final hasSubscription = responseData['hasActiveSubscription'];
+      if (trialDays != null || hasSubscription != null) {
+        await StorageService.saveTrialAndSubscription(
+          trialDaysRemaining: trialDays is int
+              ? trialDays
+              : int.tryParse(trialDays.toString()) ?? 0,
+          hasActiveSubscription: hasSubscription == true,
+        );
+        AppLoggerHelper.info('💾 Saved trialDaysRemaining: $trialDays, hasActiveSubscription: $hasSubscription to storage from Google login.');
+      }
 
       if (googleUser.photoUrl != null) {
         await StorageService.saveImageUrl(googleUser.photoUrl!);
