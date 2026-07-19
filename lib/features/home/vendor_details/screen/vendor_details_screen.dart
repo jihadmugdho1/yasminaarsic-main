@@ -424,17 +424,17 @@ class VendorDetailsScreen extends StatelessWidget {
                       return OfferCard(
                         offer: controller.offers[index],
                         onTap: () async {
-                          // if (!profileController.isSubscribed.value) {
-                          //   AppLoggerHelper.debug(
-                          //     "User subscribe value : ${profileController.isSubscribed.value}",
-                          //   );
-                          //   _showSubscribeDialog(context);
-                          //   return;
-                          // }
+                          if (!profileController.isSubscribed.value) {
+                            AppLoggerHelper.debug(
+                              "subscription value : ${profileController.isSubscribed.value}",
+                            );
+                            _showSubscribeDialog(context);
+                            return;
+                          }
+
                           AppLoggerHelper.debug(
                             "subscription value : ${profileController.isSubscribed.value}",
                           );
-                           _showSubscribeDialog(context);
                       
                           final offerId = controller.offers[index].id;
                           if (offerId != null && offerId.isNotEmpty) {
