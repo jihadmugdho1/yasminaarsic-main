@@ -32,12 +32,15 @@ class ProfileController extends GetxController {
   final errorMessage = ''.obs;
   var selectedLanguage = 'en'.obs;
   final isSubscribed = false.obs;
+  final trialDaysRemaining = 0.obs;
 
   @override
   void onInit() {
     super.onInit();
     _localeController = Get.find<LocalizationController>();
     selectedLanguage.value = _localeController.currentLanguage.value;
+    trialDaysRemaining.value = StorageService.trialDaysRemaining;
+    isSubscribed.value = StorageService.hasActiveSubscription;
     _fetchFullProfile();
   }
 
@@ -63,7 +66,8 @@ class ProfileController extends GetxController {
 
       final user = profileResp.responseData as UserModel;
 
-      isSubscribed.value = user.isSubscribed;
+      isSubscribed.value = StorageService.hasActiveSubscription || user.isSubscribed;
+      trialDaysRemaining.value = StorageService.trialDaysRemaining;
 
       // Notification preferences come embedded in the profile response (notifications[0])
       final notifData = user.notifications.isNotEmpty ? user.notifications.first : null;

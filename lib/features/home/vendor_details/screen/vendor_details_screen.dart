@@ -424,9 +424,13 @@ class VendorDetailsScreen extends StatelessWidget {
                       return OfferCard(
                         offer: controller.offers[index],
                         onTap: () async {
-                          if (!profileController.isSubscribed.value) {
+                          if (profileController.trialDaysRemaining.value == 0) {
                             AppLoggerHelper.debug(
-                              "subscription value : ${profileController.isSubscribed.value}",
+                              "subscription value : ${profileController.isSubscribed.value}, trialDaysRemaining: ${profileController.trialDaysRemaining.value}",
+                            );
+
+                            AppLoggerHelper.debug(
+                              " trail value :${profileController.trialDaysRemaining.value}",
                             );
                             _showSubscribeDialog(context);
                             return;
@@ -435,7 +439,7 @@ class VendorDetailsScreen extends StatelessWidget {
                           AppLoggerHelper.debug(
                             "subscription value : ${profileController.isSubscribed.value}",
                           );
-                      
+
                           final offerId = controller.offers[index].id;
                           if (offerId != null && offerId.isNotEmpty) {
                             showGeneralDialog(
@@ -466,20 +470,18 @@ class VendorDetailsScreen extends StatelessWidget {
                                     );
                                   },
                             );
-                      
+
                             await controller.fetchOfferDetails(offerId);
-                      
+
                             if (!context.mounted) return;
                             Navigator.of(context).pop();
-                      
+
                             if (!context.mounted) return;
                             showGeneralDialog(
                               context: context,
                               barrierDismissible: true,
                               barrierLabel: 'OfferDialog',
-                              barrierColor: Colors.transparent.withOpacity(
-                                0.5,
-                              ),
+                              barrierColor: Colors.transparent.withOpacity(0.5),
                               transitionDuration: Duration(milliseconds: 200),
                               pageBuilder:
                                   (context, animation, secondaryAnimation) {

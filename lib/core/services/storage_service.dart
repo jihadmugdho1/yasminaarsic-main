@@ -7,6 +7,8 @@ class StorageService {
   static const String _resetTokenKey = 'resetToken';
   static const String _fcmTokenKey = 'fcmToken';
   static const String _nameKey = 'name';
+  static const String _trialDaysRemainingKey = 'trialDaysRemaining';
+  static const String _hasActiveSubscriptionKey = 'hasActiveSubscription';
 
   // Singleton instance for SharedPreferences
   static SharedPreferences? _preferences;
@@ -28,11 +30,22 @@ class StorageService {
     await _preferences?.setString(_idKey, id);
   }
 
+  // Save trial and subscription info
+  static Future<void> saveTrialAndSubscription({
+    required int trialDaysRemaining,
+    required bool hasActiveSubscription,
+  }) async {
+    await _preferences?.setInt(_trialDaysRemainingKey, trialDaysRemaining);
+    await _preferences?.setBool(_hasActiveSubscriptionKey, hasActiveSubscription);
+  }
+
   // Remove the token and user ID from local storage (for logout)
   static Future<void> logoutUser() async {
     await _preferences?.remove(_tokenKey);
     await _preferences?.remove(_idKey);
     await _preferences?.remove(_imageUrlKey);
+    await _preferences?.remove(_trialDaysRemainingKey);
+    await _preferences?.remove(_hasActiveSubscriptionKey);
     // Navigate to the login screen
     // Get.offAllNamed('/login');
   }
@@ -42,6 +55,12 @@ class StorageService {
 
   // Getter for token
   static String? get token => _preferences?.getString(_tokenKey);
+
+  // Getter for trial days remaining
+  static int get trialDaysRemaining => _preferences?.getInt(_trialDaysRemainingKey) ?? 0;
+
+  // Getter for subscription status
+  static bool get hasActiveSubscription => _preferences?.getBool(_hasActiveSubscriptionKey) ?? false;
 
   // Reset token methods
   static Future<void> saveResetToken(String token) async {
