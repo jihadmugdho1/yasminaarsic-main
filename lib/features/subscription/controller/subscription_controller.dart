@@ -171,7 +171,7 @@ class SubscriptionController extends GetxController {
     isPromoApplied.value = true;
     appliedPromoCode.value = promoCode;
 
-    Get.snackbar('Promo Code', 'Promo code applied');
+    checkoutSelectedPlan();
   }
 
   Future<void> checkoutSelectedPlan() async {

@@ -43,7 +43,6 @@ class SubscriptionService {
           responseData: plans,
         );
       }
-     
 
       return response;
     } catch (e) {
@@ -90,7 +89,10 @@ class SubscriptionService {
   }
 
   // Fetch subscription history
-  Future<ResponseData> getSubscriptionHistory({int page = 1, int limit = 10}) async {
+  Future<ResponseData> getSubscriptionHistory({
+    int page = 1,
+    int limit = 10,
+  }) async {
     try {
       final token = StorageService.token;
       final response = await _networkCaller.getRequest(
@@ -205,10 +207,15 @@ class SubscriptionService {
       AppLoggerHelper.debug(
         'getPaymentFormHtml -> GET $uri (token: ${token != null ? "yes" : "no"})',
       );
-      final response = await http.get(uri, headers: {
-        'accept': '*/*',
-        if (token != null) 'Authorization': 'Bearer $token',
-      }).timeout(const Duration(seconds: 30));
+      final response = await http
+          .get(
+            uri,
+            headers: {
+              'accept': '*/*',
+              if (token != null) 'Authorization': 'Bearer $token',
+            },
+          )
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
         final body = response.body;
@@ -224,8 +231,9 @@ class SubscriptionService {
         );
       }
 
-      final errorBodyPreview =
-          response.body.length > 800 ? response.body.substring(0, 800) : response.body;
+      final errorBodyPreview = response.body.length > 800
+          ? response.body.substring(0, 800)
+          : response.body;
       AppLoggerHelper.debug(
         'getPaymentFormHtml <- ${response.statusCode} errorBody: $errorBodyPreview',
       );
