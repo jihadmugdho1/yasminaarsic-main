@@ -266,21 +266,23 @@ class _PlanDetailsScreenState extends State<PlanDetailsScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 10.h),
+              // SizedBox(height: 10.h),
 
-              Obx(
-                () => Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: Text(
-                    "Applied Promo Code: ${_controller.isPromoApplied.value ? _controller.appliedPromoCode.value : 'None'}",
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ),
-              ),
+              // Obx(
+              //   () =>
+
+              //    Padding(
+              //     padding: EdgeInsets.symmetric(horizontal: 16.w),
+              //     child: Text(
+              //       "Applied Promo Code: ${_controller.isPromoApplied.value ? _controller.appliedPromoCode.value : 'None'}",
+              //       style: TextStyle(
+              //         fontSize: 14.sp,
+              //         fontStyle: FontStyle.italic,
+              //         color: Colors.grey[600],
+              //       ),
+              //     ),
+              //   ),
+              // ),
               SizedBox(height: 8.h),
 
               // Action Buttons
