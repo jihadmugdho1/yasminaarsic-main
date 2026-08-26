@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:vendora/core/core.dart';
 import 'package:vendora/features/home/vendor_details/models/offer_model.dart';
 
@@ -38,11 +39,13 @@ class OfferCard extends StatelessWidget {
       fit: BoxFit.cover,
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;
-        return Container(
-          width: width,
-          height: height,
-          color: Colors.grey[300],
-          child: const Center(child: CircularProgressIndicator()),
+        return Skeletonizer(
+          enabled: true,
+          child: Container(
+            width: width,
+            height: height,
+            color: Colors.grey[300],
+          ),
         );
       },
       errorBuilder: (context, error, stackTrace) => Image.asset(

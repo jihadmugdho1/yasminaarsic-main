@@ -2,17 +2,17 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:vendora/core/core.dart';
 import 'package:vendora/core/localization/localization_controller.dart';
 import 'package:vendora/features/home/vendor_details/controllers/vendor_details_controller.dart';
+import 'package:vendora/features/home/vendor_details/widgets/alert_dialogs/subscribe_required_dialog.dart';
 import 'package:vendora/features/home/vendor_details/widgets/offer_card.dart';
 import 'package:vendora/features/home/vendor_details/widgets/alert_dialogs/offer_dialog.dart';
 import 'package:vendora/features/home/vendor_details/widgets/alert_dialogs/offer_dialog_shimmer.dart';
+import 'package:vendora/features/home/vendor_details/widgets/vendor_carousel_slider.dart';
 import 'package:vendora/features/home/vendor_details/widgets/vendor_details_card.dart';
 import 'package:vendora/features/home/vendor_details/widgets/vendor_details_card_shimmer.dart';
 import 'package:vendora/features/home/vendor_details/widgets/vendor_offer_card_shimmer.dart';
-import 'package:vendora/features/bottom_navbar/controller/bottom_navbar_controller.dart';
 import 'package:vendora/features/profile/controller/profile_controller.dart';
 
 class VendorDetailsScreen extends StatelessWidget {
@@ -23,109 +23,6 @@ class VendorDetailsScreen extends StatelessWidget {
   late final CarouselSliderController carouselController =
       CarouselSliderController();
   final profileController = Get.put(ProfileController());
-  void _showSubscribeDialog(BuildContext context) {
-    showGeneralDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierLabel: 'SubscribeDialog',
-      barrierColor: Colors.black.withValues(alpha: 0.5),
-      transitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return Center(
-          child: Material(
-            type: MaterialType.transparency,
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 24.w),
-              padding: EdgeInsets.all(24.w),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 64.w,
-                    height: 64.w,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF6C63FE).withValues(alpha: 0.12),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.workspace_premium_rounded,
-                      size: 36.sp,
-                      color: const Color(0xFF6C63FE),
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-                  Text(
-                    'Subscription Required',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Inter',
-                      color: const Color(0xFF101828),
-                    ),
-                  ),
-                  SizedBox(height: 8.h),
-                  Text(
-                    'Please subscribe to a plan to access this offer.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 13.sp,
-                      color: Colors.grey[600],
-                      fontFamily: 'Inter',
-                    ),
-                  ),
-                  SizedBox(height: 24.h),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                        Get.until((route) => route.isFirst);
-                        Get.find<BottomNavController>().changeTab(1);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        side: BorderSide.none,
-                        backgroundColor: const Color(0xFF6C63FE),
-                        minimumSize: Size(0, 44.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      child: Text(
-                        'Go to Subscription',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  TextButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text(
-                      'Maybe Later',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 13.sp,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(opacity: animation, child: child);
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -161,202 +58,10 @@ class VendorDetailsScreen extends StatelessWidget {
             children: [
               SizedBox(height: 10.h),
 
-              // Carousel Slider with rounded borders and navigation buttons
-              Padding(
-                padding: EdgeInsets.only(left: 16.w, right: 16.w),
-                child: Stack(
-                  children: [
-                    Obx(() {
-                      if (controller.isLoading.value) {
-                        return const _VendorCarouselShimmer();
-                      }
-                      return CarouselSlider(
-                        carouselController: carouselController,
-                        options: CarouselOptions(
-                          height: 180.h,
-                          viewportFraction: 1.0,
-                          enlargeCenterPage: false,
-                          onPageChanged: (index, reason) {
-                            controller.setCurrentIndex(index);
-                          },
-                        ),
-                        items: controller.carouselItems.isEmpty
-                            ? [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(16),
-                                  child: Image.asset(
-                                    'assets/images/noSummaryImage.jpg',
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
-                                    errorBuilder:
-                                        (
-                                          context,
-                                          error,
-                                          stackTrace,
-                                        ) => Container(
-                                          color: Colors.grey[300],
-                                          child: Center(
-                                            child: Icon(
-                                              Icons
-                                                  .image_not_supported_outlined,
-                                              color: Colors.grey[600],
-                                              size: 40,
-                                            ),
-                                          ),
-                                        ),
-                                  ),
-                                ),
-                              ]
-                            : controller.carouselItems
-                                  .map(
-                                    (item) => ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
-                                      child: item.imagePath.startsWith('http')
-                                          ? Image.network(
-                                              item.imagePath,
-                                              fit: BoxFit.cover,
-                                              width: double.infinity,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                    return Container(
-                                                      color: Colors.grey[300],
-                                                      child: Center(
-                                                        child: Icon(
-                                                          Icons
-                                                              .image_not_supported_outlined,
-                                                          color:
-                                                              Colors.grey[600],
-                                                          size: 40,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                            )
-                                          : Image.asset(
-                                              item.imagePath,
-                                              fit: BoxFit.cover,
-                                              width: double.infinity,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                    return Container(
-                                                      color: Colors.grey[300],
-                                                      child: Center(
-                                                        child: Icon(
-                                                          Icons
-                                                              .image_not_supported_outlined,
-                                                          color:
-                                                              Colors.grey[600],
-                                                          size: 40,
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                            ),
-                                    ),
-                                  )
-                                  .toList(),
-                      );
-                    }),
-                    // Positioned(
-                    //   left: 10.w,
-                    //   top: 80.h,
-                    //   child: Container(
-                    //     height: 25.h,
-                    //     width: 25.h,
-                    //     decoration: BoxDecoration(
-                    //       shape: BoxShape.circle,
-                    //       color: Colors.white.withOpacity(0.5),
-                    //     ),
-                    //     child: IconButton(
-                    //       icon: Icon(
-                    //         Icons.arrow_back_ios_new_sharp,
-                    //         color: Colors.black,
-                    //       ),
-                    //       onPressed: () {
-                    //         int prevIndex =
-                    //             (controller.currentIndex.value - 1) %
-                    //             controller.carouselItems.length;
-                    //         if (prevIndex < 0) {
-                    //           prevIndex = controller.carouselItems.length - 1;
-                    //         }
-                    //         controller.setCurrentIndex(prevIndex);
-                    //         carouselController.animateToPage(
-                    //           prevIndex,
-                    //           duration: Duration(milliseconds: 300),
-                    //           curve: Curves.easeInOut,
-                    //         );
-                    //       },
-                    //       iconSize: 18.sp,
-                    //       padding: EdgeInsets.all(5),
-                    //       constraints: BoxConstraints(),
-                    //     ),
-                    //   ),
-                    // ),
-                    // Positioned(
-                    //   right: 10.w,
-                    //   top: 80.h,
-                    //   child: Container(
-                    //     height: 25.h,
-                    //     width: 25.h,
-                    //     decoration: BoxDecoration(
-                    //       shape: BoxShape.circle,
-                    //       color: Colors.white.withOpacity(0.5),
-                    //     ),
-                    //     child: IconButton(
-                    //       icon: Icon(
-                    //         Icons.arrow_forward_ios,
-                    //         color: Colors.black,
-                    //       ),
-                    //       onPressed: () {
-                    //         int nextIndex =
-                    //             (controller.currentIndex.value + 1) %
-                    //             controller.carouselItems.length;
-                    //         controller.setCurrentIndex(nextIndex);
-                    //         carouselController.animateToPage(
-                    //           nextIndex,
-                    //           duration: Duration(milliseconds: 300),
-                    //           curve: Curves.easeInOut,
-                    //         );
-                    //       },
-                    //       iconSize: 18.sp,
-                    //       padding: EdgeInsets.all(5),
-                    //       constraints: BoxConstraints(),
-                    //     ),
-                    //   ),
-                    // ),
-                    Positioned(
-                      bottom: 14.h,
-                      left: 0,
-                      right: 0,
-                      child: Center(
-                        child: Obx(
-                          () => Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: controller.carouselItems
-                                .asMap()
-                                .entries
-                                .map((entry) {
-                                  return Container(
-                                    width: 12.w,
-                                    height: 12.h,
-                                    margin: EdgeInsets.symmetric(horizontal: 4),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color:
-                                          controller.currentIndex.value ==
-                                              entry.key
-                                          ? AppColors.primary
-                                          : Colors.white.withOpacity(0.7),
-                                    ),
-                                  );
-                                })
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+              // Vendor Image Carousel Slider
+              VendorCarouselSlider(
+                controller: controller,
+                carouselController: carouselController,
               ),
 
               Padding(
@@ -393,7 +98,7 @@ class VendorDetailsScreen extends StatelessWidget {
                   if (controller.isLoading.value) {
                     return ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: 3,
                       itemBuilder: (context, index) {
                         return Padding(
@@ -418,7 +123,7 @@ class VendorDetailsScreen extends StatelessWidget {
 
                   return ListView.builder(
                     shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemCount: controller.offers.length,
                     itemBuilder: (context, index) {
                       return OfferCard(
@@ -432,7 +137,7 @@ class VendorDetailsScreen extends StatelessWidget {
                             AppLoggerHelper.debug(
                               " trail value :${profileController.trialDaysRemaining.value}",
                             );
-                            _showSubscribeDialog(context);
+                            SubscribeRequiredDialog.show(context);
                             return;
                           }
 
@@ -447,16 +152,16 @@ class VendorDetailsScreen extends StatelessWidget {
                               barrierDismissible: false,
                               barrierLabel: 'LoadingOfferDialog',
                               barrierColor: Colors.black.withOpacity(0.5),
-                              transitionDuration: Duration(milliseconds: 200),
+                              transitionDuration: const Duration(milliseconds: 200),
                               pageBuilder:
                                   (context, animation, secondaryAnimation) {
-                                    return Center(
-                                      child: Material(
-                                        type: MaterialType.transparency,
-                                        child: const OfferDialogShimmer(),
-                                      ),
-                                    );
-                                  },
+                                return const Center(
+                                  child: Material(
+                                    type: MaterialType.transparency,
+                                    child: OfferDialogShimmer(),
+                                  ),
+                                );
+                              },
                               transitionBuilder:
                                   (
                                     context,
@@ -464,11 +169,11 @@ class VendorDetailsScreen extends StatelessWidget {
                                     secondaryAnimation,
                                     child,
                                   ) {
-                                    return FadeTransition(
-                                      opacity: animation,
-                                      child: child,
-                                    );
-                                  },
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
                             );
 
                             await controller.fetchOfferDetails(offerId);
@@ -482,22 +187,22 @@ class VendorDetailsScreen extends StatelessWidget {
                               barrierDismissible: true,
                               barrierLabel: 'OfferDialog',
                               barrierColor: Colors.transparent.withOpacity(0.5),
-                              transitionDuration: Duration(milliseconds: 200),
+                              transitionDuration: const Duration(milliseconds: 200),
                               pageBuilder:
                                   (context, animation, secondaryAnimation) {
-                                    return Center(
-                                      child: Material(
-                                        type: MaterialType.transparency,
-                                        child: OfferDialog(
-                                          offer: controller.offers[index],
-                                          offerIndex: index,
-                                          offerDetail: controller
-                                              .selectedOfferDetail
-                                              .value,
-                                        ),
-                                      ),
-                                    );
-                                  },
+                                return Center(
+                                  child: Material(
+                                    type: MaterialType.transparency,
+                                    child: OfferDialog(
+                                      offer: controller.offers[index],
+                                      offerIndex: index,
+                                      offerDetail: controller
+                                          .selectedOfferDetail
+                                          .value,
+                                    ),
+                                  ),
+                                );
+                              },
                               transitionBuilder:
                                   (
                                     context,
@@ -505,11 +210,11 @@ class VendorDetailsScreen extends StatelessWidget {
                                     secondaryAnimation,
                                     child,
                                   ) {
-                                    return FadeTransition(
-                                      opacity: animation,
-                                      child: child,
-                                    );
-                                  },
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
                             );
                           }
                         },
@@ -521,101 +226,6 @@ class VendorDetailsScreen extends StatelessWidget {
               SizedBox(height: 32.h),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _VendorCarouselShimmer extends StatelessWidget {
-  const _VendorCarouselShimmer();
-
-  @override
-  Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: const Color(0xFFF0F3F8),
-      highlightColor: const Color(0xFFFFFFFF),
-      period: const Duration(milliseconds: 1400),
-      child: Container(
-        height: 180,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFFF4F7FB), Color(0xFFE9EEF6)],
-          ),
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              top: 18,
-              left: 18,
-              child: Container(
-                width: 88,
-                height: 26,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF0F3F8),
-                  borderRadius: BorderRadius.circular(999),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 18,
-              right: 72,
-              bottom: 34,
-              child: Container(
-                height: 20,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF0F3F8),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            Positioned(
-              left: 18,
-              right: 120,
-              bottom: 12,
-              child: Container(
-                height: 12,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF0F3F8),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-            ),
-            Positioned(
-              right: -8,
-              top: -10,
-              child: Container(
-                width: 96,
-                height: 96,
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.5),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-            Positioned(
-              right: 18,
-              bottom: 16,
-              child: Row(
-                children: List.generate(
-                  3,
-                  (index) => Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 3),
-                    width: index == 0 ? 18 : 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF0F3F8),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );
