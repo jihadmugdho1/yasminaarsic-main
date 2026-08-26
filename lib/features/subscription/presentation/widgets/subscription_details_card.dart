@@ -276,15 +276,23 @@ class SubscriptionDetailsCard extends StatelessWidget {
                 fontFamily: 'Arial',
                 color: subtitleColor,
               ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
             ),
           ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: emphasizeValue ? 16.sp : 14.sp,
-              fontFamily: 'Arial',
-              fontWeight: emphasizeValue ? FontWeight.w700 : FontWeight.w500,
-              color: titleColor,
+          SizedBox(width: 8.w),
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              style: TextStyle(
+                fontSize: emphasizeValue ? 16.sp : 14.sp,
+                fontFamily: 'Arial',
+                fontWeight: emphasizeValue ? FontWeight.w700 : FontWeight.w500,
+                color: titleColor,
+              ),
             ),
           ),
           if (trailing != null) ...[SizedBox(width: 8.w), trailing],
