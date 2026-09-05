@@ -116,7 +116,7 @@ class LoginScreen extends StatelessWidget {
                       controller: controller.emailControllerOne,
                       validator: controller.validateEmail,
                     ),
-                    SizedBox(height: 24.h),
+                    SizedBox(height: 8.h),
 
                     // Password Label
                     Obx(

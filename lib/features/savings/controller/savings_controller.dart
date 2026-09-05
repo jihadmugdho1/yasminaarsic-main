@@ -12,6 +12,8 @@ class SavingsController extends GetxController {
   late Rx<SavingsModel> savingsData;
   var selectedOfferIndex = (-1).obs;
   final isLoading = false.obs;
+  final isError = false.obs;
+  final errorMessage = ''.obs;
 
   final SavingsService _savingsService = SavingsService();
 
@@ -27,17 +29,25 @@ class SavingsController extends GetxController {
       redeemedOffers: [],
     ).obs;
 
-    _fetchSavingsData();
+    fetchSavingsData();
 
     // Listen for language changes and re-fetch savings data
     final locale = Get.find<LocalizationController>();
     ever(locale.currentLanguage, (_) {
-      _fetchSavingsData();
+      fetchSavingsData();
     });
   }
 
-  Future<void> _fetchSavingsData() async {
-    isLoading.value = true;
+  Future<void> refreshSavingsData() async {
+    await fetchSavingsData(showLoading: false);
+  }
+
+  Future<void> fetchSavingsData({bool showLoading = true}) async {
+    if (showLoading) {
+      isLoading.value = true;
+    }
+    isError.value = false;
+    errorMessage.value = '';
     try {
       final response = await _savingsService.getMyRedeemedOffers();
 
@@ -62,13 +72,18 @@ class SavingsController extends GetxController {
           monthlySavings: apiData.data.totalSaving,
           redeemedOffers: offers,
         );
+        isError.value = false;
       } else {
+        isError.value = true;
+        errorMessage.value = response.errorMessage.isNotEmpty
+            ? response.errorMessage
+            : 'Failed to load savings data';
         AppLoggerHelper.error('Savings Load Error', response.errorMessage);
-        Get.snackbar('Error', response.errorMessage);
       }
     } catch (e) {
+      isError.value = true;
+      errorMessage.value = 'Failed to load savings data';
       AppLoggerHelper.error('Savings Load Error', e);
-      Get.snackbar('Error', 'Failed to load savings data');
     } finally {
       isLoading.value = false;
     }

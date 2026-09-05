@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:vendora/core/utils/constants/colors.dart';
 import 'package:vendora/core/localization/localization_controller.dart';
@@ -28,7 +29,7 @@ class SavingsScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(12.r),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 8,
                 offset: const Offset(0, 2),
               ),
@@ -227,92 +228,205 @@ class SavingsScreen extends StatelessWidget {
         elevation: 0,
         toolbarHeight: 0,
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.zero,
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Obx(
-                () => SubscriptionCard(
-                  title: locale.get('your_savings'),
-                  subtitle: locale.get('track_savings'),
-                  backgroundColor: const Color(0xFF6C63FE),
-                  titleColor: Colors.white,
-                  subtitleColor: Colors.white,
+      body: RefreshIndicator(
+        color: AppColors.primary,
+        onRefresh: controller.refreshSavingsData,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.zero,
+          child: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Obx(
+                  () => SubscriptionCard(
+                    title: locale.get('your_savings'),
+                    subtitle: locale.get('track_savings'),
+                    backgroundColor: const Color(0xFF6C63FE),
+                    titleColor: Colors.white,
+                    subtitleColor: Colors.white,
+                  ),
                 ),
-              ),
-              SizedBox(height: 16.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Obx(() {
-                  if (controller.isLoading.value) {
-                    return _buildSavingsSummaryCardShimmer();
-                  }
-                  final data = controller.savingsData.value;
-                  return SavingsSummaryCard(
-                    title: locale.get('total_savings'),
-                    savingsAmount: data.totalSavings,
-                    description: locale
-                        .get('from_redeemed_offers')
-                        .replaceFirst(
-                          '{count}',
-                          data.redeemedOffersCount.toString(),
+                SizedBox(height: 16.h),
+
+                // Error message banner if any
+                Obx(() {
+                  if (controller.isError.value) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 8.h,
+                      ),
+                      child: Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(14.r),
+                        decoration: BoxDecoration(
+                          color: Colors.red.shade50,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(color: Colors.red.shade200),
                         ),
-                    icon: Icons.balance,
-                    backgroundColor: const Color(0xFFFFF6D5),
-                    iconBackgroundColor: const Color(0xFFFFD700),
-                    descriptionColor: const Color(0xFFF4DB35),
-                    onTap: controller.onSavingsSummaryTap,
-                  );
-                }),
-              ),
-              SizedBox(height: 16.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Obx(() {
-                  if (controller.isLoading.value) {
-                    return _buildMonthlySavingsCardShimmer();
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.error_outline,
+                              color: Colors.red.shade600,
+                              size: 22.sp,
+                            ),
+                            SizedBox(width: 10.w),
+                            Expanded(
+                              child: Text(
+                                controller.errorMessage.value.isNotEmpty
+                                    ? controller.errorMessage.value
+                                    : 'Failed to load savings data',
+                                style: TextStyle(
+                                  fontSize: 13.sp,
+                                  color: Colors.red.shade800,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => controller.fetchSavingsData(),
+                              child: Text(
+                                'Retry',
+                                style: TextStyle(
+                                  color: Colors.red.shade800,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
                   }
-                  final data = controller.savingsData.value;
-                  return MonthlySavingsCard(
-                    title: locale.get('this_month'),
-                    amount: data.monthlySavings,
-                    description: locale.get('keep_saving'),
-                    icon: Icons.trending_up,
-                    backgroundColor: const Color(0xFFF0F5FF),
-                    iconBackgroundColor: const Color(0xFF6C5CE7),
-                    descriptionColor: const Color(0xFF6C63FE),
-                    onTap: controller.onMonthlySavingsTap,
-                  );
+                  return const SizedBox.shrink();
                 }),
-              ),
-              SizedBox(height: 16.h),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Obx(
-                  () => Text(
-                    locale.get('redeemed_offers'),
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Inter',
-                      color: const Color(0xFF101828),
+
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Obx(() {
+                    if (controller.isLoading.value) {
+                      return _buildSavingsSummaryCardShimmer();
+                    }
+                    final data = controller.savingsData.value;
+                    return SavingsSummaryCard(
+                      title: locale.get('total_savings'),
+                      savingsAmount: data.totalSavings,
+                      description: locale
+                          .get('from_redeemed_offers')
+                          .replaceFirst(
+                            '{count}',
+                            data.redeemedOffersCount.toString(),
+                          ),
+                      icon: Icons.balance,
+                      backgroundColor: const Color(0xFFFFF6D5),
+                      iconBackgroundColor: const Color(0xFFFFD700),
+                      descriptionColor: const Color(0xFFF4DB35),
+                      onTap: controller.onSavingsSummaryTap,
+                    );
+                  }),
+                ),
+                SizedBox(height: 16.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Obx(() {
+                    if (controller.isLoading.value) {
+                      return _buildMonthlySavingsCardShimmer();
+                    }
+                    final data = controller.savingsData.value;
+                    return MonthlySavingsCard(
+                      title: locale.get('this_month'),
+                      amount: data.monthlySavings,
+                      description: locale.get('keep_saving'),
+                      icon: Icons.trending_up,
+                      backgroundColor: const Color(0xFFF0F5FF),
+                      iconBackgroundColor: const Color(0xFF6C5CE7),
+                      descriptionColor: const Color(0xFF6C63FE),
+                      onTap: controller.onMonthlySavingsTap,
+                    );
+                  }),
+                ),
+                SizedBox(height: 16.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: Obx(
+                    () => Text(
+                      locale.get('redeemed_offers'),
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Inter',
+                        color: const Color(0xFF101828),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Obx(() {
-                if (controller.isLoading.value) {
-                  // Show shimmer effect while loading
-                  return Column(
-                    children: List.generate(
-                      3,
-                      (index) => _buildOfferCardShimmer(),
-                    ),
-                  );
-                } else {
+                Obx(() {
+                  if (controller.isLoading.value) {
+                    // Show shimmer effect while loading
+                    return Column(
+                      children: List.generate(
+                        3,
+                        (index) => _buildOfferCardShimmer(),
+                      ),
+                    );
+                  }
+
                   final offers = controller.savingsData.value.redeemedOffers;
+
+                  if (offers.isEmpty) {
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 32.h,
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 64.h,
+                              width: 64.h,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: AppColors.primary.withValues(
+                                  alpha: 0.08,
+                                ),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                Iconsax.empty_wallet,
+                                size: 30.sp,
+                                color: AppColors.primary,
+                              ),
+                            ),
+                            SizedBox(height: 12.h),
+                            Text(
+                              'No redeemed offers yet',
+                              style: TextStyle(
+                                fontSize: 15.sp,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'Inter',
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            SizedBox(height: 4.h),
+                            Text(
+                              'Redeem offers to start tracking your savings here.',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 13.sp,
+                                fontFamily: 'Inter',
+                                color: AppColors.textSecondary,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }
+
                   return Column(
                     children: [
                       for (int i = 0; i < offers.length; i++)
@@ -338,9 +452,10 @@ class SavingsScreen extends StatelessWidget {
                         ),
                     ],
                   );
-                }
-              }),
-            ],
+                }),
+                SizedBox(height: 24.h),
+              ],
+            ),
           ),
         ),
       ),

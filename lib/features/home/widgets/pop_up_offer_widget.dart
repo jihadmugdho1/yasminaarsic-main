@@ -17,6 +17,8 @@ class PopupOfferWidget extends StatelessWidget {
       if (!controller.isVisible.value) return const SizedBox.shrink();
 
       final profileController = Get.find<ProfileController>();
+      if (profileController.isSubscribed.value) return const SizedBox.shrink();
+
       final trialDays = profileController.trialDaysRemaining.value;
 
       final bool isExpired = trialDays == 0;

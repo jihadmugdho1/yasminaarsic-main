@@ -22,8 +22,8 @@ class MonthlySavingsCard extends StatelessWidget {
     required this.amount,
     this.description = '',
     this.backgroundColor = const Color(0xFFF0F5FF), // Light blue as in image
-    this.titleColor =const Color(0xFF1C398E),
-    this.amountColor =const Color(0xFF1C398E),
+    this.titleColor = const Color(0xFF1C398E),
+    this.amountColor = const Color(0xFF1C398E),
     this.descriptionColor = const Color(0xFF6C63FE), // Purple-blue text
     this.iconBackgroundColor = const Color(0xFF6C5CE7), // Dark purple
     this.iconForegroundColor = Colors.white,
@@ -42,9 +42,7 @@ class MonthlySavingsCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(borderRadius),
-          border: Border.all(
-            color: Color(0xFFBEDBFF)
-          ),
+          border: Border.all(color: Color(0xFFBEDBFF)),
         ),
         child: Row(
           children: [
@@ -56,11 +54,7 @@ class MonthlySavingsCard extends StatelessWidget {
                 color: iconBackgroundColor,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                icon,
-                color: iconForegroundColor,
-                size: 24,
-              ),
+              child: Icon(icon, color: iconForegroundColor, size: 24),
             ),
 
             const SizedBox(width: 16),

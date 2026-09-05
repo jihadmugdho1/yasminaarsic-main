@@ -565,7 +565,9 @@ class HomeScreen extends StatelessWidget {
                     final trialDays =
                         profileController.trialDaysRemaining.value;
 
-                    if (trialDays <= 7) {
+                    final isSubscribed = profileController.isSubscribed.value;
+
+                    if (!isSubscribed && trialDays <= 7) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         if (!popupController.isVisible.value) {
                           popupController.showPopup(

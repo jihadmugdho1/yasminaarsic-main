@@ -10,7 +10,8 @@ import 'package:vendora/core/utils/constants/colors.dart';
 import 'package:vendora/core/utils/constants/icon_path.dart';
 import 'package:vendora/core/utils/constants/image_path.dart';
 import 'package:vendora/core/localization/localization_controller.dart';
-import 'package:vendora/features/authentication/controllers/login_controller.dart';
+import 'package:vendora/features/authentication/controllers/google_sign_in_controller.dart';
+import 'package:vendora/features/authentication/controllers/sign_up_controller.dart';
 import 'package:vendora/features/authentication/presentation/widgets/custom_text_form_field.dart';
 import 'package:vendora/routes/app_routes.dart';
 
@@ -22,7 +23,9 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  late final LoginController controller = Get.find<LoginController>();
+  late final SignUpController controller = Get.find<SignUpController>();
+  late final GoogleSignInController googleSignInController =
+      Get.find<GoogleSignInController>();
 
   @override
   void initState() {
@@ -402,13 +405,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                       SizedBox(height: 16.h),
                       Center(
-                        child: Image.asset(
-                          ImagePath.googleImage,
-                          height: 32.h,
-                          width: 32.w,
+                        child: InkWell(
+                          onTap: googleSignInController.signInWithGoogle,
+                          child: Image.asset(
+                            ImagePath.googleImage,
+                            height: 32.h,
+                            width: 32.w,
+                          ),
                         ),
                       ),
-                      SizedBox(height: 24.h),
+                      SizedBox(height: 8.h),
 
                       // Login link
                       Row(

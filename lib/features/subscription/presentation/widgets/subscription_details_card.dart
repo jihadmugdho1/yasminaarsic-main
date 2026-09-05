@@ -39,7 +39,7 @@ class SubscriptionDetailsCard extends StatelessWidget {
     this.planTitle = 'Current Plan',
     this.planSubtitle = 'Annual Subscription',
     this.trailingBadgeText = 'Active',
-    this.trailingBadgeColor = const Color(0xFF17A34A), // Green
+    this.trailingBadgeColor,
     this.startDate,
     this.renewalDate,
     this.planDescription = 'Subscription Plan for One Year',
@@ -144,7 +144,7 @@ class SubscriptionDetailsCard extends StatelessWidget {
                       vertical: 5.h,
                     ),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFFFD700),
+                      color: _badgeBgColor,
                       borderRadius: BorderRadius.circular(20.r),
                     ),
                     child: Row(
@@ -155,7 +155,7 @@ class SubscriptionDetailsCard extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 11.sp,
                             fontWeight: FontWeight.w700,
-                            color: Colors.black.withValues(alpha: 0.7),
+                            color: _badgeTextColor,
                             letterSpacing: 0.2,
                           ),
                         ),
@@ -239,8 +239,16 @@ class SubscriptionDetailsCard extends StatelessWidget {
 
   Widget _buildDivider() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.h),
-      child: Divider(color: dividerColor.withOpacity(0.1), height: 1),
+      padding: EdgeInsets.symmetric(vertical: 4.h),
+      child: CustomPaint(
+        size: const Size(double.infinity, 1),
+        painter: DottedLinePainter(
+          color: dividerColor.withValues(alpha: 0.25),
+          dashWidth: 4.0,
+          dashSpace: 4.0,
+          strokeWidth: 1.0,
+        ),
+      ),
     );
   }
 
@@ -257,8 +265,8 @@ class SubscriptionDetailsCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            height: 34.h,
-            width: 34.h,
+            height: 25.h,
+            width: 25.h,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: subtitleColor.withOpacity(0.06),
@@ -268,31 +276,35 @@ class SubscriptionDetailsCard extends StatelessWidget {
           ),
           SizedBox(width: 12.w),
           Expanded(
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Arial',
-                color: subtitleColor,
-              ),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-            ),
-          ),
-          SizedBox(width: 8.w),
-          Flexible(
-            child: Text(
-              value,
-              textAlign: TextAlign.end,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 2,
-              style: TextStyle(
-                fontSize: emphasizeValue ? 16.sp : 14.sp,
-                fontFamily: 'Arial',
-                fontWeight: emphasizeValue ? FontWeight.w700 : FontWeight.w500,
-                color: titleColor,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    fontFamily: 'Arial',
+                    color: subtitleColor,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 2.h),
+                Text(
+                  value,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontSize: emphasizeValue ? 14.sp : 12.sp,
+                    fontFamily: 'Arial',
+                    fontWeight: emphasizeValue
+                        ? FontWeight.w700
+                        : FontWeight.w500,
+                    color: titleColor,
+                  ),
+                ),
+              ],
             ),
           ),
           if (trailing != null) ...[SizedBox(width: 8.w), trailing],
@@ -301,9 +313,74 @@ class SubscriptionDetailsCard extends StatelessWidget {
     );
   }
 
+  Color get _badgeBgColor {
+    final text = trailingBadgeText?.toLowerCase().trim();
+    if (text == 'active') {
+      return trailingBadgeColor ?? const Color(0xFF17A34A); // Green for active
+    } else if (text == 'available') {
+      return trailingBadgeColor ??
+          const Color(0xFFFFD700); // Gold/Yellow for available
+    } else if (text == 'inactive' || text == 'expired') {
+      return trailingBadgeColor ?? Colors.grey;
+    }
+    return trailingBadgeColor ?? const Color(0xFF17A34A);
+  }
+
+  Color get _badgeTextColor {
+    final text = trailingBadgeText?.toLowerCase().trim();
+    if (text == 'active') {
+      return Colors.white;
+    } else if (text == 'available') {
+      return Colors.black87;
+    } else if (text == 'inactive' || text == 'expired') {
+      return Colors.white;
+    }
+    return badgeTextColor;
+  }
+
   int _daysLeft(DateTime date) {
     final now = DateTime.now();
     final difference = date.difference(now);
     return difference.inDays > 0 ? difference.inDays : 0;
+  }
+}
+
+class DottedLinePainter extends CustomPainter {
+  final Color color;
+  final double dashWidth;
+  final double dashSpace;
+  final double strokeWidth;
+
+  const DottedLinePainter({
+    required this.color,
+    this.dashWidth = 4.0,
+    this.dashSpace = 4.0,
+    this.strokeWidth = 1.0,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    double startX = 0;
+    while (startX < size.width) {
+      canvas.drawLine(
+        Offset(startX, size.height / 2),
+        Offset((startX + dashWidth).clamp(0, size.width), size.height / 2),
+        paint,
+      );
+      startX += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant DottedLinePainter oldDelegate) {
+    return oldDelegate.color != color ||
+        oldDelegate.dashWidth != dashWidth ||
+        oldDelegate.dashSpace != dashSpace ||
+        oldDelegate.strokeWidth != strokeWidth;
   }
 }
