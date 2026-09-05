@@ -145,78 +145,106 @@ class VendorDetailsScreen extends StatelessWidget {
                             "subscription value : ${profileController.isSubscribed.value}",
                           );
 
-                          final offerId = controller.offers[index].id;
-                          if (offerId != null && offerId.isNotEmpty) {
-                            showGeneralDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              barrierLabel: 'LoadingOfferDialog',
-                              barrierColor: Colors.black.withOpacity(0.5),
-                              transitionDuration: const Duration(milliseconds: 200),
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) {
-                                return const Center(
-                                  child: Material(
-                                    type: MaterialType.transparency,
-                                    child: OfferDialogShimmer(),
-                                  ),
-                                );
-                              },
-                              transitionBuilder:
-                                  (
-                                    context,
-                                    animation,
-                                    secondaryAnimation,
-                                    child,
-                                  ) {
-                                return FadeTransition(
-                                  opacity: animation,
-                                  child: child,
-                                );
-                              },
+                          final offer = controller.offers[index];
+                          final offerId = offer.id;
+
+                          AppLoggerHelper.debug(
+                            'OfferCard tapped - index: $index, offerId: $offerId, title: ${offer.title}',
+                          );
+
+                          if (offerId == null || offerId.isEmpty) {
+                            AppLoggerHelper.error('OfferCard tapped but offerId is null or empty');
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Offer ID is not available'),
+                                backgroundColor: Colors.red,
+                              ),
                             );
-
-                            await controller.fetchOfferDetails(offerId);
-
-                            if (!context.mounted) return;
-                            Navigator.of(context).pop();
-
-                            if (!context.mounted) return;
-                            showGeneralDialog(
-                              context: context,
-                              barrierDismissible: true,
-                              barrierLabel: 'OfferDialog',
-                              barrierColor: Colors.transparent.withOpacity(0.5),
-                              transitionDuration: const Duration(milliseconds: 200),
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) {
-                                return Center(
-                                  child: Material(
-                                    type: MaterialType.transparency,
-                                    child: OfferDialog(
-                                      offer: controller.offers[index],
-                                      offerIndex: index,
-                                      offerDetail: controller
-                                          .selectedOfferDetail
-                                          .value,
-                                    ),
-                                  ),
-                                );
-                              },
-                              transitionBuilder:
-                                  (
-                                    context,
-                                    animation,
-                                    secondaryAnimation,
-                                    child,
-                                  ) {
-                                return FadeTransition(
-                                  opacity: animation,
-                                  child: child,
-                                );
-                              },
-                            );
+                            return;
                           }
+
+                          showGeneralDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            barrierLabel: 'LoadingOfferDialog',
+                            barrierColor: Colors.black.withOpacity(0.5),
+                            transitionDuration: const Duration(milliseconds: 200),
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) {
+                              return const Center(
+                                child: Material(
+                                  type: MaterialType.transparency,
+                                  child: OfferDialogShimmer(),
+                                ),
+                              );
+                            },
+                            transitionBuilder:
+                                (
+                                  context,
+                                  animation,
+                                  secondaryAnimation,
+                                  child,
+                                ) {
+                              return FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              );
+                            },
+                          );
+
+                          await controller.fetchOfferDetails(offerId);
+
+                          if (!context.mounted) return;
+                          Navigator.of(context).pop();
+
+                          final offerDetail = controller.selectedOfferDetail.value;
+                          if (offerDetail == null) {
+                            AppLoggerHelper.error(
+                              'Failed to fetch offer details for offer ID: $offerId',
+                            );
+                            if (!context.mounted) return;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Failed to load offer details. Please try again.'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                            return;
+                          }
+
+                          if (!context.mounted) return;
+                          showGeneralDialog(
+                            context: context,
+                            barrierDismissible: true,
+                            barrierLabel: 'OfferDialog',
+                            barrierColor: Colors.transparent.withOpacity(0.5),
+                            transitionDuration: const Duration(milliseconds: 200),
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) {
+                              return Center(
+                                child: Material(
+                                  type: MaterialType.transparency,
+                                  child: OfferDialog(
+                                    offer: controller.offers[index],
+                                    offerIndex: index,
+                                    offerDetail: offerDetail,
+                                  ),
+                                ),
+                              );
+                            },
+                            transitionBuilder:
+                                (
+                                  context,
+                                  animation,
+                                  secondaryAnimation,
+                                  child,
+                                ) {
+                              return FadeTransition(
+                                opacity: animation,
+                                child: child,
+                              );
+                            },
+                          );
                         },
                       );
                     },

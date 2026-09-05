@@ -1,103 +1,135 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vendora/core/utils/logging/logger.dart';
 import 'package:vendora/features/home/vendor_details/models/alert_dialogs/offer_dialog_model.dart';
 import 'package:vendora/features/home/vendor_details/widgets/alert_dialogs/qr_dialog.dart';
 import 'package:vendora/features/home/vendor_details/models/alert_dialogs/qr_dialog_model.dart';
 import 'package:vendora/features/home/vendor_details/models/offer_model.dart';
-import 'package:vendora/features/home/vendor_details/controllers/vendor_details_controller.dart';
 import 'package:vendora/features/home/vendor_details/services/offer_service.dart';
 
 class OfferController extends GetxController {
   final bool isReuseable;
   final Offer? offerData;
-  final int offerIndex; // ✅ Track offer index
+  final int offerIndex;
   final Map<String, dynamic>? offerDetail;
 
   OfferController({
     this.isReuseable = false,
     this.offerData,
-    this.offerIndex = 0, // ✅ Add index parameter
+    this.offerIndex = 0,
     this.offerDetail,
   });
 
-  late var offer = OfferDialogModel(
-    title: offerDetail?['title'] ?? offerData?.title ?? 'Buy 1 Get 1 Free',
-    description:
-        offerDetail?['description'] ??
-        offerData?.description ??
-        'Enjoy our signature dishes with BOGO offer on all main courses',
-    location:
-        offerDetail?['VendorProfile']?['city'] ??
-        offerData?.location ??
-        'Downtown, City Center',
-    expiryDate: offerDetail?['validUntil'] != null
-        ? DateTime.tryParse(offerDetail!['validUntil']) ??
-              DateTime(2025, 12, 31)
-        : offerData?.expiryDate ?? DateTime(2025, 12, 31),
-    estimatedValue: offerDetail?['estimatedValue']?.toDouble() ?? 25.0,
-    terms:
-        offerDetail?['termsAndConditions'] ??
-        'Valid on dine-in only. Not valid with other offers. Valid Mon-Thu only.',
-    imageUrl: offerDetail?['imageUrl'] ?? offerData?.imageUrl ?? '',
-
-    isReuseable: isReuseable,
-  ).obs;
+  late Rx<OfferDialogModel> offer;
 
   @override
   void onInit() {
     super.onInit();
-    // Update the offer's isReuseable flag with the passed parameter
-    offer.update((val) {
-      val?.isReuseable = isReuseable;
-    });
+
+    final detail = offerDetail;
+    final profile = (detail?['VendorProfile'] ?? detail?['vendorProfile'])
+        as Map<String, dynamic>?;
+
+    final String title = detail?['title'] as String? ?? offerData?.title ?? '';
+    final String description =
+        detail?['description'] as String? ?? offerData?.description ?? '';
+    final String location = profile?['city'] as String? ??
+        profile?['streetAddress'] as String? ??
+        offerData?.location ??
+        '';
+
+    final String? rawExpiry = detail?['validUntil'] as String?;
+    final DateTime expiryDate = rawExpiry != null
+        ? DateTime.tryParse(rawExpiry) ?? offerData?.expiryDate ?? DateTime.now()
+        : offerData?.expiryDate ?? DateTime.now();
+
+    final dynamic rawEstimated = detail?['estimatedValue'];
+    final double estimatedValue = (rawEstimated is num)
+        ? rawEstimated.toDouble()
+        : (double.tryParse(rawEstimated?.toString() ?? '') ?? 0.0);
+
+    final String terms = detail?['termsAndConditions'] as String? ?? '';
+    final String imageUrl = detail?['thumbnail'] as String? ??
+        detail?['imageUrl'] as String? ??
+        offerData?.imageUrl ??
+        '';
+
+    final bool effectiveReusable =
+        detail?['isReusable'] as bool? ?? isReuseable;
+
+    offer = OfferDialogModel(
+      title: title,
+      description: description,
+      location: location,
+      expiryDate: expiryDate,
+      estimatedValue: estimatedValue,
+      terms: terms,
+      imageUrl: imageUrl,
+      isReuseable: effectiveReusable,
+    ).obs;
   }
 
   void redeemOffer(BuildContext context) async {
-    // Get offer ID
-    final offerId = offerDetail != null
-        ? offerDetail!['id']
-        : offerData?.id ?? 'OFFER_${DateTime.now().millisecondsSinceEpoch}';
+    final offerId = offerDetail?['id'] as String? ?? offerData?.id;
 
-    print('🔄 Generating QR code for offer: $offerId');
+    if (offerId == null || offerId.isEmpty) {
+      AppLoggerHelper.error('Invalid offer ID for QR code generation');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid offer ID for QR code generation'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    AppLoggerHelper.debug('Generating QR code for offer ID: $offerId');
 
     try {
-      // Call the service to generate QR code and get token
       final offerService = OfferService();
       final response = await offerService.generateOfferQRCode(offerId);
 
       if (response.isSuccess && response.responseData != null) {
-        // Extract token from response data
         final qrData = response.responseData as Map<String, dynamic>;
         final qrToken = qrData['token'] as String? ?? '';
 
-        print('✅ QR Code Token extracted: $qrToken');
+        AppLoggerHelper.debug('QR Code Token extracted: $qrToken');
 
-        // Create QrOffer with the token from API
+        final profile = (offerDetail?['VendorProfile'] ??
+            offerDetail?['vendorProfile']) as Map<String, dynamic>?;
+        final vendorName = profile?['businessName'] as String? ??
+            profile?['user']?['name'] as String? ??
+            offerData?.restaurantName ??
+            offer.value.title;
+        final locationName = profile?['city'] as String? ??
+            profile?['streetAddress'] as String? ??
+            offer.value.location;
+
         final qrOffer = QrOffer(
-          qrCode: qrToken, // Use the token from API
-          title: offerDetail?['title'] ?? offer.value.title,
-          description: offerDetail?['description'],
-          vendor:
-              offerDetail?['VendorProfile']?['businessName'] ?? offer.value.title,
-          location: offerDetail?['VendorProfile']?['city'] ?? offer.value.location,
+          qrCode: qrToken,
+          title: offerDetail?['title'] as String? ?? offer.value.title,
+          description: offerDetail?['description'] as String? ??
+              offer.value.description,
+          vendor: vendorName,
+          location: locationName,
           validUntil: offerDetail?['validUntil'] != null
               ? DateTime.tryParse(
-                      offerDetail!['validUntil'],
+                      offerDetail!['validUntil'] as String,
                     )?.toString().split(' ')[0] ??
                   offer.value.expiryDate.toString().split(' ')[0]
               : offer.value.expiryDate.toString().split(' ')[0],
           isRedeemed: false,
-          isReuseable: offerDetail?['isReusable'] ?? offer.value.isReuseable,
+          isReuseable:
+              offerDetail?['isReusable'] as bool? ?? offer.value.isReuseable,
         );
 
-
-        // Show QR code dialog - pass QrOffer directly
+        if (!context.mounted) return;
         showGeneralDialog(
           context: context,
           barrierDismissible: true,
           barrierLabel: 'QrDialog',
           barrierColor: Colors.black.withOpacity(0.5),
-          transitionDuration: Duration(milliseconds: 200),
+          transitionDuration: const Duration(milliseconds: 200),
           pageBuilder: (context, animation, secondaryAnimation) {
             return Center(
               child: Material(
@@ -105,13 +137,10 @@ class OfferController extends GetxController {
                 child: QrRedemptionAlertDialog(
                   qrOffer: qrOffer,
                   onClose: () {
-                    // Only mark as redeemed for one-time offers
-                    if (!isReuseable) {
-                      // Update local offer state
+                    if (!offer.value.isReuseable) {
                       offer.update((val) {
                         val?.isRedeemed = true;
                       });
-
                     }
                     Get.back();
                   },
@@ -130,17 +159,22 @@ class OfferController extends GetxController {
           },
         );
       } else {
-        // Handle error case
-        print('❌ Failed to generate QR code: ${response.errorMessage}');
+        AppLoggerHelper.error(
+          'Failed to generate QR code: ${response.errorMessage}',
+        );
+        if (!context.mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to generate QR code: ${response.errorMessage}'),
+            content: Text(
+              'Failed to generate QR code: ${response.errorMessage}',
+            ),
             backgroundColor: Colors.red,
           ),
         );
       }
     } catch (e) {
-      print('❌ Error generating QR code: $e');
+      AppLoggerHelper.error('Error generating QR code', e);
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error generating QR code: $e'),
