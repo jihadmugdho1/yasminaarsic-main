@@ -1,9 +1,4 @@
-import 'dart:convert';
-
 import 'package:get/get.dart';
-import 'package:path/path.dart';
-import 'package:vendora/core/localization/localization_controller.dart';
-import 'package:vendora/core/utils/constants/image_path.dart';
 import 'package:vendora/core/utils/logging/logger.dart';
 import 'package:vendora/features/home/data/services/vendor_service.dart';
 import 'package:vendora/features/home/models/vendor_model.dart';
@@ -52,13 +47,9 @@ class VendorDetailsController extends GetxController {
     offers = <Offer>[].obs;
     vendorData = Rx<VendorModel?>(null);
 
-    _initializeRestaurantDetails();
-
-    // Listen for language changes and re-initialize restaurant details
-    final locale = Get.find<LocalizationController>();
-    ever(locale.currentLanguage, (_) {
-      _initializeRestaurantDetails();
-    });
+    // Start in loading state
+    isLoading.value = true;
+    offersLoading.value = true;
 
     // Fetch vendor details if userId is passed
     _fetchVendorDetails();
@@ -70,10 +61,14 @@ class VendorDetailsController extends GetxController {
 
     if (userId == null || userId.isEmpty) {
       AppLoggerHelper.debug('No userId provided to VendorDetailsScreen');
+      isLoading.value = false;
+      offersLoading.value = false;
       return;
     }
 
     isLoading.value = true;
+    offersLoading.value = true;
+
     try {
       final response = await _vendorService.getVendorById(userId);
 
@@ -109,15 +104,20 @@ class VendorDetailsController extends GetxController {
           AppLoggerHelper.error(
             'No vendorProfile ID available for fetching offers',
           );
-          _initializeDefaultOffers();
+          offers.clear();
+          offersLoading.value = false;
         }
       } else {
         AppLoggerHelper.error(
           'Failed to fetch vendor details: ${response.errorMessage}',
         );
+        offers.clear();
+        offersLoading.value = false;
       }
     } catch (e) {
       AppLoggerHelper.error('Error fetching vendor details', e);
+      offers.clear();
+      offersLoading.value = false;
     } finally {
       isLoading.value = false;
     }
@@ -135,7 +135,7 @@ class VendorDetailsController extends GetxController {
       if (response.isSuccess && response.responseData != null) {
         final offerResponse = response.responseData as OfferResponse;
 
-        // Convert OfferItem list to Offer list
+        // Convert OfferItem list to Offer list with real IDs
         final offerList = offerResponse.data.offers.map((offerItem) {
           return Offer(
             id: offerItem.id,
@@ -150,22 +150,22 @@ class VendorDetailsController extends GetxController {
             category: offerItem.type,
             expiryDate: offerItem.validUntil,
             isReuseable: offerItem.isReusable,
-        
           );
         }).toList();
 
         offers.assignAll(offerList);
+        AppLoggerHelper.debug(
+          'Loaded ${offerList.length} real offers for vendor $vendorId',
+        );
       } else {
         AppLoggerHelper.error(
           'Failed to fetch offers: ${response.errorMessage}',
         );
-        // Fall back to default offers if API fails
-        _initializeDefaultOffers();
+        offers.clear();
       }
     } catch (e) {
       AppLoggerHelper.error('Error fetching offers', e);
-      // Fall back to default offers if error occurs
-      _initializeDefaultOffers();
+      offers.clear();
     } finally {
       offersLoading.value = false;
     }
@@ -184,106 +184,36 @@ class VendorDetailsController extends GetxController {
     }
   }
 
-  void _initializeRestaurantDetails() {
-    final locale = Get.find<LocalizationController>();
-
-    // Restaurant details as per card example
-    final newRestaurant = VendorDetailsModel(
-      name: locale.get('bella_vista_restaurant'),
-      category: locale.get('dining_category'),
-      description: locale.get('vendor_description'),
-      location: locale.get('vendor_location'),
-      phone: locale.get('vendor_phone'),
-      email: locale.get('vendor_email'),
-      website: locale.get('vendor_website'),
-      hours: {
-        locale.get('hours_mon_thu'): locale.get('hours_mon_thu_time'),
-        locale.get('hours_fri_sat'): locale.get('hours_fri_sat_time'),
-        locale.get('hours_sun'): locale.get('hours_sun_time'),
-      },
-      imageUrl: ImagePath.imageFive,
-    );
-
-    restaurant.value = newRestaurant;
-
-    // Initialize with default offers
-    _initializeDefaultOffers();
-  }
-
-  void _initializeDefaultOffers() {
-    final locale = Get.find<LocalizationController>();
-
-    // Default offer list (used as fallback when API fails)
-    final newOffers = [
-      Offer(
-        title: locale.get('offer_title_1'),
-        restaurantName: locale.get('bella_vista_restaurant'),
-        description: locale.get('offer_desc_1'),
-        location: locale.get('vendor_location'),
-        imageUrl: ImagePath.imageFive,
-        category: locale.get('dining_category'),
-        expiryDate: DateTime(2025, 12, 31),
-        isReuseable: false, // One-time offer
-      ),
-      Offer(
-        title: locale.get('offer_title_2'),
-        restaurantName: locale.get('bella_vista_restaurant'),
-        description: locale.get('offer_desc_2'),
-        location: locale.get('vendor_location'),
-        imageUrl: ImagePath.imageThree,
-        category: locale.get('dining_category'),
-        expiryDate: DateTime(2025, 12, 15),
-        isReuseable: true, // Reuseable offer
-      ),
-      Offer(
-        title: locale.get('offer_title_3'),
-        restaurantName: locale.get('bella_vista_restaurant'),
-        description: locale.get('offer_desc_3'),
-        location: locale.get('vendor_location'),
-        imageUrl: ImagePath.imageTwo,
-        category: locale.get('dining_category'),
-        expiryDate: DateTime(2025, 12, 25),
-        isReuseable: false, // One-time offer
-      ),
-    ];
-
-    offers.assignAll(newOffers);
-  }
-
   // ✅ Method to update a specific offer
   void updateOfferAtIndex(int index, Offer updatedOffer) {
     if (index >= 0 && index < offers.length) {
-     
       offers[index] = updatedOffer;
       offers.refresh(); // Force UI update
-      
     }
   }
 
-
-
-  /// Fetch detailed offer information by offer ID
+  /// Fetch detailed offer information by offer ID: GET /api/v1/offer/:offerId
   Future<void> fetchOfferDetails(String offerId) async {
     offerDetailLoading.value = true;
+    selectedOfferDetail.value = null; // Clear previous state
     try {
+      AppLoggerHelper.debug('Calling GET offer details API for offer ID: $offerId');
       final response = await _offerService.getOfferById(offerId);
 
       if (response.isSuccess && response.responseData != null) {
         selectedOfferDetail.value =
             response.responseData as Map<String, dynamic>;
         AppLoggerHelper.debug(
-          'Offer details fetched: ${selectedOfferDetail.value?['title']}',
+          'Offer details fetched successfully: id=${selectedOfferDetail.value?['id']}, title=${selectedOfferDetail.value?['title']}',
         );
-
-       
       } else {
         AppLoggerHelper.error(
-          'Failed to fetch offer details: ${response.errorMessage}',
+          'Failed to fetch offer details for ID $offerId: ${response.errorMessage}',
         );
         selectedOfferDetail.value = null;
       }
     } catch (e) {
-      AppLoggerHelper.error('Error fetching offer details', e);
+      AppLoggerHelper.error('Error fetching offer details for ID $offerId', e);
       selectedOfferDetail.value = null;
     } finally {
       offerDetailLoading.value = false;
@@ -300,6 +230,7 @@ class VendorDetailsController extends GetxController {
     }
 
     isLoading.value = true;
+    offersLoading.value = true;
     try {
       final response = await _vendorService.getVendorById(userId);
 
@@ -335,15 +266,18 @@ class VendorDetailsController extends GetxController {
           AppLoggerHelper.error(
             'No vendorProfile ID available for fetching offers',
           );
-          _initializeDefaultOffers();
+          offers.clear();
+          offersLoading.value = false;
         }
       } else {
         AppLoggerHelper.error(
           'Failed to refresh vendor details: ${response.errorMessage}',
         );
+        offersLoading.value = false;
       }
     } catch (e) {
       AppLoggerHelper.error('Error refreshing vendor details', e);
+      offersLoading.value = false;
     } finally {
       isLoading.value = false;
     }

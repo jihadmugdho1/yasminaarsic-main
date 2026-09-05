@@ -132,21 +132,31 @@ class OfferService {
       );
        AppLoggerHelper.debug("offer curl : $url");
 
-      if (response.isSuccess) {
+      if (response.isSuccess && response.responseData != null) {
         try {
           final responseData = response.responseData as Map<String, dynamic>;
-          final offerData = responseData['data'] as Map<String, dynamic>;
+          final dynamic rawData = responseData['data'];
 
-          AppLoggerHelper.debug(
-            'Offer details loaded successfully: ${offerData['title']}',
-          );
+          if (rawData is Map<String, dynamic>) {
+            AppLoggerHelper.debug(
+              'Offer details loaded successfully: id=${rawData['id']}, title=${rawData['title']}',
+            );
 
-          return ResponseData(
-            isSuccess: true,
-            statusCode: response.statusCode,
-            responseData: offerData,
-            errorMessage: '',
-          );
+            return ResponseData(
+              isSuccess: true,
+              statusCode: response.statusCode,
+              responseData: rawData,
+              errorMessage: '',
+            );
+          } else {
+            AppLoggerHelper.error('Invalid offer data format: $rawData');
+            return ResponseData(
+              isSuccess: false,
+              statusCode: response.statusCode,
+              responseData: null,
+              errorMessage: 'Invalid offer data format received from server',
+            );
+          }
         } catch (parseError) {
           AppLoggerHelper.error('Error parsing offer data', parseError);
           return ResponseData(
