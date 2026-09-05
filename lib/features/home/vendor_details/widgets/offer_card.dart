@@ -29,7 +29,7 @@ class OfferCard extends StatelessWidget {
     }
 
     final fullUrl = imageUrl.startsWith('/')
-        ? 'https://yasminaarsic-server.onrender.com$imageUrl'
+        ? 'https://api.vendora.rs$imageUrl'
         : imageUrl;
 
     return Image.network(
@@ -83,28 +83,29 @@ class OfferCard extends StatelessWidget {
                   borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
                   child: _buildImage(offer.imageUrl, double.infinity, 120.h),
                 ),
-                Positioned(
-                  top: 10.h,
-                  right: 10.w,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10.w,
-                      vertical: 5.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.yellow,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      offer.category,
-                      style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w700,
+                if (offer.category.isNotEmpty)
+                  Positioned(
+                    top: 10.h,
+                    right: 10.w,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10.w,
+                        vertical: 5.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.yellow,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        offer.category,
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
-                ),
               ],
             ),
             Padding(
