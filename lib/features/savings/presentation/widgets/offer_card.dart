@@ -48,7 +48,7 @@ class OfferCard extends StatelessWidget {
     // ✅ Set border color based on selection
     Color borderColor = isSelected
         ? const Color(0xFF6C63FE) // Selected border color (vibrant purple)
-        : Colors.grey.withOpacity(0.2); // Default border
+        : Colors.grey.withValues(alpha: 0.2); // Default border
 
     return GestureDetector(
       onTap: onTap,

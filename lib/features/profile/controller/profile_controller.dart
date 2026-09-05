@@ -7,7 +7,7 @@ import 'package:vendora/features/profile/data/models/notification_model.dart';
 import 'package:vendora/features/profile/data/models/notification_preference_model.dart';
 import 'package:vendora/features/profile/data/models/user_model.dart';
 import 'package:vendora/features/profile/data/profile_model.dart';
-import 'package:vendora/features/authentication/controllers/login_controller.dart';
+import 'package:vendora/features/authentication/controllers/google_sign_in_controller.dart';
 import 'package:vendora/features/profile/data/services/notification_preference_service.dart';
 import 'package:vendora/features/profile/data/services/profile_service.dart';
 import 'package:vendora/routes/app_routes.dart';
@@ -240,7 +240,7 @@ class ProfileController extends GetxController {
 
   void onLogoutPressed() async {
     await StorageService.logoutUser();
-    await Get.find<LoginController>().signOutGoogle();
+    await Get.find<GoogleSignInController>().signOutGoogle();
     AppLoggerHelper.info(
       '🚪 User logged out, token and data cleared from storage',
     );

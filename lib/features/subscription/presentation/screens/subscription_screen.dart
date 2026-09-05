@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:lottie/lottie.dart';
 import 'package:vendora/core/utils/constants/colors.dart';
 import 'package:vendora/core/localization/localization_controller.dart';
 import 'package:vendora/features/subscription/controller/subscription_controller.dart';
@@ -141,8 +140,9 @@ class SubscriptionScreen extends StatelessWidget {
                   }
 
                   final plan = sub.plan;
-                  final badgeColor = sub.status.toUpperCase() == 'ACTIVE'
-                      ? const Color(0xFFF4DB35)
+                  final isActive = sub.status.toUpperCase() == 'ACTIVE';
+                  final badgeColor = isActive
+                      ? const Color(0xFF17A34A)
                       : Colors.grey;
 
                   return Padding(
@@ -152,7 +152,7 @@ class SubscriptionScreen extends StatelessWidget {
                       planSubtitle: plan != null
                           ? '${plan.durationInDays} Days Plan'
                           : '',
-                      trailingBadgeText: sub.status,
+                      trailingBadgeText: isActive ? 'Active' : sub.status,
                       trailingBadgeColor: badgeColor,
                       startDate: sub.startDate,
                       renewalDate: sub.endDate,
@@ -266,10 +266,10 @@ class SubscriptionScreen extends StatelessWidget {
                               planTitle: plan.name,
                               planSubtitle: '${plan.durationInDays} Days Plan',
                               trailingBadgeText: plan.isActive
-                                  ? 'Active'
+                                  ? 'Available'
                                   : 'Inactive',
                               trailingBadgeColor: plan.isActive
-                                  ? AppColors.warning
+                                  ? const Color(0xFFFFD700)
                                   : Colors.grey,
                               planDescription: plan.description,
                               pricePerYear: plan.currentPriceDisplay.isNotEmpty

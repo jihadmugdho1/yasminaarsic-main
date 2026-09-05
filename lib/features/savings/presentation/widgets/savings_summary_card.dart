@@ -54,11 +54,7 @@ class SavingsSummaryCard extends StatelessWidget {
                 color: iconBackgroundColor,
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                icon,
-                color: iconForegroundColor,
-                size: 24,
-              ),
+              child: Icon(icon, color: iconForegroundColor, size: 24),
             ),
 
             const SizedBox(width: 16),
@@ -100,7 +96,7 @@ class SavingsSummaryCard extends StatelessWidget {
                         fontSize: 16.sp,
                         color: descriptionColor,
                         fontWeight: FontWeight.w400,
-                        fontFamily: 'Arial'
+                        fontFamily: 'Arial',
                       ),
                     ),
                 ],

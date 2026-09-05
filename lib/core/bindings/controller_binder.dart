@@ -1,6 +1,8 @@
 import 'package:get/get.dart';
 import 'package:vendora/core/localization/localization_controller.dart';
+import 'package:vendora/features/authentication/controllers/google_sign_in_controller.dart';
 import 'package:vendora/features/authentication/controllers/login_controller.dart';
+import 'package:vendora/features/authentication/controllers/sign_up_controller.dart';
 import 'package:vendora/features/authentication/data/services/authentication_service.dart';
 import 'package:vendora/features/profile/controller/profile_controller.dart';
 
@@ -13,7 +15,9 @@ class ControllerBinder extends Bindings {
     // Register AuthenticationService as permanent so it's available app-wide
     Get.put<AuthenticationService>(AuthenticationService(), permanent: true);
 
+    Get.lazyPut<GoogleSignInController>(() => GoogleSignInController(), fenix: true);
     Get.lazyPut<LoginController>(() => LoginController(), fenix: true);
+    Get.lazyPut<SignUpController>(() => SignUpController(), fenix: true);
     Get.lazyPut<ProfileController>(() => ProfileController(), fenix: true);
   }
 }
