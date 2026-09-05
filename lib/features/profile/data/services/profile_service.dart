@@ -30,9 +30,10 @@ class ProfileService {
         try {
           final userData =
               response.responseData['data'] as Map<String, dynamic>;
-          
+
           final trialDays = userData['trialDaysRemaining'];
-          final hasSubscription = userData['hasActiveSubscription'] ?? userData['isSubscribed'];
+          final hasSubscription =
+              userData['hasActiveSubscription'] ?? userData['isSubscribed'];
           if (trialDays != null) {
             await StorageService.saveTrialAndSubscription(
               trialDaysRemaining: trialDays is int
@@ -43,7 +44,9 @@ class ProfileService {
           }
 
           final user = UserModel.fromJson(userData);
-          AppLoggerHelper.debug("User data : ${jsonEncode(response.responseData)}");
+          AppLoggerHelper.debug(
+            "User data : ${jsonEncode(response.responseData)}",
+          );
           AppLoggerHelper.debug('User loaded successfully: ${user.name}');
           return ResponseData(
             isSuccess: true,

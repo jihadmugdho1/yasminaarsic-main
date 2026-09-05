@@ -66,12 +66,17 @@ class ProfileController extends GetxController {
 
       final user = profileResp.responseData as UserModel;
 
-      isSubscribed.value = StorageService.hasActiveSubscription || user.isSubscribed;
+      isSubscribed.value =
+          StorageService.hasActiveSubscription || user.isSubscribed;
       trialDaysRemaining.value = StorageService.trialDaysRemaining;
 
       // Notification preferences come embedded in the profile response (notifications[0])
-      final notifData = user.notifications.isNotEmpty ? user.notifications.first : null;
-      AppLoggerHelper.debug('[ProfileController] notifications from profile: $notifData');
+      final notifData = user.notifications.isNotEmpty
+          ? user.notifications.first
+          : null;
+      AppLoggerHelper.debug(
+        '[ProfileController] notifications from profile: $notifData',
+      );
 
       final prefs = _buildNotificationPreferences(notifData);
 
@@ -93,7 +98,9 @@ class ProfileController extends GetxController {
         location: user.location ?? 'Not specified',
         birthDate: formatBirthDate(user.dateOfBirth),
         avatarInitials: _getInitials(user.name),
-        imageUrl: (user.imageUrl != null && user.imageUrl!.isNotEmpty) ? user.imageUrl : StorageService.imageUrl,
+        imageUrl: (user.imageUrl != null && user.imageUrl!.isNotEmpty)
+            ? user.imageUrl
+            : StorageService.imageUrl,
         notificationPreferences: prefs,
       );
     } catch (e) {
@@ -207,13 +214,17 @@ class ProfileController extends GetxController {
       'promotional': currentPrefs[2].isEnabled,
     };
 
-    AppLoggerHelper.debug('[ProfileController] onNotificationToggle index=$index value=$value payload=$payload');
+    AppLoggerHelper.debug(
+      '[ProfileController] onNotificationToggle index=$index value=$value payload=$payload',
+    );
 
     final response = await _notificationService.updateNotificationPreferences(
       payload,
     );
 
-    AppLoggerHelper.debug('[ProfileController] onNotificationToggle response: isSuccess=${response.isSuccess} statusCode=${response.statusCode} data=${response.responseData} error=${response.errorMessage}');
+    AppLoggerHelper.debug(
+      '[ProfileController] onNotificationToggle response: isSuccess=${response.isSuccess} statusCode=${response.statusCode} data=${response.responseData} error=${response.errorMessage}',
+    );
 
     if (!response.isSuccess) {
       // Revert on failure

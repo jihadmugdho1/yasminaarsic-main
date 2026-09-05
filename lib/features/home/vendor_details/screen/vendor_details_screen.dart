@@ -153,7 +153,9 @@ class VendorDetailsScreen extends StatelessWidget {
                           );
 
                           if (offerId == null || offerId.isEmpty) {
-                            AppLoggerHelper.error('OfferCard tapped but offerId is null or empty');
+                            AppLoggerHelper.error(
+                              'OfferCard tapped but offerId is null or empty',
+                            );
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('Offer ID is not available'),
@@ -168,16 +170,18 @@ class VendorDetailsScreen extends StatelessWidget {
                             barrierDismissible: false,
                             barrierLabel: 'LoadingOfferDialog',
                             barrierColor: Colors.black.withOpacity(0.5),
-                            transitionDuration: const Duration(milliseconds: 200),
+                            transitionDuration: const Duration(
+                              milliseconds: 200,
+                            ),
                             pageBuilder:
                                 (context, animation, secondaryAnimation) {
-                              return const Center(
-                                child: Material(
-                                  type: MaterialType.transparency,
-                                  child: OfferDialogShimmer(),
-                                ),
-                              );
-                            },
+                                  return const Center(
+                                    child: Material(
+                                      type: MaterialType.transparency,
+                                      child: OfferDialogShimmer(),
+                                    ),
+                                  );
+                                },
                             transitionBuilder:
                                 (
                                   context,
@@ -185,11 +189,11 @@ class VendorDetailsScreen extends StatelessWidget {
                                   secondaryAnimation,
                                   child,
                                 ) {
-                              return FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              );
-                            },
+                                  return FadeTransition(
+                                    opacity: animation,
+                                    child: child,
+                                  );
+                                },
                           );
 
                           await controller.fetchOfferDetails(offerId);
@@ -197,7 +201,8 @@ class VendorDetailsScreen extends StatelessWidget {
                           if (!context.mounted) return;
                           Navigator.of(context).pop();
 
-                          final offerDetail = controller.selectedOfferDetail.value;
+                          final offerDetail =
+                              controller.selectedOfferDetail.value;
                           if (offerDetail == null) {
                             AppLoggerHelper.error(
                               'Failed to fetch offer details for offer ID: $offerId',
@@ -205,7 +210,9 @@ class VendorDetailsScreen extends StatelessWidget {
                             if (!context.mounted) return;
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('Failed to load offer details. Please try again.'),
+                                content: Text(
+                                  'Failed to load offer details. Please try again.',
+                                ),
                                 backgroundColor: Colors.red,
                               ),
                             );
@@ -218,20 +225,22 @@ class VendorDetailsScreen extends StatelessWidget {
                             barrierDismissible: true,
                             barrierLabel: 'OfferDialog',
                             barrierColor: Colors.transparent.withOpacity(0.5),
-                            transitionDuration: const Duration(milliseconds: 200),
+                            transitionDuration: const Duration(
+                              milliseconds: 200,
+                            ),
                             pageBuilder:
                                 (context, animation, secondaryAnimation) {
-                              return Center(
-                                child: Material(
-                                  type: MaterialType.transparency,
-                                  child: OfferDialog(
-                                    offer: controller.offers[index],
-                                    offerIndex: index,
-                                    offerDetail: offerDetail,
-                                  ),
-                                ),
-                              );
-                            },
+                                  return Center(
+                                    child: Material(
+                                      type: MaterialType.transparency,
+                                      child: OfferDialog(
+                                        offer: controller.offers[index],
+                                        offerIndex: index,
+                                        offerDetail: offerDetail,
+                                      ),
+                                    ),
+                                  );
+                                },
                             transitionBuilder:
                                 (
                                   context,
@@ -239,11 +248,11 @@ class VendorDetailsScreen extends StatelessWidget {
                                   secondaryAnimation,
                                   child,
                                 ) {
-                              return FadeTransition(
-                                opacity: animation,
-                                child: child,
-                              );
-                            },
+                                  return FadeTransition(
+                                    opacity: animation,
+                                    child: child,
+                                  );
+                                },
                           );
                         },
                       );

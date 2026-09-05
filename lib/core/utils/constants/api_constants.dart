@@ -1,6 +1,5 @@
 class ApiConstants {
   static const String baseUrl = "https://api.vendora.rs/api/v1/";
-
   static String get register => "${baseUrl}auth/register";
   static String get verifyEmail => "${baseUrl}auth/verify-email";
   static String get login => "${baseUrl}auth/login";
@@ -12,10 +11,8 @@ class ApiConstants {
       "${baseUrl}auth/password-reset/confirm";
   static String get changePassword => "${baseUrl}auth/change-password";
   static String get get => "${baseUrl}category";
-
   // FCM Token
   static String get registerFcmToken => "${baseUrl}users/fcm-token";
-
   // Offers
   static String getOffers({
     String? categoryId,

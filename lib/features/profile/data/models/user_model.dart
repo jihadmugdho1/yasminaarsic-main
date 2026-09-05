@@ -45,7 +45,7 @@ class UserModel {
       createdAt: json['createdAt'] ?? '',
       updatedAt: json['updatedAt'] ?? '',
       role: json['role'] ?? 'USER',
-      dateOfBirth: json['dateOfBirth']??"Your birth date",
+      dateOfBirth: json['dateOfBirth'] ?? "Your birth date",
       location: json['location'] ?? 'Your Location',
       imageUrl: json['imageUrl'],
       phone: json['phone'] ?? '+1 000 000 0000',
@@ -54,7 +54,8 @@ class UserModel {
       isSubscribed: json['isSubscribed'] ?? false,
       verificationCode: json['verificationCode'],
       verificationCodeExpiry: json['verificationCodeExpiry'],
-      notifications: (json['notifications'] as List?)
+      notifications:
+          (json['notifications'] as List?)
               ?.map((n) => NotificationModel.fromJson(n))
               .toList() ??
           [],
