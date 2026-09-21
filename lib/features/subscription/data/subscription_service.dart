@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:http/http.dart' as http;
 import 'package:vendora/core/core.dart';
+import 'package:vendora/features/subscription/data/current_subscription_model.dart';
 import 'package:vendora/features/subscription/data/subscription_history_model.dart';
 import 'package:vendora/features/subscription/data/subscription_plan_model.dart';
 import 'package:vendora/features/subscription/data/checkout_response_model.dart';
@@ -18,9 +19,7 @@ class SubscriptionService {
 
       if (response.isSuccess && response.responseData != null) {
         List<SubscriptionPlanModel> plans = [];
-
         final data = response.responseData as Map<String, dynamic>;
-
         // Navigate to data.data array which contains the plans
         if (data['data'] != null && data['data'] is Map<String, dynamic>) {
           final innerData = data['data'] as Map<String, dynamic>;
@@ -35,7 +34,6 @@ class SubscriptionService {
                 .toList();
           }
         }
-
         return ResponseData(
           isSuccess: true,
           statusCode: response.statusCode,
@@ -43,7 +41,6 @@ class SubscriptionService {
           responseData: plans,
         );
       }
-
       return response;
     } catch (e) {
       return ResponseData(
@@ -72,7 +69,7 @@ class SubscriptionService {
             isSuccess: true,
             statusCode: response.statusCode,
             errorMessage: '',
-            responseData: SubscriptionHistoryModel.fromJson(data),
+            responseData: CurrentSubscriptionModel.fromJson(data),
           );
         }
       }

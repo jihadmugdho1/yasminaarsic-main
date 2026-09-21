@@ -8,6 +8,7 @@ import 'package:uuid/uuid.dart';
 import 'package:vendora/core/core.dart';
 import 'package:vendora/core/localization/localization_controller.dart';
 import 'package:vendora/features/subscription/data/checkout_response_model.dart';
+import 'package:vendora/features/subscription/data/current_subscription_model.dart';
 import 'package:vendora/features/subscription/data/subscription_history_model.dart';
 import 'package:vendora/features/subscription/data/subscription_model.dart';
 import 'package:vendora/features/subscription/data/subscription_plan_model.dart';
@@ -24,7 +25,7 @@ class SubscriptionController extends GetxController {
   final plansErrorMessage = ''.obs;
 
   // Current Subscription
-  final currentSubscription = Rxn<SubscriptionHistoryModel>();
+  final currentSubscription = Rxn<CurrentSubscriptionModel>();
   final isLoadingCurrentSubscription = false.obs;
   final currentSubscriptionError = ''.obs;
 
@@ -98,7 +99,7 @@ class SubscriptionController extends GetxController {
 
       if (response.isSuccess && response.responseData != null) {
         currentSubscription.value =
-            response.responseData as SubscriptionHistoryModel;
+            response.responseData as CurrentSubscriptionModel;
       } else {
         currentSubscriptionError.value = response.errorMessage;
       }

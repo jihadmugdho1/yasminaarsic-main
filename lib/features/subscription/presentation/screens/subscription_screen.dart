@@ -103,7 +103,7 @@ class SubscriptionScreen extends StatelessWidget {
                             children: [
                               Container(
                                 padding: EdgeInsets.all(16.w),
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                 ),
                                 child: Image.asset(
@@ -139,27 +139,26 @@ class SubscriptionScreen extends StatelessWidget {
                     );
                   }
 
-                  final plan = sub.plan;
-                  final isActive = sub.status.toUpperCase() == 'ACTIVE';
-                  final badgeColor = isActive
-                      ? const Color(0xFF17A34A)
-                      : Colors.grey;
+                  final isActive = sub.isActive;
+                  final badgeText = sub.isTrialActive
+                      ? 'Trial'
+                      : (isActive ? 'Active' : sub.status);
+                  final badgeColor = sub.statusColor;
 
                   return Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     child: SubscriptionDetailsCard(
-                      planTitle: plan?.name ?? sub.status,
-                      planSubtitle: plan != null
-                          ? '${plan.durationInDays} Days Plan'
-                          : '',
-                      trailingBadgeText: isActive ? 'Active' : sub.status,
+                      planTitle: sub.displayTitle,
+                      planSubtitle: sub.displaySubtitle,
+                      trailingBadgeText: badgeText,
                       trailingBadgeColor: badgeColor,
                       startDate: sub.startDate,
-                      renewalDate: sub.endDate,
-                      planDescription: plan?.name ?? '',
-                      pricePerYear: plan != null
-                          ? '${plan.currency} ${plan.currentPriceDisplay.isNotEmpty ? plan.currentPriceDisplay : plan.price}'
-                          : sub.price,
+                      renewalDate: sub.trialEndsAt ?? sub.endDate,
+                      customDaysLeft: sub.daysRemaining,
+                      planDescription: sub.isTrial
+                          ? 'Free Trial Access'
+                          : (sub.plan?.name ?? sub.displayTitle),
+                      pricePerYear: sub.displayPrice,
                       isAutoRenewEnabled: false,
                       autoRenewMessage: '',
                       showCancelButton: false,

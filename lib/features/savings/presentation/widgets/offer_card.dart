@@ -45,22 +45,20 @@ class OfferCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ✅ Set border color based on selection
-    Color borderColor = isSelected
-        ? const Color(0xFF6C63FE) // Selected border color (vibrant purple)
-        : Colors.grey.withValues(alpha: 0.2); // Default border
-
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: padding,
         decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.07),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
           color: backgroundColor,
           borderRadius: BorderRadius.circular(borderRadius),
-          border: Border.all(
-            color: borderColor,
-            width: isSelected ? 2.0 : 1.0, // Slightly thicker when selected
-          ),
         ),
         child: Row(
           children: [
@@ -78,7 +76,11 @@ class OfferCard extends StatelessWidget {
                       width: 80.w,
                       height: 80.h,
                       color: Colors.grey[200],
-                      child: Icon(Icons.image, color: Colors.grey[500], size: 24),
+                      child: Icon(
+                        Icons.image,
+                        color: Colors.grey[500],
+                        size: 24,
+                      ),
                     );
                   },
                 ),
@@ -114,9 +116,13 @@ class OfferCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      if (priceBadge != null)
+                      if (priceBadge != null) ...[
+                        const SizedBox(width: 8),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8.w,
+                            vertical: 4.h,
+                          ),
                           decoration: BoxDecoration(
                             color: priceBadgeColor,
                             borderRadius: BorderRadius.circular(8),
@@ -131,6 +137,7 @@ class OfferCard extends StatelessWidget {
                             ),
                           ),
                         ),
+                      ],
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -147,14 +154,22 @@ class OfferCard extends StatelessWidget {
                   if (date != null)
                     Row(
                       children: [
-                        Icon(Icons.calendar_today_outlined, size: 16, color: dateColor),
+                        Icon(
+                          Icons.calendar_today_outlined,
+                          size: 16,
+                          color: dateColor,
+                        ),
                         const SizedBox(width: 4),
-                        Text(
-                          _formatDate(date!),
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontFamily: 'Arial',
-                            color: dateColor,
+                        Expanded(
+                          child: Text(
+                            _formatDate(date!),
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontFamily: 'Arial',
+                              color: dateColor,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
@@ -163,15 +178,23 @@ class OfferCard extends StatelessWidget {
                   if (location != null)
                     Row(
                       children: [
-                        Icon(Icons.location_on_outlined, size: 16, color: locationColor),
+                        Icon(
+                          Icons.location_on_outlined,
+                          size: 16,
+                          color: locationColor,
+                        ),
                         const SizedBox(width: 4),
-                        Text(
-                          location!,
-                          style: TextStyle(
-                            fontSize: 12.sp,
-                            fontFamily: 'Arial',
-                            fontWeight: FontWeight.w400,
-                            color: locationColor,
+                        Expanded(
+                          child: Text(
+                            location!,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontFamily: 'Arial',
+                              fontWeight: FontWeight.w400,
+                              color: locationColor,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],

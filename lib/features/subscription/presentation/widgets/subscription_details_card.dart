@@ -34,6 +34,8 @@ class SubscriptionDetailsCard extends StatelessWidget {
   final double borderRadius;
   final EdgeInsets padding;
 
+  final int? customDaysLeft;
+
   const SubscriptionDetailsCard({
     super.key,
     this.planTitle = 'Current Plan',
@@ -42,6 +44,7 @@ class SubscriptionDetailsCard extends StatelessWidget {
     this.trailingBadgeColor,
     this.startDate,
     this.renewalDate,
+    this.customDaysLeft,
     this.planDescription = 'Subscription Plan for One Year',
     this.pricePerYear = r'$99.99 / year',
     this.isAutoRenewEnabled = true,
@@ -79,10 +82,10 @@ class SubscriptionDetailsCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(borderRadius),
-          border: Border.all(color: dividerColor.withOpacity(0.1)),
+          border: Border.all(color: dividerColor.withValues(alpha: 0.1)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -178,14 +181,14 @@ class SubscriptionDetailsCard extends StatelessWidget {
               icon: Icons.event_available_outlined,
               label: locale.get('renewal_date'),
               value: renewalDate != null ? _formatDate(renewalDate!) : '-',
-              trailing: renewalDate != null
+              trailing: (renewalDate != null || customDaysLeft != null)
                   ? Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 10.w,
                         vertical: 5.h,
                       ),
                       decoration: BoxDecoration(
-                        color: primaryButtonColor.withOpacity(0.08),
+                        color: primaryButtonColor.withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Text(
@@ -193,7 +196,7 @@ class SubscriptionDetailsCard extends StatelessWidget {
                             .get('days_left')
                             .replaceFirst(
                               '{days}',
-                              _daysLeft(renewalDate!).toString(),
+                              (customDaysLeft ?? _daysLeft(renewalDate!)).toString(),
                             ),
                         style: TextStyle(
                           fontSize: 11.sp,
@@ -269,7 +272,7 @@ class SubscriptionDetailsCard extends StatelessWidget {
             width: 25.h,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: subtitleColor.withOpacity(0.06),
+              color: subtitleColor.withValues(alpha: 0.06),
               borderRadius: BorderRadius.circular(10.r),
             ),
             child: Icon(icon, size: 17.sp, color: subtitleColor),
@@ -314,25 +317,31 @@ class SubscriptionDetailsCard extends StatelessWidget {
   }
 
   Color get _badgeBgColor {
+    if (trailingBadgeColor != null) return trailingBadgeColor!;
     final text = trailingBadgeText?.toLowerCase().trim();
-    if (text == 'active') {
-      return trailingBadgeColor ?? const Color(0xFF17A34A); // Green for active
+    if (text == 'active' || text == 'trial' || text == 'active trial') {
+      return const Color(0xFF17A34A); // Green for active
     } else if (text == 'available') {
-      return trailingBadgeColor ??
-          const Color(0xFFFFD700); // Gold/Yellow for available
-    } else if (text == 'inactive' || text == 'expired') {
-      return trailingBadgeColor ?? Colors.grey;
+      return const Color(0xFFFFD700); // Gold/Yellow for available
+    } else if (text == 'inactive' ||
+        text == 'expired' ||
+        text == 'cancelled' ||
+        text == 'canceled') {
+      return Colors.grey;
     }
-    return trailingBadgeColor ?? const Color(0xFF17A34A);
+    return const Color(0xFF17A34A);
   }
 
   Color get _badgeTextColor {
     final text = trailingBadgeText?.toLowerCase().trim();
-    if (text == 'active') {
+    if (text == 'active' || text == 'trial' || text == 'active trial') {
       return Colors.white;
     } else if (text == 'available') {
       return Colors.black87;
-    } else if (text == 'inactive' || text == 'expired') {
+    } else if (text == 'inactive' ||
+        text == 'expired' ||
+        text == 'cancelled' ||
+        text == 'canceled') {
       return Colors.white;
     }
     return badgeTextColor;

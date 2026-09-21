@@ -26,17 +26,24 @@ class SubscriptionPlanModel {
   });
 
   factory SubscriptionPlanModel.fromJson(Map<String, dynamic> json) {
+    final rawPrice = json['price'];
+    final String price = rawPrice is num
+        ? rawPrice.toStringAsFixed(2)
+        : (rawPrice?.toString() ?? '0.00');
+
     return SubscriptionPlanModel(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      description: json['description'] ?? '',
-      price: json['price'] ?? '0.00',
-      durationInDays: json['durationInDays'] ?? 365,
-      currency: json['currency'] ?? 'USD',
-      currentPriceDisplay: json['currentPriceDisplay'] ?? '',
-      isActive: json['isActive'] ?? true,
-      createdAt: json['createdAt'] ?? '',
-      updatedAt: json['updatedAt'] ?? '',
+      id: json['id']?.toString() ?? '',
+      name: json['name']?.toString() ?? '',
+      description: json['description']?.toString() ?? '',
+      price: price,
+      durationInDays: (json['durationInDays'] is num)
+          ? (json['durationInDays'] as num).toInt()
+          : int.tryParse(json['durationInDays']?.toString() ?? '') ?? 365,
+      currency: json['currency']?.toString() ?? 'USD',
+      currentPriceDisplay: json['currentPriceDisplay']?.toString() ?? '',
+      isActive: json['isActive'] is bool ? json['isActive'] as bool : true,
+      createdAt: json['createdAt']?.toString() ?? '',
+      updatedAt: json['updatedAt']?.toString() ?? '',
     );
   }
 
