@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:vendora/core/utils/constants/colors.dart';
 
 class OfferCard extends StatelessWidget {
   final String title;
@@ -19,7 +20,7 @@ class OfferCard extends StatelessWidget {
   final Color? locationColor;
   final double borderRadius;
   final EdgeInsets padding;
-  final bool isSelected; // ✅ New parameter
+  final bool isSelected;
   final VoidCallback? onTap;
 
   const OfferCard({
@@ -39,63 +40,133 @@ class OfferCard extends StatelessWidget {
     this.locationColor = const Color(0xFF6A7282),
     this.borderRadius = 16.0,
     this.padding = const EdgeInsets.all(16),
-    this.isSelected = false, // ✅ Default to false
+    this.isSelected = false,
     this.onTap,
   });
+
+  Widget _buildImage() {
+    final imagePath = imageAssetPath?.trim() ?? '';
+
+    if (imagePath.isEmpty) {
+      return Container(
+        width: 80.w,
+        height: 80.h,
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(Icons.image_outlined, color: Colors.grey[400], size: 28),
+      );
+    }
+
+    final isRemote = imagePath.startsWith('http://') ||
+        imagePath.startsWith('https://') ||
+        imagePath.startsWith('/');
+
+    if (isRemote) {
+      final fullUrl = imagePath.startsWith('/')
+          ? 'https://api.vendora.rs$imagePath'
+          : imagePath;
+      final encodedUrl = Uri.encodeFull(fullUrl);
+
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.network(
+          encodedUrl,
+          width: 80.w,
+          height: 80.h,
+          fit: BoxFit.cover,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return Container(
+              width: 80.w,
+              height: 80.h,
+              color: Colors.grey[100],
+              child: Center(
+                child: SizedBox(
+                  width: 20.w,
+                  height: 20.w,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor:
+                        AlwaysStoppedAnimation<Color>(AppColors.primary),
+                  ),
+                ),
+              ),
+            );
+          },
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              width: 80.w,
+              height: 80.h,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                Icons.image_not_supported_outlined,
+                color: Colors.grey[400],
+                size: 24,
+              ),
+            );
+          },
+        ),
+      );
+    } else {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(8),
+        child: Image.asset(
+          imagePath,
+          width: 80.w,
+          height: 80.h,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              width: 80.w,
+              height: 80.h,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(
+                Icons.image_outlined,
+                color: Colors.grey[400],
+                size: 24,
+              ),
+            );
+          },
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         padding: padding,
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.07),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
+              color: Colors.black.withValues(alpha: 0.06),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
             ),
           ],
           color: backgroundColor,
           borderRadius: BorderRadius.circular(borderRadius),
+          border: isSelected
+              ? Border.all(color: AppColors.primary, width: 1.5)
+              : Border.all(color: Colors.grey.shade100, width: 1),
         ),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Image Asset
-            if (imageAssetPath != null)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.asset(
-                  imageAssetPath!,
-                  width: 80.w,
-                  height: 80.h,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      width: 80.w,
-                      height: 80.h,
-                      color: Colors.grey[200],
-                      child: Icon(
-                        Icons.image,
-                        color: Colors.grey[500],
-                        size: 24,
-                      ),
-                    );
-                  },
-                ),
-              )
-            else
-              Container(
-                width: 80.w,
-                height: 80.h,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Icon(Icons.image, color: Colors.grey[500], size: 24),
-              ),
-            const SizedBox(width: 16),
+            // Image Preview (Network or Asset)
+            _buildImage(),
+            const SizedBox(width: 14),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +179,7 @@ class OfferCard extends StatelessWidget {
                           title,
                           style: TextStyle(
                             fontSize: 14.sp,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w600,
                             fontFamily: 'Inter',
                             color: titleColor,
                           ),
@@ -116,23 +187,23 @@ class OfferCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      if (priceBadge != null) ...[
+                      if (priceBadge != null && priceBadge!.isNotEmpty) ...[
                         const SizedBox(width: 8),
                         Container(
                           padding: EdgeInsets.symmetric(
                             horizontal: 8.w,
-                            vertical: 4.h,
+                            vertical: 3.h,
                           ),
                           decoration: BoxDecoration(
                             color: priceBadgeColor,
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(6),
                           ),
                           child: Text(
                             priceBadge!,
                             style: TextStyle(
-                              fontSize: 12.sp,
+                              fontSize: 11.sp,
                               fontFamily: 'Arial',
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w700,
                               color: priceTextColor,
                             ),
                           ),
@@ -149,14 +220,16 @@ class OfferCard extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       color: subtitleColor,
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   if (date != null)
                     Row(
                       children: [
                         Icon(
                           Icons.calendar_today_outlined,
-                          size: 16,
+                          size: 14.sp,
                           color: dateColor,
                         ),
                         const SizedBox(width: 4),
@@ -164,7 +237,7 @@ class OfferCard extends StatelessWidget {
                           child: Text(
                             _formatDate(date!),
                             style: TextStyle(
-                              fontSize: 12.sp,
+                              fontSize: 11.sp,
                               fontFamily: 'Arial',
                               color: dateColor,
                             ),
@@ -174,13 +247,13 @@ class OfferCard extends StatelessWidget {
                         ),
                       ],
                     ),
-                  const SizedBox(height: 4),
-                  if (location != null)
+                  if (location != null && location!.trim().isNotEmpty) ...[
+                    const SizedBox(height: 3),
                     Row(
                       children: [
                         Icon(
                           Icons.location_on_outlined,
-                          size: 16,
+                          size: 14.sp,
                           color: locationColor,
                         ),
                         const SizedBox(width: 4),
@@ -188,7 +261,7 @@ class OfferCard extends StatelessWidget {
                           child: Text(
                             location!,
                             style: TextStyle(
-                              fontSize: 12.sp,
+                              fontSize: 11.sp,
                               fontFamily: 'Arial',
                               fontWeight: FontWeight.w400,
                               color: locationColor,
@@ -199,6 +272,7 @@ class OfferCard extends StatelessWidget {
                         ),
                       ],
                     ),
+                  ],
                 ],
               ),
             ),
@@ -209,6 +283,6 @@ class OfferCard extends StatelessWidget {
   }
 
   String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+    return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
   }
 }

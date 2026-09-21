@@ -322,7 +322,7 @@ class SavingsScreen extends StatelessWidget {
                       icon: Icons.balance,
                       backgroundColor: const Color(0xFFFFF6D5),
                       iconBackgroundColor: const Color(0xFFFFD700),
-                      descriptionColor: const Color(0xFFF4DB35),
+                      descriptionColor: const Color.fromARGB(255, 176, 157, 33),
                       onTap: controller.onSavingsSummaryTap,
                     );
                   }),
@@ -446,7 +446,7 @@ class SavingsScreen extends StatelessWidget {
                               isSelected:
                                   controller.selectedOfferIndex.value ==
                                   i, // ✅ Selection state
-                              onTap: () => controller.onOfferTap(i),
+                              onTap: () => controller.onOfferTap(i, context),
                             ),
                           ),
                         ),
